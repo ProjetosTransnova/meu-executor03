@@ -1,0 +1,2826 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Executor — App sincronizado com a planilha</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
+  <style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Complements basecoat; artifacts override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: 28px; font-weight: 650; line-height: 1.1; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: #0a8f3c; }
+.kpi .kpi-delta.down { color: #cf3131; }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+</style>
+  
+  <style>
+    :root {
+      --accent: #C9A86A;
+      --accent-text: #8c6e30;
+      --accent-contrast: #ffffff;
+      --bg: #FAF8F6;
+      --surface: #FFFFFF;
+      --surface-subtle: #F5F3EF;
+      --text: #3A3A3A;
+      --text-muted: #767676;
+      --border: #ECECEC;
+      --border-dark: #DDD9D2;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+
+      /* Tons pastéis de status */
+      --st-ideia-bg: #EAEAE8;
+      --st-ideia-text: #4A4A48;
+      --st-afazer-bg: #D4E4F7;
+      --st-afazer-text: #1E4670;
+      --st-andamento-bg: #FCE6BE;
+      --st-andamento-text: #7A5310;
+      --st-concluido-bg: #CFEAD9;
+      --st-concluido-text: #195E36;
+
+      /* Prioridades pastéis */
+      --prio-alta-bg: #FAD1D1;
+      --prio-alta-text: #881F1F;
+      --prio-media-bg: #FBEAD2;
+      --prio-media-text: #804812;
+      --prio-baixa-bg: #DAEFE3;
+      --prio-baixa-text: #185D36;
+
+      --gold: #C9A86A;
+      --gold-dark: #98783C;
+      --shadow-subtle: 0 2px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+      --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+      --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Compact", "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.45;
+      padding-bottom: 90px;
+    }
+
+    @media (min-width: 900px) {
+      body {
+        padding-bottom: 40px;
+      }
+    }
+
+    /* Top Navigation Header */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lamp-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: #FFFDF9;
+      border: 1px solid #EEDBBE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-dark);
+      box-shadow: 0 2px 6px rgba(201, 168, 106, 0.12);
+      flex-shrink: 0;
+    }
+
+    .brand-titles h1 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #2D2D2D;
+      line-height: 1.15;
+    }
+
+    .brand-titles .subtitle {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold-dark);
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    /* Desktop Nav Tabs */
+    .desktop-nav {
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (min-width: 768px) {
+      .desktop-nav {
+        display: flex;
+      }
+    }
+
+    .nav-pill {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.18s ease;
+    }
+
+    .nav-pill:hover {
+      background: var(--surface-subtle);
+      color: var(--text);
+    }
+
+    .nav-pill.active {
+      background: #FDF9F0;
+      color: var(--gold-dark);
+      border-color: #EEDBBE;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sync-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: #F4F4F4;
+      color: #666;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .sync-status-badge.synced {
+      background: #EAF7EE;
+      color: #176538;
+      border-color: #BBE7C9;
+    }
+
+    .sync-status-badge.syncing {
+      background: #FFF8E6;
+      color: #8C6207;
+      border-color: #F8E3A6;
+    }
+
+    .sync-status-badge.offline {
+      background: #F3F3F3;
+      color: #616161;
+      border-color: #DDD;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .btn-add-primary {
+      background: var(--gold);
+      color: #FFFFFF;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(201, 168, 106, 0.3);
+    }
+
+    .btn-add-primary:hover {
+      background: #B99757;
+      transform: translateY(-1px);
+    }
+
+    .user-tag {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding-left: 8px;
+      border-left: 1px solid var(--border);
+    }
+
+    @media (min-width: 990px) {
+      .user-tag {
+        display: flex;
+      }
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #EAE6DE;
+      color: #4D4539;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #D6D0C4;
+    }
+
+    .user-info-text {
+      line-height: 1.15;
+    }
+
+    .user-info-text .name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .user-info-text .role {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Main Container */
+    .app-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* Screens switch */
+    .app-screen {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .app-screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Grid */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 640px) {
+      .kpi-row {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .kpi-row {
+        grid-template-columns: repeat(7, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-subtle);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-card:hover {
+      border-color: #D8D2C6;
+      transform: translateY(-2px);
+    }
+
+    .kpi-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-number {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-card.highlight-amber {
+      border-left: 3px solid #E0B460;
+    }
+
+    .kpi-card.highlight-green {
+      border-left: 3px solid #6EBA8A;
+    }
+
+    .kpi-card.highlight-blue {
+      border-left: 3px solid #7FA4D4;
+    }
+
+    .kpi-card.highlight-red {
+      border-left: 3px solid #DE7D7D;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 768px) {
+      .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .charts-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      min-height: 340px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .chart-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .chart-container-box {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-container-box svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 14px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #F0EEEA;
+      font-size: 11px;
+      color: #555;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    /* Screen Tarefas Styling */
+    .filter-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .filter-grid {
+        grid-template-columns: repeat(4, 1fr) auto;
+      }
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .filter-select, .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text);
+      background-color: #FFFFFF;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .filter-select:focus, .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.18);
+    }
+
+    .task-list-count {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .tasks-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .tasks-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-subtle);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .task-card:hover {
+      border-color: #D3CBBF;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .task-id {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .task-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #2D2D2D;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .task-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .badge-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-dept {
+      background: #F1EFEA;
+      color: #555047;
+    }
+
+    .task-footer-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid #F5F3EF;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .task-due {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .task-due.overdue {
+      color: #B92F2F;
+      font-weight: 600;
+    }
+
+    .task-due.near {
+      color: #9A6605;
+      font-weight: 600;
+    }
+
+    .task-owner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+
+    /* Badges Status & Prioridade */
+    .st-Ideia { background: var(--st-ideia-bg); color: var(--st-ideia-text); }
+    .st-A-Fazer { background: var(--st-afazer-bg); color: var(--st-afazer-text); }
+    .st-Em-Andamento { background: var(--st-andamento-bg); color: var(--st-andamento-text); }
+    .st-Concluídos { background: var(--st-concluido-bg); color: var(--st-concluido-text); }
+
+    .prio-Alta { background: var(--prio-alta-bg); color: var(--prio-alta-text); }
+    .prio-Média { background: var(--prio-media-bg); color: var(--prio-media-text); }
+    .prio-Baixa { background: var(--prio-baixa-bg); color: var(--prio-baixa-text); }
+
+    /* Kanban Screen */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (min-width: 640px) {
+      .kanban-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .kanban-board {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .kanban-col {
+      background: #F8F6F2;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kanban-col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid transparent;
+    }
+
+    .kanban-col.col-ideia .kanban-col-header { border-color: #D3D3D0; }
+    .kanban-col.col-afazer .kanban-col-header { border-color: #A8C8E8; }
+    .kanban-col.col-andamento .kanban-col-header { border-color: #F2D8A7; }
+    .kanban-col.col-concluido .kanban-col-header { border-color: #B8DCC8; }
+
+    .col-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .col-count {
+      background: rgba(0,0,0,0.06);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      color: #555;
+    }
+
+    .kanban-cards-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .kanban-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .kanban-card:hover {
+      border-color: #CFC7BB;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .kanban-card .k-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2D2D2D;
+      margin: 6px 0 8px 0;
+      line-height: 1.3;
+    }
+
+    /* Modal Backdrop & Dialog */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 20, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-modal);
+      border: 1px solid var(--border);
+      animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAF8F5;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .modal-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #2D2D2D;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      line-height: 1;
+      color: #888;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+    }
+
+    .btn-close-modal:hover {
+      background: #EAE6DE;
+      color: #333;
+    }
+
+    .modal-body {
+      padding: 22px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 520px) {
+      .form-grid.two-cols {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      background: #FAF8F5;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+    }
+
+    .modal-actions-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-sec {
+      background: #FFFFFF;
+      border: 1px solid var(--border-dark);
+      color: #4A4A4A;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sec:hover {
+      background: #F2EFEA;
+    }
+
+    .btn-action-start {
+      background: #FFF0D6;
+      border: 1px solid #ECC988;
+      color: #7A5310;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .btn-action-done {
+      background: #D9F2E2;
+      border: 1px solid #A6DEB7;
+      color: #176538;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .btn-save-gold {
+      background: var(--gold);
+      border: 1px solid #B79555;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(201, 168, 106, 0.25);
+    }
+
+    .btn-save-gold:hover {
+      background: #B69352;
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 12px;
+      z-index: 90;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    @media (min-width: 768px) {
+      .mobile-tab-bar {
+        display: none;
+      }
+    }
+
+    .mobile-tab-btn {
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #777;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .mobile-tab-btn.active {
+      color: var(--gold-dark);
+    }
+
+    .mobile-tab-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+
+    .mobile-add-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(201, 168, 106, 0.45);
+      cursor: pointer;
+      transform: translateY(-8px);
+    }
+
+    /* Footer */
+    .app-footer {
+      max-width: 1200px;
+      margin: 40px auto 0 auto;
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .app-footer strong {
+      color: var(--gold-dark);
+    }
+
+    /* Notifications Toast */
+    .toast-box {
+      position: fixed;
+      top: 76px;
+      right: 20px;
+      background: #2D2D2D;
+      color: #FFF;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: var(--shadow-modal);
+      z-index: 300;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+
+    .toast-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Print styling */
+    @media print {
+      .app-header, .mobile-tab-bar, .filter-panel, .btn-add-primary, .modal-backdrop {
+        display: none !important;
+      }
+      body {
+        background: #FFF;
+        color: #000;
+      }
+      .chart-card, .kpi-card {
+        box-shadow: none !important;
+        border: 1px solid #CCC !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="lamp-icon-box" title="Transnova Gestão de Projetos">
+          <!-- Lâmpada traço fino -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6" />
+            <path d="M10 22h4" />
+            <path d="M12 2a7 7 0 0 0-7 7c0 2.6 1.4 4.5 2.5 5.8.4.5.5.9.5 1.2h8c0-.3.1-.7.5-1.2C17.6 13.5 19 11.6 19 9a7 7 0 0 0-7-7z" />
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <h1>Meu Executor</h1>
+          <div class="subtitle">Transnova Transportes</div>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="Navegação Principal">
+        <button class="nav-pill active" id="pill-inicio" onclick="showScreen('inicio')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Início
+        </button>
+        <button class="nav-pill" id="pill-tarefas" onclick="showScreen('tarefas')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Tarefas
+        </button>
+        <button class="nav-pill" id="pill-kanban" onclick="showScreen('kanban')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="12" rx="1"/></svg>
+          Kanban
+        </button>
+      </nav>
+
+      <!-- Actions -->
+      <div class="header-actions">
+        <div class="sync-status-badge offline" id="sync-badge">
+          <span class="pulse-dot"></span>
+          <span id="sync-text">Conectando...</span>
+        </div>
+
+        <button class="btn-add-primary" onclick="openNewTask()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Nova Tarefa</span>
+        </button>
+
+        <div class="user-tag">
+          <div class="user-avatar" title="Renato Rodrigues">RR</div>
+          <div class="user-info-text">
+            <div class="name">Renato Rodrigues</div>
+            <div class="role">Gerente de Projetos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="app-main">
+
+    <!-- SCREEN 1: INÍCIO -->
+    <section id="screen-inicio" class="app-screen active">
+      <!-- Painel Superior de KPIs -->
+      <div class="kpi-row" id="kpi-container">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- 6 Gráficos com Números Visíveis -->
+      <div class="charts-grid">
+        <!-- 1. Distribuição por Status (Rosca) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Distribuição por Status</div>
+              <div class="chart-subtitle">Ideia, A Fazer, Em Andamento, Concluídos</div>
+            </div>
+          </div>
+          <div class="chart-container-box" id="chart-status-box"></div>
+          <div class="chart-legend" id="legend-status"></div>
+        </div>
+
+        <!-- 2. Distribuição por Departamento (Barras Horizontais) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Distribuição por Departamento</div>
+              <div class="chart-subtitle">Carga por área da Transnova</div>
+            </div>
+          </div>
+          <div class="chart-container-box" id="chart-dept-box"></div>
+          <div class="chart-legend" id="legend-dept"></div>
+        </div>
+
+        <!-- 3. Distribuição por Prioridade (Pizza) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Distribuição por Prioridade</div>
+              <div class="chart-subtitle">Alta, Média e Baixa urgência</div>
+            </div>
+          </div>
+          <div class="chart-container-box" id="chart-prio-box"></div>
+          <div class="chart-legend" id="legend-prio"></div>
+        </div>
+
+        <!-- 4. Carga por Dono (Radar) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Carga por Dono (Radar)</div>
+              <div class="chart-subtitle">Ativas, 7 dias, Vencidas, Concluídas</div>
+            </div>
+          </div>
+          <div class="chart-container-box" id="chart-radar-box"></div>
+          <div class="chart-legend" id="legend-radar"></div>
+        </div>
+
+        <!-- 5. Abertos × Concluídos (Proporção) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Abertos × Concluídos</div>
+              <div class="chart-subtitle">Taxa de entrega global da equipe</div>
+            </div>
+          </div>
+          <div class="chart-container-box" id="chart-prop-box"></div>
+          <div class="chart-legend" id="legend-prop"></div>
+        </div>
+
+        <!-- 6. Tarefas por Origem / Tendência -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Tarefas por Origem da Demanda</div>
+              <div class="chart-subtitle">Canais geradores de demandas</div>
+            </div>
+          </div>
+          <div class="chart-container-box" id="chart-origem-box"></div>
+          <div class="chart-legend" id="legend-origem"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: TAREFAS -->
+    <section id="screen-tarefas" class="app-screen">
+      <!-- Painel de Filtros -->
+      <div class="filter-panel">
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="filter-dept">Departamento</label>
+            <select id="filter-dept" class="filter-select" onchange="applyFilters()">
+              <option value="ALL">Todos os Departamentos</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-prio">Prioridade</label>
+            <select id="filter-prio" class="filter-select" onchange="applyFilters()">
+              <option value="ALL">Todas as Prioridades</option>
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-dono">Dono</label>
+            <select id="filter-dono" class="filter-select" onchange="applyFilters()">
+              <option value="ALL">Todos os Donos</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-status">Status</label>
+            <select id="filter-status" class="filter-select" onchange="applyFilters()">
+              <option value="ALL">Todos os Status</option>
+              <option value="ABERTOS">Abertos (Não Concluídos)</option>
+              <option value="Ideia">Ideia</option>
+              <option value="A Fazer">A Fazer</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Concluídos">Concluídos</option>
+            </select>
+          </div>
+          <div class="filter-group" style="display:flex; align-items:flex-end;">
+            <button class="btn-sec" style="width:100%;" onclick="resetFilters()">Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-list-count">
+        <span id="tasks-count-label">Exibindo tarefas</span>
+        <span style="font-size:12px; color:var(--gold-dark); cursor:pointer;" onclick="openNewTask()">+ Adicionar nova</span>
+      </div>
+
+      <div class="tasks-grid" id="tasks-list-container">
+        <!-- Cards de Tarefas via JS -->
+      </div>
+    </section>
+
+    <!-- SCREEN 3: KANBAN -->
+    <section id="screen-kanban" class="app-screen">
+      <div class="kanban-board">
+        <!-- Coluna 1: Ideia -->
+        <div class="kanban-col col-ideia">
+          <div class="kanban-col-header">
+            <div class="col-title-group">
+              <span class="col-title">Ideia</span>
+              <span class="col-count" id="count-kanban-ideia">0</span>
+            </div>
+          </div>
+          <div class="kanban-cards-box" id="kanban-list-ideia"></div>
+        </div>
+
+        <!-- Coluna 2: A Fazer -->
+        <div class="kanban-col col-afazer">
+          <div class="kanban-col-header">
+            <div class="col-title-group">
+              <span class="col-title">A Fazer</span>
+              <span class="col-count" id="count-kanban-afazer">0</span>
+            </div>
+          </div>
+          <div class="kanban-cards-box" id="kanban-list-afazer"></div>
+        </div>
+
+        <!-- Coluna 3: Em Andamento -->
+        <div class="kanban-col col-andamento">
+          <div class="kanban-col-header">
+            <div class="col-title-group">
+              <span class="col-title">Em Andamento</span>
+              <span class="col-count" id="count-kanban-andamento">0</span>
+            </div>
+          </div>
+          <div class="kanban-cards-box" id="kanban-list-andamento"></div>
+        </div>
+
+        <!-- Coluna 4: Concluídos -->
+        <div class="kanban-col col-concluido">
+          <div class="kanban-col-header">
+            <div class="col-title-group">
+              <span class="col-title">Concluídos</span>
+              <span class="col-count" id="count-kanban-concluido">0</span>
+            </div>
+          </div>
+          <div class="kanban-cards-box" id="kanban-list-concluido"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="app-footer">
+    <p>Dados sincronizados com a planilha <strong>Gestao_Tarefas_Transnova</strong> (fonte de verdade).</p>
+    <p style="margin-top: 4px; font-size: 11px; color:#888;">Transnova Transportes e Logística &bull; Painel PMO Renato Rodrigues</p>
+  </footer>
+
+  <!-- Mobile Bottom Tab Bar -->
+  <div class="mobile-tab-bar">
+    <button class="mobile-tab-btn active" id="mob-inicio" onclick="showScreen('inicio')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2"/></svg>
+      <span>Início</span>
+    </button>
+    <button class="mobile-tab-btn" id="mob-tarefas" onclick="showScreen('tarefas')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke-width="2"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2"/></svg>
+      <span>Tarefas</span>
+    </button>
+    <button class="mobile-tab-btn" id="mob-kanban" onclick="showScreen('kanban')">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="18" rx="1" stroke-width="2"/><rect x="14" y="3" width="7" height="12" rx="1" stroke-width="2"/></svg>
+      <span>Kanban</span>
+    </button>
+    <button class="mobile-add-btn" onclick="openNewTask()" title="Adicionar Tarefa">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+
+  <!-- MODAL: EDITAR TAREFA -->
+  <div class="modal-backdrop" id="modal-edit-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>
+          <span>Editar Tarefa</span>
+          <span id="modal-edit-id-badge" class="badge-chip" style="background:#ECEAE4; font-size:12px; color:#555;"></span>
+        </h2>
+        <button class="btn-close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-edit-task" onsubmit="event.preventDefault(); saveTask();">
+          <input type="hidden" id="edit-id">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="edit-tarefa">Título da Tarefa *</label>
+              <input type="text" id="edit-tarefa" class="form-input" required>
+            </div>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="edit-dept">Departamento</label>
+                <select id="edit-dept" class="form-select">
+                  <option value="Dpto Projetos">Dpto Projetos</option>
+                  <option value="Dpto Frota">Dpto Frota</option>
+                  <option value="Dpto Operacional">Dpto Operacional</option>
+                  <option value="Dpto Qualidade">Dpto Qualidade</option>
+                  <option value="Dpto GGC">Dpto GGC</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="edit-prio">Prioridade</label>
+                <select id="edit-prio" class="form-select">
+                  <option value="Alta">Alta</option>
+                  <option value="Média">Média</option>
+                  <option value="Baixa">Baixa</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="edit-prazo">Prazo (DD/MM/AAAA)</label>
+                <input type="text" id="edit-prazo" class="form-input" placeholder="Ex: 25/11/2026">
+              </div>
+              <div class="form-group">
+                <label for="edit-status">Status</label>
+                <select id="edit-status" class="form-select">
+                  <option value="Ideia">Ideia</option>
+                  <option value="A Fazer">A Fazer</option>
+                  <option value="Em Andamento">Em Andamento</option>
+                  <option value="Concluídos">Concluídos</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="edit-dono">Dono</label>
+                <select id="edit-dono" class="form-select">
+                  <option value="Renato">Renato</option>
+                  <option value="Equipe">Equipe</option>
+                  <option value="Terceiro">Terceiro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="edit-origem">Origem</label>
+                <select id="edit-origem" class="form-select">
+                  <option value="Projeto">Projeto</option>
+                  <option value="Reunião">Reunião</option>
+                  <option value="E-mail">E-mail</option>
+                  <option value="Decisão">Decisão</option>
+                  <option value="Caderno">Caderno</option>
+                  <option value="Ideia">Ideia</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-obs">Observações</label>
+              <textarea id="edit-obs" rows="3" class="form-textarea" placeholder="Anotações adicionais..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn-action-start" onclick="changeStatus('Em Andamento')" title="Mudar para Em Andamento">▶ Iniciar</button>
+          <button type="button" class="btn-action-done" onclick="changeStatus('Concluídos')" title="Mudar para Concluídos">✓ Concluir</button>
+        </div>
+        <div class="modal-actions-right">
+          <button type="button" class="btn-sec" onclick="closeModal()">Fechar</button>
+          <button type="button" class="btn-save-gold" onclick="saveTask()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVA TAREFA -->
+  <div class="modal-backdrop" id="modal-new-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Adicionar Nova Tarefa</h2>
+        <button class="btn-close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-new-task" onsubmit="event.preventDefault(); addTask();">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="new-tarefa">Título da Tarefa *</label>
+              <input type="text" id="new-tarefa" class="form-input" placeholder="Ex: Novo roteiro de auditoria" required>
+            </div>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="new-dept">Departamento</label>
+                <select id="new-dept" class="form-select">
+                  <option value="Dpto Projetos">Dpto Projetos</option>
+                  <option value="Dpto Frota">Dpto Frota</option>
+                  <option value="Dpto Operacional">Dpto Operacional</option>
+                  <option value="Dpto Qualidade">Dpto Qualidade</option>
+                  <option value="Dpto GGC">Dpto GGC</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="new-prio">Prioridade</label>
+                <select id="new-prio" class="form-select">
+                  <option value="Alta">Alta</option>
+                  <option value="Média" selected>Média</option>
+                  <option value="Baixa">Baixa</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="new-prazo">Prazo (DD/MM/AAAA)</label>
+                <input type="text" id="new-prazo" class="form-input" placeholder="Ex: 28/11/2026">
+              </div>
+              <div class="form-group">
+                <label for="new-status">Status</label>
+                <select id="new-status" class="form-select">
+                  <option value="Ideia">Ideia</option>
+                  <option value="A Fazer" selected>A Fazer</option>
+                  <option value="Em Andamento">Em Andamento</option>
+                  <option value="Concluídos">Concluídos</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="new-dono">Dono</label>
+                <select id="new-dono" class="form-select">
+                  <option value="Renato" selected>Renato</option>
+                  <option value="Equipe">Equipe</option>
+                  <option value="Terceiro">Terceiro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="new-origem">Origem</label>
+                <select id="new-origem" class="form-select">
+                  <option value="Projeto" selected>Projeto</option>
+                  <option value="Reunião">Reunião</option>
+                  <option value="E-mail">E-mail</option>
+                  <option value="Decisão">Decisão</option>
+                  <option value="Caderno">Caderno</option>
+                  <option value="Ideia">Ideia</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="new-obs">Observações</label>
+              <textarea id="new-obs" rows="3" class="form-textarea" placeholder="Detalhes, links ou instruções..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-sec" onclick="closeModal()">Cancelar</button>
+        <button type="button" class="btn-save-gold" onclick="addTask()">Salvar Tarefa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div class="toast-box" id="app-toast">Aviso</div>
+
+  <script>
+    // URL Web App do Google Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
+
+    // Base inicial de fallback
+    const tarefasFallback = [
+      {id:'TAR-001', tarefa:'Cronograma Mestre PMO', dept:'Dpto Projetos', prio:'Alta', prazo:'22/10/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
+      {id:'TAR-002', tarefa:'Auditoria de Frota GGC', dept:'Dpto GGC', prio:'Alta', prazo:'25/10/2026', status:'A Fazer', dono:'Equipe', origem:'Reunião', obs:''},
+      {id:'TAR-003', tarefa:'Revisão Procedimento ISO', dept:'Dpto Qualidade', prio:'Média', prazo:'29/10/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
+      {id:'TAR-004', tarefa:'Calibração de Rastreadores', dept:'Dpto Frota', prio:'Média', prazo:'04/11/2026', status:'A Fazer', dono:'Terceiro', origem:'E-mail', obs:''},
+      {id:'TAR-005', tarefa:'Checklist Diário Operação', dept:'Dpto Operacional', prio:'Baixa', prazo:'10/11/2026', status:'A Fazer', dono:'Equipe', origem:'Decisão', obs:''},
+      {id:'TAR-006', tarefa:'App motorista offline', dept:'Dpto Projetos', prio:'Média', prazo:'', status:'Ideia', dono:'Renato', origem:'Ideia', obs:''},
+      {id:'TAR-007', tarefa:'Dashboard TV no pátio', dept:'Dpto Operacional', prio:'Baixa', prazo:'', status:'Ideia', dono:'Equipe', origem:'Caderno', obs:''},
+      {id:'TAR-008', tarefa:'Migração frota GNV', dept:'Dpto Frota', prio:'Alta', prazo:'20/11/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
+      {id:'TAR-009', tarefa:'Certificação ANVISA', dept:'Dpto Qualidade', prio:'Alta', prazo:'15/11/2026', status:'A Fazer', dono:'Renato', origem:'E-mail', obs:''},
+      {id:'TAR-010', tarefa:'Endomarketing campanha', dept:'Dpto GGC', prio:'Baixa', prazo:'30/11/2026', status:'Concluídos', dono:'Equipe', origem:'Reunião', obs:''}
+    ];
+
+    // Estado local
+    let tasksData = JSON.parse(JSON.stringify(tarefasFallback));
+    let currentScreen = 'inicio';
+    let currentFilter = { dept: 'ALL', prio: 'ALL', dono: 'ALL', status: 'ALL' };
+
+    // Cores do sistema
+    const PALETTE = {
+      status: {
+        'Ideia': '#E5E5E5',
+        'A Fazer': '#A8C8E8',
+        'Em Andamento': '#F2D8A7',
+        'Concluídos': '#B8DCC8'
+      },
+      prio: {
+        'Alta': '#F2C4C4',
+        'Média': '#F5E3C0',
+        'Baixa': '#CDE8D8'
+      },
+      dept: ['#A8C8E8', '#F2D8A7', '#B8DCC8', '#F2C4C4', '#D4CCE4', '#F7D6B8'],
+      dono: {
+        'Renato': '#C9A86A',
+        'Equipe': '#7FA4D4',
+        'Terceiro': '#90C7A6'
+      }
+    };
+
+    // Toast helper
+    function showToast(msg, duration = 3000) {
+      const toast = document.getElementById('app-toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+
+    // Status sync badge helper
+    function setSyncStatus(text, mode = 'synced') {
+      const badge = document.getElementById('sync-badge');
+      const label = document.getElementById('sync-text');
+      if (!badge || !label) return;
+      label.textContent = text;
+      badge.className = 'sync-status-badge ' + mode;
+    }
+
+    // Parser de datas com segurança (DD/MM/YYYY ou YYYY-MM-DD)
+    function parseDate(str) {
+      if (!str || typeof str !== 'string') return null;
+      str = str.trim();
+      if (str.includes('/')) {
+        const parts = str.split('/');
+        if (parts.length === 3) {
+          const d = parseInt(parts[0], 10);
+          const m = parseInt(parts[1], 10) - 1;
+          const y = parseInt(parts[2], 10);
+          if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m, d);
+        }
+      }
+      if (str.includes('-')) {
+        const parts = str.split('-');
+        if (parts.length === 3) {
+          const y = parseInt(parts[0], 10);
+          const m = parseInt(parts[1], 10) - 1;
+          const d = parseInt(parts[2], 10);
+          if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m, d);
+        }
+      }
+      return null;
+    }
+
+    // LEITURA (planilha -> app)
+    async function loadFromSheet() {
+      setSyncStatus('Sincronizando...', 'syncing');
+      try {
+        let res = await fetch(SCRIPT_URL, {
+          method: 'GET',
+          redirect: 'follow'
+        });
+
+        // Caso haja redirecionamento do Google Apps Script
+        if (res.status === 302 || res.status === 303 || (res.url && res.url.includes('script.googleusercontent.com'))) {
+          res = await fetch(res.url, { method: 'GET', redirect: 'follow' });
+        }
+
+        const data = await res.json();
+        if (data && (data.success || Array.isArray(data.tasks))) {
+          const received = data.tasks || (Array.isArray(data) ? data : []);
+          if (received.length > 0) {
+            tasksData = received;
+            try { localStorage.setItem('meu_executor_cache', JSON.stringify(tasksData)); } catch(e){}
+            setSyncStatus('Salvo na planilha ✓', 'synced');
+            renderAll();
+            showToast('Dados sincronizados com a planilha!');
+            return;
+          }
+        }
+        setSyncStatus('Modo offline — dados de exemplo', 'offline');
+      } catch (err) {
+        console.warn('Erro ao conectar ao Google Apps Script:', err);
+        setSyncStatus('Modo offline — dados de exemplo', 'offline');
+      }
+    }
+
+    // ESCRITA (app -> planilha)
+    async function writeToSheet(payload) {
+      setSyncStatus('Salvando...', 'syncing');
+      try {
+        let res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          redirect: 'follow'
+        });
+
+        if (res.status === 302 || res.status === 303 || (res.url && res.url.includes('script.googleusercontent.com'))) {
+          res = await fetch(res.url, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            redirect: 'follow'
+          });
+        }
+
+        const json = await res.json();
+        setSyncStatus('Salvo na planilha ✓', 'synced');
+        showToast('Salvo na planilha ✓');
+        return { success: true, data: json };
+      } catch (err) {
+        console.warn('Falha na escrita na planilha:', err);
+        setSyncStatus('Salvo localmente (offline)', 'offline');
+        showToast('Modo offline — alteração mantida localmente');
+        return { success: false, error: err.message };
+      }
+    }
+
+    // Funções de Navegação
+    function showScreen(screenId) {
+      currentScreen = screenId;
+      document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-pill').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-tab-btn').forEach(el => el.classList.remove('active'));
+
+      const targetScreen = document.getElementById('screen-' + screenId);
+      if (targetScreen) targetScreen.classList.add('active');
+
+      const pill = document.getElementById('pill-' + screenId);
+      if (pill) pill.classList.add('active');
+
+      const mob = document.getElementById('mob-' + screenId);
+      if (mob) mob.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // KPIs Computation
+    function computeKPIs() {
+      const total = tasksData.length;
+      let emAndamento = 0;
+      let concluidos = 0;
+      let abertos = 0; // Ideia + A Fazer + Em Andamento
+      let vencendo7d = 0;
+      let vencidas = 0;
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      tasksData.forEach(t => {
+        const st = (t.status || '').trim();
+        if (st === 'Concluídos') {
+          concluidos++;
+        } else {
+          abertos++;
+          if (st === 'Em Andamento') emAndamento++;
+
+          if (t.prazo) {
+            const pDate = parseDate(t.prazo);
+            if (pDate) {
+              if (pDate < now) {
+                vencidas++;
+              } else if (pDate <= in7Days) {
+                vencendo7d++;
+              }
+            }
+          }
+        }
+      });
+
+      const taxa = total > 0 ? Math.round((concluidos / total) * 100) : 0;
+
+      return {
+        total,
+        emAndamento,
+        concluidos,
+        abertos,
+        taxa,
+        vencendo7d,
+        vencidas
+      };
+    }
+
+    // Render KPIs
+    function renderKPIs() {
+      const k = computeKPIs();
+      const container = document.getElementById('kpi-container');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="kpi-card">
+          <div class="kpi-header">Total de Tarefas</div>
+          <div class="kpi-number">${k.total}</div>
+          <div class="kpi-sub">Cadastradas no PMO</div>
+        </div>
+        <div class="kpi-card highlight-amber">
+          <div class="kpi-header">Em Andamento</div>
+          <div class="kpi-number" style="color:#855C16;">${k.emAndamento}</div>
+          <div class="kpi-sub">Execução ativa</div>
+        </div>
+        <div class="kpi-card highlight-green">
+          <div class="kpi-header">Concluídos</div>
+          <div class="kpi-number" style="color:#1C683B;">${k.concluidos}</div>
+          <div class="kpi-sub">Entregues</div>
+        </div>
+        <div class="kpi-card highlight-blue">
+          <div class="kpi-header">Abertos</div>
+          <div class="kpi-number" style="color:#1D4A77;">${k.abertos}</div>
+          <div class="kpi-sub">Ideia + Fazer + Andam.</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header">% Abertos × Concl.</div>
+          <div class="kpi-number" style="color:var(--gold-dark);">${k.taxa}%</div>
+          <div class="kpi-sub">Taxa de conclusão</div>
+        </div>
+        <div class="kpi-card highlight-amber">
+          <div class="kpi-header">Vencendo 7 dias</div>
+          <div class="kpi-number" style="color:#A36400;">${k.vencendo7d}</div>
+          <div class="kpi-sub">Atenção ao cronograma</div>
+        </div>
+        <div class="kpi-card highlight-red">
+          <div class="kpi-header">Vencidas</div>
+          <div class="kpi-number" style="color:#9B2626;">${k.vencidas}</div>
+          <div class="kpi-sub">Ação corretiva</div>
+        </div>
+      `;
+    }
+
+    // Render 6 Charts
+    function renderCharts() {
+      renderStatusDoughnut();
+      renderDeptHorizontalBar();
+      renderPriorityPie();
+      renderOwnerRadar();
+      renderProportionDonut();
+      renderOriginLine();
+    }
+
+    // 1. Status Doughnut Chart (SVG)
+    function renderStatusDoughnut() {
+      const box = document.getElementById('chart-status-box');
+      const legend = document.getElementById('legend-status');
+      if (!box) return;
+
+      const counts = { 'Ideia': 0, 'A Fazer': 0, 'Em Andamento': 0, 'Concluídos': 0 };
+      tasksData.forEach(t => {
+        const s = (t.status || 'Ideia').trim();
+        if (counts[s] !== undefined) counts[s]++;
+        else counts['Ideia']++;
+      });
+
+      const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+      const statuses = ['Ideia', 'A Fazer', 'Em Andamento', 'Concluídos'];
+
+      let currentAngle = -90;
+      const radius = 64;
+      const strokeWidth = 28;
+      const center = 100;
+      const circ = 2 * Math.PI * radius;
+
+      let pathsHtml = '';
+      let labelsHtml = '';
+
+      statuses.forEach(st => {
+        const val = counts[st];
+        if (val > 0) {
+          const sliceAngle = (val / total) * 360;
+          const strokeDash = (val / total) * circ;
+          const strokeOffset = circ - strokeDash;
+
+          // Ângulo central do arco para posicionar o rótulo
+          const midAngle = (currentAngle + sliceAngle / 2) * (Math.PI / 180);
+          const lx = center + (radius) * Math.cos(midAngle);
+          const ly = center + (radius) * Math.sin(midAngle);
+
+          pathsHtml += `
+            <circle cx="${center}" cy="${center}" r="${radius}"
+              fill="transparent"
+              stroke="${PALETTE.status[st]}"
+              stroke-width="${strokeWidth}"
+              stroke-dasharray="${strokeDash} ${circ}"
+              transform="rotate(${currentAngle} ${center} ${center})"
+            />
+          `;
+
+          labelsHtml += `
+            <text x="${lx}" y="${ly + 4}" fill="#2D2D2D" font-size="11" font-weight="700" text-anchor="middle">
+              ${val}
+            </text>
+          `;
+
+          currentAngle += sliceAngle;
+        }
+      });
+
+      box.innerHTML = `
+        <svg viewBox="0 0 200 200">
+          <circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="#F1EFEA" stroke-width="${strokeWidth}"/>
+          ${pathsHtml}
+          ${labelsHtml}
+          <text x="${center}" y="${center - 2}" text-anchor="middle" font-size="11" fill="#777" font-weight="500">TOTAL</text>
+          <text x="${center}" y="${center + 16}" text-anchor="middle" font-size="17" fill="#333" font-weight="700">${total}</text>
+        </svg>
+      `;
+
+      if (legend) {
+        legend.innerHTML = statuses.map(st => `
+          <div class="legend-item">
+            <span class="legend-color" style="background:${PALETTE.status[st]}; border:1px solid rgba(0,0,0,0.08);"></span>
+            <span>${st} (<strong>${counts[st]}</strong>)</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 2. Departamento Horizontal Bars (SVG)
+    function renderDeptHorizontalBar() {
+      const box = document.getElementById('chart-dept-box');
+      const legend = document.getElementById('legend-dept');
+      if (!box) return;
+
+      const deptCounts = {};
+      tasksData.forEach(t => {
+        const d = (t.dept || 'Outros').trim();
+        deptCounts[d] = (deptCounts[d] || 0) + 1;
+      });
+
+      const depts = Object.keys(deptCounts);
+      const maxVal = Math.max(...Object.values(deptCounts), 1);
+      const width = 280;
+      const barHeight = 20;
+      const gap = 14;
+      const startY = 16;
+
+      let barsHtml = '';
+      depts.forEach((d, idx) => {
+        const count = deptCounts[d];
+        const barWidth = (count / maxVal) * 140;
+        const y = startY + idx * (barHeight + gap);
+        const color = PALETTE.dept[idx % PALETTE.dept.length];
+
+        barsHtml += `
+          <g>
+            <text x="10" y="${y + 14}" font-size="10.5" fill="#444" font-weight="600">${d}</text>
+            <rect x="110" y="${y}" width="${barWidth}" height="${barHeight}" rx="4" fill="${color}" stroke="#D1C9BE" stroke-width="0.5"/>
+            <text x="${118 + barWidth}" y="${y + 14}" font-size="11" fill="#222" font-weight="700">${count}</text>
+          </g>
+        `;
+      });
+
+      const totalH = startY + depts.length * (barHeight + gap) + 10;
+
+      box.innerHTML = `
+        <svg viewBox="0 0 300 ${Math.max(totalH, 180)}" preserveAspectRatio="xMidYMid meet">
+          ${barsHtml}
+        </svg>
+      `;
+
+      if (legend) {
+        legend.innerHTML = `
+          <div class="legend-item"><span style="color:#666;">Total de departamentos ativos: <strong>${depts.length}</strong></span></div>
+        `;
+      }
+    }
+
+    // 3. Prioridade Pie Chart (SVG)
+    function renderPriorityPie() {
+      const box = document.getElementById('chart-prio-box');
+      const legend = document.getElementById('legend-prio');
+      if (!box) return;
+
+      const counts = { 'Alta': 0, 'Média': 0, 'Baixa': 0 };
+      tasksData.forEach(t => {
+        const p = (t.prio || 'Média').trim();
+        if (counts[p] !== undefined) counts[p]++;
+        else counts['Média']++;
+      });
+
+      const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+      const prios = ['Alta', 'Média', 'Baixa'];
+
+      let currentAngle = 0;
+      const cx = 100, cy = 100, r = 74;
+      let slicesHtml = '';
+      let textHtml = '';
+
+      prios.forEach(pr => {
+        const val = counts[pr];
+        if (val > 0) {
+          const sliceAngle = (val / total) * 360;
+          const a1 = (currentAngle * Math.PI) / 180;
+          const a2 = ((currentAngle + sliceAngle) * Math.PI) / 180;
+
+          const x1 = cx + r * Math.cos(a1);
+          const y1 = cy + r * Math.sin(a1);
+          const x2 = cx + r * Math.cos(a2);
+          const y2 = cy + r * Math.sin(a2);
+
+          const largeArc = sliceAngle > 180 ? 1 : 0;
+          const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+          // Label position
+          const midA = ((currentAngle + sliceAngle / 2) * Math.PI) / 180;
+          const lx = cx + (r * 0.65) * Math.cos(midA);
+          const ly = cy + (r * 0.65) * Math.sin(midA);
+
+          slicesHtml += `<path d="${pathData}" fill="${PALETTE.prio[pr]}" stroke="#FFFFFF" stroke-width="2"/>`;
+          textHtml += `<text x="${lx}" y="${ly + 4}" fill="#2D2D2D" font-size="11.5" font-weight="700" text-anchor="middle">${val}</text>`;
+
+          currentAngle += sliceAngle;
+        }
+      });
+
+      box.innerHTML = `
+        <svg viewBox="0 0 200 200">
+          ${slicesHtml}
+          ${textHtml}
+        </svg>
+      `;
+
+      if (legend) {
+        legend.innerHTML = prios.map(pr => `
+          <div class="legend-item">
+            <span class="legend-color" style="background:${PALETTE.prio[pr]}; border:1px solid rgba(0,0,0,0.1);"></span>
+            <span>${pr} (<strong>${counts[pr]}</strong>)</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 4. Radar Chart: Carga por Dono (SVG)
+    function renderOwnerRadar() {
+      const box = document.getElementById('chart-radar-box');
+      const legend = document.getElementById('legend-radar');
+      if (!box) return;
+
+      const owners = ['Renato', 'Equipe', 'Terceiro'];
+      const axes = ['Ativas', 'Vencendo 7d', 'Vencidas', 'Concluídas'];
+      const metrics = {};
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      owners.forEach(o => {
+        metrics[o] = { 'Ativas': 0, 'Vencendo 7d': 0, 'Vencidas': 0, 'Concluídas': 0 };
+      });
+
+      tasksData.forEach(t => {
+        const o = (t.dono || 'Outro').trim();
+        if (!metrics[o]) return;
+
+        const st = (t.status || '').trim();
+        if (st === 'Concluídos') {
+          metrics[o]['Concluídas']++;
+        } else {
+          metrics[o]['Ativas']++;
+          if (t.prazo) {
+            const pDate = parseDate(t.prazo);
+            if (pDate) {
+              if (pDate < now) metrics[o]['Vencidas']++;
+              else if (pDate <= in7Days) metrics[o]['Vencendo 7d']++;
+            }
+          }
+        }
+      });
+
+      // Max value for scale
+      let maxVal = 1;
+      owners.forEach(o => {
+        axes.forEach(a => {
+          if (metrics[o][a] > maxVal) maxVal = metrics[o][a];
+        });
+      });
+      maxVal = Math.max(maxVal, 4);
+
+      const cx = 110, cy = 100, maxRadius = 65;
+      const numAxes = axes.length;
+
+      // Concentric background rings
+      let ringsHtml = '';
+      [0.25, 0.5, 0.75, 1].forEach(ratio => {
+        const pts = axes.map((_, i) => {
+          const angle = (i * 2 * Math.PI / numAxes) - Math.PI / 2;
+          const x = cx + maxRadius * ratio * Math.cos(angle);
+          const y = cy + maxRadius * ratio * Math.sin(angle);
+          return `${x},${y}`;
+        }).join(' ');
+        ringsHtml += `<polygon points="${pts}" fill="none" stroke="#E6E3DB" stroke-width="1"/>`;
+      });
+
+      // Axis lines & labels
+      let axesHtml = '';
+      axes.forEach((axisName, i) => {
+        const angle = (i * 2 * Math.PI / numAxes) - Math.PI / 2;
+        const x = cx + maxRadius * Math.cos(angle);
+        const y = cy + maxRadius * Math.sin(angle);
+        const lx = cx + (maxRadius + 15) * Math.cos(angle);
+        const ly = cy + (maxRadius + 13) * Math.sin(angle);
+
+        axesHtml += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DDD9D0" stroke-width="1"/>`;
+        axesHtml += `<text x="${lx}" y="${ly}" font-size="9" fill="#555" font-weight="600" text-anchor="middle">${axisName}</text>`;
+      });
+
+      // Owner polygons
+      let seriesHtml = '';
+      const colors = {
+        'Renato': { stroke: '#9E7E38', fill: 'rgba(201, 168, 106, 0.35)' },
+        'Equipe': { stroke: '#4D7BB0', fill: 'rgba(127, 164, 212, 0.35)' },
+        'Terceiro': { stroke: '#2A7A48', fill: 'rgba(144, 199, 166, 0.35)' }
+      };
+
+      owners.forEach(o => {
+        const pts = axes.map((axisName, i) => {
+          const val = metrics[o][axisName];
+          const ratio = val / maxVal;
+          const angle = (i * 2 * Math.PI / numAxes) - Math.PI / 2;
+          const x = cx + (maxRadius * ratio) * Math.cos(angle);
+          const y = cy + (maxRadius * ratio) * Math.sin(angle);
+          return `${x},${y}`;
+        }).join(' ');
+
+        seriesHtml += `<polygon points="${pts}" fill="${colors[o].fill}" stroke="${colors[o].stroke}" stroke-width="2"/>`;
+      });
+
+      box.innerHTML = `
+        <svg viewBox="0 0 220 200">
+          ${ringsHtml}
+          ${axesHtml}
+          ${seriesHtml}
+        </svg>
+      `;
+
+      if (legend) {
+        legend.innerHTML = owners.map(o => `
+          <div class="legend-item">
+            <span class="legend-color" style="background:${colors[o].stroke};"></span>
+            <span>${o}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 5. Abertos × Concluídos Proporção (SVG)
+    function renderProportionDonut() {
+      const box = document.getElementById('chart-prop-box');
+      const legend = document.getElementById('legend-prop');
+      if (!box) return;
+
+      const k = computeKPIs();
+      const total = k.total || 1;
+      const abertos = k.abertos;
+      const concluidos = k.concluidos;
+      const pctConcl = k.taxa;
+      const pctAbertos = 100 - pctConcl;
+
+      const cx = 100, cy = 100, r = 64, strokeWidth = 26;
+      const circ = 2 * Math.PI * r;
+
+      const conclDash = (concluidos / total) * circ;
+      const abertosDash = (abertos / total) * circ;
+
+      box.innerHTML = `
+        <svg viewBox="0 0 200 200">
+          <!-- Abertos arc -->
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#A8C8E8" stroke-width="${strokeWidth}"
+            stroke-dasharray="${abertosDash} ${circ}"
+            transform="rotate(-90 ${cx} ${cy})" />
+          <!-- Concluídos arc -->
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#B8DCC8" stroke-width="${strokeWidth}"
+            stroke-dasharray="${conclDash} ${circ}"
+            stroke-dashoffset="${-abertosDash}"
+            transform="rotate(-90 ${cx} ${cy})" />
+          <!-- Central text -->
+          <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="22" font-weight="700" fill="#2D2D2D">${pctConcl}%</text>
+          <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10.5" font-weight="600" fill="#666">CONCLUÍDAS</text>
+        </svg>
+      `;
+
+      if (legend) {
+        legend.innerHTML = `
+          <div class="legend-item">
+            <span class="legend-color" style="background:#A8C8E8;"></span>
+            <span>Abertos: <strong>${abertos}</strong> (${pctAbertos}%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background:#B8DCC8;"></span>
+            <span>Concluídos: <strong>${concluidos}</strong> (${pctConcl}%)</span>
+          </div>
+        `;
+      }
+    }
+
+    // 6. Tarefas por Origem da Demanda (SVG Barras/Linha)
+    function renderOriginLine() {
+      const box = document.getElementById('chart-origem-box');
+      const legend = document.getElementById('legend-origem');
+      if (!box) return;
+
+      const counts = {};
+      tasksData.forEach(t => {
+        const o = (t.origem || 'Ideia').trim();
+        counts[o] = (counts[o] || 0) + 1;
+      });
+
+      const origens = Object.keys(counts);
+      const values = origens.map(o => counts[o]);
+      const maxVal = Math.max(...values, 1);
+
+      const w = 270, h = 130;
+      const startX = 30, endX = 250;
+      const step = origens.length > 1 ? (endX - startX) / (origens.length - 1) : 0;
+      const baseline = 145;
+
+      const pts = origens.map((o, i) => {
+        const x = startX + i * step;
+        const val = counts[o];
+        const y = baseline - (val / maxVal) * 90;
+        return { x, y, val, label: o };
+      });
+
+      const polyPoints = pts.map(p => `${p.x},${p.y}`).join(' ');
+      const areaPoints = `${pts[0].x},${baseline} ${polyPoints} ${pts[pts.length - 1].x},${baseline}`;
+
+      let circlesHtml = '';
+      pts.forEach(p => {
+        circlesHtml += `
+          <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#C9A86A" stroke="#FFFFFF" stroke-width="2"/>
+          <text x="${p.x}" y="${p.y - 8}" font-size="11" font-weight="700" fill="#222" text-anchor="middle">${p.val}</text>
+          <text x="${p.x}" y="${baseline + 16}" font-size="9.5" font-weight="600" fill="#555" text-anchor="middle">${p.label}</text>
+        `;
+      });
+
+      box.innerHTML = `
+        <svg viewBox="0 0 280 180">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#C9A86A" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#C9A86A" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <line x1="20" y1="${baseline}" x2="260" y2="${baseline}" stroke="#E5E1D8" stroke-width="1"/>
+          <polygon points="${areaPoints}" fill="url(#areaGrad)"/>
+          <polyline points="${polyPoints}" fill="none" stroke="#C9A86A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          ${circlesHtml}
+        </svg>
+      `;
+
+      if (legend) {
+        legend.innerHTML = `
+          <div class="legend-item">
+            <span class="legend-color" style="background:#C9A86A;"></span>
+            <span>Total de canais de demanda mapeados: <strong>${origens.length}</strong></span>
+          </div>
+        `;
+      }
+    }
+
+    // Filtros e Renderização de Tarefas (Screen Tarefas)
+    function populateFilterDropdowns() {
+      const deptSelect = document.getElementById('filter-dept');
+      const donoSelect = document.getElementById('filter-dono');
+      if (!deptSelect || !donoSelect) return;
+
+      const depts = [...new Set(tasksData.map(t => (t.dept || '').trim()).filter(Boolean))].sort();
+      const donos = [...new Set(tasksData.map(t => (t.dono || '').trim()).filter(Boolean))].sort();
+
+      const curDept = deptSelect.value;
+      const curDono = donoSelect.value;
+
+      deptSelect.innerHTML = '<option value="ALL">Todos os Departamentos</option>' +
+        depts.map(d => `<option value="${d}">${d}</option>`).join('');
+
+      donoSelect.innerHTML = '<option value="ALL">Todos os Donos</option>' +
+        donos.map(o => `<option value="${o}">${o}</option>`).join('');
+
+      deptSelect.value = curDept || 'ALL';
+      donoSelect.value = curDono || 'ALL';
+    }
+
+    function applyFilters() {
+      currentFilter.dept = document.getElementById('filter-dept').value;
+      currentFilter.prio = document.getElementById('filter-prio').value;
+      currentFilter.dono = document.getElementById('filter-dono').value;
+      currentFilter.status = document.getElementById('filter-status').value;
+      renderTaskList();
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-dept').value = 'ALL';
+      document.getElementById('filter-prio').value = 'ALL';
+      document.getElementById('filter-dono').value = 'ALL';
+      document.getElementById('filter-status').value = 'ALL';
+      applyFilters();
+    }
+
+    function renderTaskList() {
+      const container = document.getElementById('tasks-list-container');
+      const label = document.getElementById('tasks-count-label');
+      if (!container) return;
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      const filtered = tasksData.filter(t => {
+        if (currentFilter.dept !== 'ALL' && t.dept !== currentFilter.dept) return false;
+        if (currentFilter.prio !== 'ALL' && t.prio !== currentFilter.prio) return false;
+        if (currentFilter.dono !== 'ALL' && t.dono !== currentFilter.dono) return false;
+        if (currentFilter.status !== 'ALL') {
+          if (currentFilter.status === 'ABERTOS') {
+            if (t.status === 'Concluídos') return false;
+          } else if (t.status !== currentFilter.status) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (label) {
+        label.textContent = `Exibindo ${filtered.length} de ${tasksData.length} tarefas`;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align:center; padding: 40px; color:#888; background:#fff; border-radius:12px; border:1px solid #ECECEC;">
+            Nenhuma tarefa encontrada com os filtros selecionados.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const stSafe = (t.status || 'Ideia').replace(/\s+/g, '-');
+        const prioSafe = (t.prio || 'Média');
+
+        let dueClass = '';
+        let dueText = t.prazo || 'Sem prazo';
+        if (t.prazo) {
+          const pDate = parseDate(t.prazo);
+          if (pDate && t.status !== 'Concluídos') {
+            if (pDate < now) {
+              dueClass = 'overdue';
+              dueText = '⚠ ' + t.prazo + ' (Vencida)';
+            } else if (pDate <= in7Days) {
+              dueClass = 'near';
+              dueText = '⏳ ' + t.prazo + ' (7 dias)';
+            }
+          }
+        }
+
+        return `
+          <div class="task-card" onclick="openTask('${t.id}')">
+            <div>
+              <div class="task-top">
+                <span class="task-id">${t.id}</span>
+                <span class="badge-chip st-${stSafe}">${t.status}</span>
+              </div>
+              <div class="task-title">${escapeHtml(t.tarefa)}</div>
+              <div class="task-meta-row">
+                <span class="badge-chip badge-dept">${escapeHtml(t.dept || 'Geral')}</span>
+                <span class="badge-chip prio-${prioSafe}">Prio ${t.prio}</span>
+                <span class="badge-chip" style="background:#F2EFEA; color:#666;">Origem: ${escapeHtml(t.origem || '-')}</span>
+              </div>
+            </div>
+            <div class="task-footer-info">
+              <span class="task-due ${dueClass}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ${dueText}
+              </span>
+              <span class="task-owner-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                ${escapeHtml(t.dono || 'Sem dono')}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render Kanban Board
+    function renderKanban() {
+      const cols = {
+        'Ideia': { list: document.getElementById('kanban-list-ideia'), count: document.getElementById('count-kanban-ideia'), items: [] },
+        'A Fazer': { list: document.getElementById('kanban-list-afazer'), count: document.getElementById('count-kanban-afazer'), items: [] },
+        'Em Andamento': { list: document.getElementById('kanban-list-andamento'), count: document.getElementById('count-kanban-andamento'), items: [] },
+        'Concluídos': { list: document.getElementById('kanban-list-concluido'), count: document.getElementById('count-kanban-concluido'), items: [] }
+      };
+
+      tasksData.forEach(t => {
+        const st = (t.status || 'Ideia').trim();
+        if (cols[st]) cols[st].items.push(t);
+        else if (cols['Ideia']) cols['Ideia'].items.push(t);
+      });
+
+      Object.keys(cols).forEach(st => {
+        const col = cols[st];
+        if (col.count) col.count.textContent = col.items.length;
+        if (!col.list) return;
+
+        if (col.items.length === 0) {
+          col.list.innerHTML = `<div style="text-align:center; padding: 20px 10px; color:#999; font-size:12px;">Nenhuma tarefa</div>`;
+          return;
+        }
+
+        col.list.innerHTML = col.items.map(t => {
+          const prioSafe = (t.prio || 'Média');
+          return `
+            <div class="kanban-card" onclick="openTask('${t.id}')">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; font-weight:700; color:#888;">${t.id}</span>
+                <span class="badge-chip prio-${prioSafe}" style="font-size:10px; padding:2px 6px;">${t.prio}</span>
+              </div>
+              <div class="k-title">${escapeHtml(t.tarefa)}</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#777; margin-top:6px;">
+                <span>${escapeHtml(t.dept || '')}</span>
+                <span style="font-weight:600; color:#555;">${escapeHtml(t.dono || '')}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    // Modal Operations: Open Task for editing
+    let currentEditingId = null;
+
+    function openTask(id) {
+      const task = tasksData.find(t => t.id === id);
+      if (!task) return;
+
+      currentEditingId = id;
+      document.getElementById('edit-id').value = task.id;
+      document.getElementById('modal-edit-id-badge').textContent = task.id;
+      document.getElementById('edit-tarefa').value = task.tarefa || '';
+      document.getElementById('edit-dept').value = task.dept || 'Dpto Projetos';
+      document.getElementById('edit-prio').value = task.prio || 'Média';
+      document.getElementById('edit-prazo').value = task.prazo || '';
+      document.getElementById('edit-status').value = task.status || 'Ideia';
+      document.getElementById('edit-dono').value = task.dono || 'Renato';
+      document.getElementById('edit-origem').value = task.origem || 'Projeto';
+      document.getElementById('edit-obs').value = task.obs || '';
+
+      document.getElementById('modal-edit-backdrop').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-edit-backdrop').classList.remove('open');
+      document.getElementById('modal-new-backdrop').classList.remove('open');
+      currentEditingId = null;
+    }
+
+    // Salvar tarefa editada
+    async function saveTask() {
+      if (!currentEditingId) return;
+
+      const id = document.getElementById('edit-id').value;
+      const tarefa = document.getElementById('edit-tarefa').value.trim();
+      const dept = document.getElementById('edit-dept').value;
+      const prio = document.getElementById('edit-prio').value;
+      const prazo = document.getElementById('edit-prazo').value.trim();
+      const status = document.getElementById('edit-status').value;
+      const dono = document.getElementById('edit-dono').value;
+      const origem = document.getElementById('edit-origem').value;
+      const obs = document.getElementById('edit-obs').value.trim();
+
+      if (!tarefa) {
+        alert('Por favor, informe o título da tarefa.');
+        return;
+      }
+
+      // Atualiza localmente
+      const idx = tasksData.findIndex(t => t.id === id);
+      if (idx !== -1) {
+        tasksData[idx] = { id, tarefa, dept, prio, prazo, status, dono, origem, obs };
+      }
+
+      closeModal();
+      renderAll();
+
+      // Gravação na Planilha
+      await writeToSheet({
+        action: 'update',
+        id,
+        tarefa,
+        dept,
+        prio,
+        prazo,
+        status,
+        dono,
+        origem,
+        obs
+      });
+    }
+
+    // Mudar Status rápido no modal (Iniciar ou Concluir)
+    async function changeStatus(newStatus) {
+      if (!currentEditingId) return;
+      document.getElementById('edit-status').value = newStatus;
+      await saveTask();
+    }
+
+    // Modal Nova Tarefa
+    function openNewTask() {
+      document.getElementById('form-new-task').reset();
+      document.getElementById('modal-new-backdrop').classList.add('open');
+    }
+
+    // Adicionar Nova Tarefa
+    async function addTask() {
+      const tarefa = document.getElementById('new-tarefa').value.trim();
+      const dept = document.getElementById('new-dept').value;
+      const prio = document.getElementById('new-prio').value;
+      const prazo = document.getElementById('new-prazo').value.trim();
+      const status = document.getElementById('new-status').value;
+      const dono = document.getElementById('new-dono').value;
+      const origem = document.getElementById('new-origem').value;
+      const obs = document.getElementById('new-obs').value.trim();
+
+      if (!tarefa) {
+        alert('Por favor, digite o título da tarefa.');
+        return;
+      }
+
+      // Sequencial ID fallback (ex: TAR-011, TAR-012...)
+      let nextNum = 1;
+      tasksData.forEach(t => {
+        if (t.id && t.id.startsWith('TAR-')) {
+          const num = parseInt(t.id.replace('TAR-', ''), 10);
+          if (!isNaN(num) && num >= nextNum) nextNum = num + 1;
+        }
+      });
+      const generatedId = 'TAR-' + String(nextNum).padStart(3, '0');
+
+      const newTask = {
+        id: generatedId,
+        tarefa,
+        dept,
+        prio,
+        prazo,
+        status,
+        dono,
+        origem,
+        obs
+      };
+
+      tasksData.unshift(newTask);
+      closeModal();
+      renderAll();
+
+      // Gravação na planilha
+      const res = await writeToSheet({
+        action: 'add',
+        tarefa,
+        dept,
+        prio,
+        prazo,
+        status,
+        dono,
+        origem,
+        obs
+      });
+
+      // Se a planilha retornou um ID oficial diferente, atualiza
+      if (res && res.data && res.data.id && res.data.id !== generatedId) {
+        newTask.id = res.data.id;
+        renderAll();
+      }
+    }
+
+    // Helper sanitização de texto HTML
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Render Master
+    function renderAll() {
+      renderKPIs();
+      renderCharts();
+      populateFilterDropdowns();
+      renderTaskList();
+      renderKanban();
+    }
+
+    // Exposição global das funções solicitadas
+    window.showScreen = showScreen;
+    window.openTask = openTask;
+    window.closeModal = closeModal;
+    window.saveTask = saveTask;
+    window.changeStatus = changeStatus;
+    window.openNewTask = openNewTask;
+    window.addTask = addTask;
+    window.writeToSheet = writeToSheet;
+    window.loadFromSheet = loadFromSheet;
+    window.renderAll = renderAll;
+    window.applyFilters = applyFilters;
+    window.resetFilters = resetFilters;
+
+    // Inicialização segura no DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', function() {
+      // 1. Tenta carregar cache anterior do localStorage se houver
+      try {
+        const cached = localStorage.getItem('meu_executor_cache');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            tasksData = parsed;
+          }
+        }
+      } catch(e) {}
+
+      // 2. Renderização imediata síncrona com dados de fallback/cache
+      renderAll();
+      showScreen('inicio');
+
+      // 3. Sincroniza em segundo plano com a planilha do Apps Script
+      loadFromSheet();
+    });
+  </script>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisFmt keeps axis tick labels short (compact notation) so long values
+  // (e.g. full BRL amounts) never clip against the plot edge.
+  function axisFmt(v) {
+    return fmt.num(v, { notation: "compact", maximumFractionDigits: 1 });
+  }
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  function coerceFormat(spec) {
+    if (typeof spec === "function") return spec;
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 12, plotH = H - padT - padB;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 12, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (v / max) * plotH);
+      var x = padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      var tx = svgEl("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // line(el, {labels:[], values:[], color?, format?}) — single-series line.
+  function line(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 16, plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 16, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    var pts = cfg.values.map(function (v, i) {
+      var x = padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
+      var y = padT + plotH - (v / max) * plotH;
+      return [x, y];
+    });
+    var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+    pts.forEach(function (p, i) {
+      var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(cfg.values[i]);
+      c.appendChild(t);
+      svg.appendChild(c);
+      var tx = svgEl("text", { x: p[0], y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // donut(el, {labels:[], values:[], colors?}) — donut with center total.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    var total = cfg.values.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var palette = cfg.colors || [accent(), "#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4"];
+    var a0 = -Math.PI / 2;
+    cfg.values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + fmt.num(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    var center = svgEl("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 20, "font-weight": 650, fill: "currentColor" });
+    center.textContent = fmt.num(total);
+    svg.appendChild(center);
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+})();
+
+</script>
+</body>
+</html>
