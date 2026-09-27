@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Meu Executor — App sincronizado com a planilha</title>
-  
-  <!-- Basecoat CSS -->
+
+  <!-- Allowed Basecoat CDN and Shell stylesheets -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
-  
-  <!-- Shell CSS & JS -->
   <style>
 /* Skip artifact shell — fixed styles served beside every artifact.
    Complements basecoat; artifacts override --accent for their own identity. */
@@ -119,168 +117,612 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
 </style>
   
-  
+
   <style>
     :root {
       --accent: #C9A86A;
-      --accent-text: #8A6827;
-      --accent-contrast: #FFFFFF;
+      --accent-contrast: #221B0F;
       --bg: #FAF8F6;
       --surface: #FFFFFF;
       --text: #3A3A3A;
-      --text-muted: #888888;
+      --text-muted: #7A7A7A;
       --border: #ECECEC;
-      --radius: 12px;
+      --radius: 14px;
+      --radius-sm: 8px;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       margin: 0;
       padding: 0;
-      padding-bottom: 70px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    @media (min-width: 768px) {
-      body {
-        padding-bottom: 20px;
-      }
-    }
-
-    /* Top Bar & Branding */
+    /* Header & Navigation */
     .app-header {
       background: #FFFFFF;
       border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
       position: sticky;
       top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      z-index: 50;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
 
-    .header-content {
+    .header-inner {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 12px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
       gap: 12px;
     }
 
-    .brand-title {
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #FFF9ED;
+      border: 1px solid #F2E3C4;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      color: #9A752B;
     }
 
-    .brand-icon {
-      width: 28px;
-      height: 28px;
-      color: var(--accent);
-      stroke-width: 2;
-    }
-
-    .brand-text h1 {
-      font-size: 18px;
+    .brand-title {
+      font-size: 19px;
       font-weight: 700;
       margin: 0;
       line-height: 1.2;
-      color: #222222;
+      color: #2F2D2B;
+      letter-spacing: -0.3px;
     }
 
-    .brand-text span {
+    .brand-sub {
       font-size: 12px;
       font-weight: 600;
-      color: var(--accent-text);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #9A752B;
+      letter-spacing: 0.2px;
+      margin: 0;
     }
 
-    .sync-status {
-      display: flex;
+    .sync-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #EDF7F1;
+      color: #1F6E43;
       font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: #F0F4F1;
-      color: #2E7D32;
-      border: 1px solid #C8E6C9;
-      transition: all 0.3s ease;
+      border: 1px solid #CEE8D8;
+    }
+    .sync-badge.offline {
+      background: #F8F4EE;
+      color: #8C6A28;
+      border-color: #EBD8B3;
+    }
+    .sync-badge.syncing {
+      background: #EBF3FB;
+      color: #2A6496;
+      border-color: #C6DEF2;
     }
 
-    .sync-status.offline {
-      background: #FFF8E1;
-      color: #B78103;
-      border-color: #FFE082;
-    }
-
-    .sync-status.syncing {
-      background: #E3F2FD;
-      color: #1565C0;
-      border-color: #90CAF9;
-    }
-
-    .sync-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: currentColor;
-    }
-
-    /* Desktop Nav */
-    .nav-bar {
-      display: flex;
-      gap: 8px;
+    .nav-desktop {
+      display: none;
       align-items: center;
+      gap: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-desktop { display: flex; }
+      .nav-mobile { display: none !important; }
     }
 
     .nav-btn {
       background: transparent;
-      border: none;
-      padding: 8px 16px;
-      font-size: 14px;
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
       font-weight: 600;
-      color: #666;
-      border-radius: 8px;
+      color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .nav-btn:hover {
-      background: #F3ECE1;
+      background: #F4F1EC;
       color: var(--text);
     }
 
     .nav-btn.active {
-      background: var(--accent);
-      color: #FFFFFF;
+      background: #F4EEDF;
+      color: #664A12;
+      border-color: #E6D5B4;
     }
 
-    .btn-add-primary {
-      background: #3A3A3A;
-      color: #FFFFFF;
+    .btn-add {
+      background: #C9A86A;
+      color: #221B0F;
       border: none;
       padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
+      box-shadow: 0 2px 6px rgba(201, 168, 106, 0.35);
+      transition: transform 0.1s ease, filter 0.15s;
+    }
+
+    .btn-add:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    /* Content Layout */
+    .app-main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 16px 80px 16px;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
+      .app-main {
+        padding: 24px 20px 40px 20px;
+      }
+    }
+
+    .screen-view {
+      display: none;
+    }
+
+    .screen-view.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Grid */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .kpi-card-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .kpi-card-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: #2D2D2D;
+      line-height: 1.1;
+    }
+
+    .kpi-card-sub {
+      font-size: 11px;
+      color: #8A8A8A;
+    }
+
+    /* Charts Section */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .charts-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .chart-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #333333;
+      margin: 0 0 4px 0;
+    }
+
+    .chart-card-sub {
+      font-size: 11.5px;
+      color: #8C8C8C;
+      margin: 0 0 12px 0;
+    }
+
+    .chart-card-body {
+      flex: 1;
+      position: relative;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Visual Badges */
+    .badge-status {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+    .badge-ideia { background: #E5E5E5; color: #404040; }
+    .badge-a-fazer { background: #D5E6F5; color: #1E466E; }
+    .badge-em-andamento { background: #FCE8C4; color: #6D4C0A; }
+    .badge-concluidos { background: #CEEADB; color: #155734; }
+
+    .badge-prio {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .prio-alta { background: #FDE2E2; color: #8F2D2D; }
+    .prio-media { background: #FBEFDB; color: #805315; }
+    .prio-baixa { background: #E2F2E9; color: #22613D; }
+
+    /* Filters Bar */
+    .filters-bar {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    .filter-select {
+      background: #FAF9F7;
+      border: 1px solid #DDD;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: #333;
+      outline: none;
+    }
+
+    /* Tasks List */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-row-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .task-row-card:hover {
+      border-color: #D6C29E;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    }
+
+    .task-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .task-header-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .task-id {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #9A752B;
+      letter-spacing: 0.3px;
+    }
+
+    .task-title {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #2F2F2F;
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: #7E7E7E;
+      flex-wrap: wrap;
+    }
+
+    .task-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Kanban */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    @media (min-width: 900px) {
+      .kanban-board {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .kanban-col {
+      background: #F4F2EF;
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 480px;
+    }
+
+    .kanban-col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 4px 10px 4px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      margin-bottom: 10px;
+    }
+
+    .kanban-col-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #4A4A4A;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.2s;
     }
 
-    .btn-add-primary:hover {
-      background: #222222;
+    .kanban-count {
+      background: #FFFFFF;
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 1px 8px;
+      font-weight: 700;
+      color: #666;
     }
 
-    /* Mobile Bottom Navigation */
-    .mobile-nav {
+    .kanban-cards-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .kanban-item {
+      background: #FFFFFF;
+      border: 1px solid #E6E3DE;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kanban-item:hover {
+      border-color: #C9A86A;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(20, 20, 20, 0.45);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-window {
+      background: #FFFFFF;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid #EBE8E3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-head {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0;
+      color: #2B2A29;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #999;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-body {
+      padding: 20px 22px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 520px) {
+      .modal-body.grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .col-span-2 {
+        grid-column: span 2;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      background: #FAF9F6;
+      border: 1px solid #DCD8D0;
+      border-radius: 8px;
+      padding: 8px 11px;
+      font-size: 13.5px;
+      color: #2F2F2F;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: #C9A86A;
+      background: #FFF;
+      box-shadow: 0 0 0 2px rgba(201,168,106,0.2);
+    }
+
+    .modal-footer {
+      padding: 16px 22px;
+      border-top: 1px solid var(--border);
+      background: #FDFBF8;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Mobile Bottom Bar */
+    .nav-mobile {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -290,860 +732,513 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       display: flex;
       justify-content: space-around;
       align-items: center;
-      padding: 8px 0;
-      z-index: 99;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      padding: 8px 10px;
+      z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
     }
 
-    @media (min-width: 768px) {
-      .mobile-nav {
-        display: none;
-      }
-    }
-
-    .mobile-tab {
+    .mobile-tab-btn {
+      background: none;
+      border: none;
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 3px;
       font-size: 11px;
-      color: #777;
-      background: none;
-      border: none;
+      font-weight: 600;
+      color: #8C8C8C;
       cursor: pointer;
-      gap: 2px;
-      font-weight: 500;
+      padding: 4px 10px;
     }
 
-    .mobile-tab.active {
-      color: var(--accent-text);
-      font-weight: 700;
+    .mobile-tab-btn.active {
+      color: #9A752B;
     }
 
     .mobile-add-btn {
-      background: var(--accent);
-      color: #FFF;
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: justify-center;
+      background: #C9A86A;
+      color: #221B0F;
       border: none;
-      box-shadow: 0 4px 10px rgba(201,168,106,0.4);
       font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    /* Toast Notification */
-    .toast-container {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      z-index: 1000;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      pointer-events: none;
-    }
-
-    .toast {
-      background: #333333;
-      color: #FFFFFF;
-      padding: 12px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      animation: fadeIn 0.3s ease;
-      pointer-events: auto;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Screen management */
-    .screen-content {
-      display: none;
-      padding: 20px 0;
-    }
-
-    .screen-content.active {
-      display: block;
-    }
-
-    /* Badges & Status Colors (Pastel) */
-    .badge-status-ideia { background: #E5E5E5; color: #4A4A4A; }
-    .badge-status-afazer { background: #A8C8E8; color: #1E3A5F; }
-    .badge-status-emandamento { background: #F2D8A7; color: #614611; }
-    .badge-status-concluidos { background: #B8DCC8; color: #1B4D2E; }
-
-    .badge-prio-alta { background: #F2C4C4; color: #6E1F1F; }
-    .badge-prio-media { background: #F5E3C0; color: #5C4312; }
-    .badge-prio-baixa { background: #CDE8D8; color: #1C4A2D; }
-
-    .status-pill {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 600;
-      display: inline-block;
-      text-transform: capitalize;
-    }
-
-    /* Filter Toolbar */
-    .filter-bar {
-      background: #FFFFFF;
-      padding: 16px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      margin-bottom: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      align-items: center;
-    }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .filter-group label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #666;
-    }
-
-    .filter-group select, .filter-group input {
-      padding: 8px 12px;
-      border: 1px solid #DDD;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-      background-color: #FAFAFA;
-    }
-
-    .filter-group select:focus, .filter-group input:focus {
-      border-color: var(--accent);
-      background-color: #FFF;
-    }
-
-    /* Kanban Board */
-    .kanban-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      align-items: start;
-    }
-
-    .kanban-column {
-      background: #F4F2EE;
-      border-radius: 12px;
-      padding: 14px;
-      border: 1px solid #E5E2DC;
-      min-height: 450px;
-    }
-
-    .kanban-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid rgba(0,0,0,0.05);
-    }
-
-    .kanban-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #333;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .kanban-count {
-      background: #FFFFFF;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #666;
-    }
-
-    .kanban-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .task-card {
-      background: #FFFFFF;
-      border-radius: 10px;
-      padding: 14px;
-      border: 1px solid #E8E6E1;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .task-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .task-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-    }
-
-    .task-id {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-text);
-      letter-spacing: 0.5px;
-    }
-
-    .task-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #222;
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-
-    .task-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-      font-size: 11px;
-      color: #777;
-    }
-
-    .task-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Table view */
-    .task-table-container {
-      background: #FFFFFF;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      overflow-x: auto;
-    }
-
-    table.shell-table tbody tr {
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    table.shell-table tbody tr:hover {
-      background: #FBF9F5;
-    }
-
-    /* Modal Styling */
-    .modal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(2px);
-      display: none;
       align-items: center;
       justify-content: center;
-      z-index: 999;
-      padding: 16px;
+      box-shadow: 0 3px 8px rgba(201,168,106,0.4);
+      cursor: pointer;
     }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-card {
-      background: #FFFFFF;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 650px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      border: 1px solid var(--border);
-    }
-
-    .modal-header {
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h3 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-      color: #222;
-    }
-
-    .modal-body {
-      padding: 24px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .modal-body .full-width {
-      grid-column: span 2;
-    }
-
-    @media (max-width: 600px) {
-      .modal-body {
-        grid-template-columns: 1fr;
-      }
-      .modal-body .full-width {
-        grid-column: span 1;
-      }
-    }
-
-    .modal-footer {
-      padding: 16px 24px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      background: #FAFAFA;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
+    /* Footer Note */
+    .app-footer-note {
+      text-align: center;
       font-size: 12px;
-      font-weight: 600;
-      color: #555;
+      color: #8E8A82;
+      padding: 24px 16px;
+      border-top: 1px solid var(--border);
+      background: #FAF8F6;
     }
 
-    .form-group input, .form-group select, .form-group textarea {
-      padding: 10px 12px;
-      border: 1px solid #DDD;
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 74px;
+      right: 20px;
+      background: #2E2E2E;
+      color: #FFF;
+      padding: 10px 18px;
       border-radius: 8px;
       font-size: 13px;
-      font-family: inherit;
-      outline: none;
+      font-weight: 500;
+      z-index: 200;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      animation: fadeIn 0.15s ease;
+    }
+    @media (min-width: 768px) {
+      #toast { bottom: 24px; }
     }
 
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(201, 168, 106, 0.2);
-    }
-
-    /* Custom SVG Radar Chart Style */
-    .radar-chart-svg {
+    /* SVG Chart Helpers */
+    .svg-chart-container {
       width: 100%;
-      height: 240px;
-    }
-
-    .radar-grid {
-      stroke: #E5E5E5;
-      stroke-dasharray: 2,2;
-      fill: none;
-    }
-
-    .radar-axis {
-      stroke: #DDDDDD;
-      stroke-width: 1;
-    }
-
-    .radar-area-renato { fill: rgba(201, 168, 106, 0.35); stroke: #C9A86A; stroke-width: 2; }
-    .radar-area-equipe { fill: rgba(168, 200, 232, 0.35); stroke: #4A90E2; stroke-width: 2; }
-    .radar-area-terceiro { fill: rgba(184, 220, 200, 0.35); stroke: #2E7D32; stroke-width: 2; }
-
-    .chart-box-header {
-      font-size: 13px;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 12px;
+      height: 100%;
+      min-height: 220px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: space-between;
     }
-
-    .chart-box-header span {
-      font-size: 11px;
-      font-weight: 500;
-      color: #888;
+    .svg-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 11.5px;
+      color: #555;
+    }
+    .svg-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .svg-legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Top Application Header -->
   <header class="app-header">
-    <div class="header-content">
-      <div class="brand-title">
-        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M9 18h6m-4 3h2M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="brand-text">
-          <h1>Meu Executor</h1>
-          <span>Transnova Transportes & Logística</span>
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-icon" title="Transnova Transportes e Logística">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="9" y1="18" x2="15" y2="18"></line>
+            <line x1="10" y1="22" x2="14" y2="22"></line>
+            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">Meu Executor</h1>
+          <p class="brand-sub">Transnova Transportes &bull; Renato Rodrigues</p>
         </div>
       </div>
 
-      <!-- Sync Status Pill -->
-      <div id="sync-status-badge" class="sync-status">
-        <span class="sync-dot"></span>
-        <span id="sync-status-text">Carregando dados...</span>
-      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span id="sync-status" class="sync-badge syncing">
+          <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:currentColor;"></span>
+          <span id="sync-text">Sincronizando...</span>
+        </span>
 
-      <!-- Desktop Nav -->
-      <nav class="nav-bar hide-mobile">
-        <button class="nav-btn active" onclick="showScreen('inicio')">Início</button>
-        <button class="nav-btn" onclick="showScreen('tarefas')">Tarefas</button>
-        <button class="nav-btn" onclick="showScreen('kanban')">Kanban</button>
-        <button class="btn-add-primary" onclick="openNewTask()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Nova Tarefa
-        </button>
-      </nav>
+        <!-- Desktop Navigation -->
+        <nav class="nav-desktop">
+          <button type="button" class="nav-btn active" id="desk-btn-inicio" onclick="showScreen('inicio')">Início</button>
+          <button type="button" class="nav-btn" id="desk-btn-tarefas" onclick="showScreen('tarefas')">Tarefas</button>
+          <button type="button" class="nav-btn" id="desk-btn-kanban" onclick="showScreen('kanban')">Kanban</button>
+          <button type="button" class="btn-add" onclick="openNewTask()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Nova Tarefa
+          </button>
+        </nav>
+      </div>
     </div>
   </header>
 
-  <!-- Shell Main Container -->
-  <main class="shell-container">
+  <!-- Main View Screens -->
+  <main class="app-main">
 
-    <!-- SCREEN 1: INÍCIO (DASHBOARD) -->
-    <section id="screen-inicio" class="screen-content active">
-      
-      <!-- KPIs Panel -->
-      <div class="shell-grid" style="margin-bottom: 24px;">
-        <div class="kpi panel">
-          <div class="kpi-label">Total de Tarefas</div>
-          <div class="kpi-value" id="kpi-total">0</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">Base sincronizada</div>
+    <!-- ==================== SCREEN 1: INÍCIO ==================== -->
+    <section id="screen-inicio" class="screen-view active">
+      <!-- Upper KPI Grid -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-card-label">Total de Tarefas</span>
+          <span class="kpi-card-value" id="kpi-total">0</span>
+          <span class="kpi-card-sub">Base consolidada</span>
         </div>
-        <div class="kpi panel">
-          <div class="kpi-label">Em Andamento</div>
-          <div class="kpi-value" id="kpi-emandamento" style="color: #B78103;">0</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">Em execução ativa</div>
+        <div class="kpi-card">
+          <span class="kpi-card-label">Em Andamento</span>
+          <span class="kpi-card-value" style="color:#A17013;" id="kpi-andamento">0</span>
+          <span class="kpi-card-sub">Em execução</span>
         </div>
-        <div class="kpi panel">
-          <div class="kpi-label">Concluídos</div>
-          <div class="kpi-value" id="kpi-concluidos" style="color: #2E7D32;">0</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">Entregues com sucesso</div>
+        <div class="kpi-card">
+          <span class="kpi-card-label">Concluídos</span>
+          <span class="kpi-card-value" style="color:#206E44;" id="kpi-concluidos">0</span>
+          <span class="kpi-card-sub">Finalizadas</span>
         </div>
-        <div class="kpi panel">
-          <div class="kpi-label">Abertos</div>
-          <div class="kpi-value" id="kpi-abertos" style="color: #1565C0;">0</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">Ideia + A Fazer + Andamento</div>
+        <div class="kpi-card">
+          <span class="kpi-card-label">Abertos</span>
+          <span class="kpi-card-value" style="color:#2A5F9E;" id="kpi-abertos">0</span>
+          <span class="kpi-card-sub">Ideia + Fazer + And.</span>
         </div>
-        <div class="kpi panel">
-          <div class="kpi-label">% Conclusão</div>
-          <div class="kpi-value" id="kpi-pct-conclusao">0%</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">% Concluídos vs Total</div>
+        <div class="kpi-card">
+          <span class="kpi-card-label">% Abertos × Conc.</span>
+          <span class="kpi-card-value" id="kpi-pct">0%</span>
+          <span class="kpi-card-sub">Taxa de entrega</span>
         </div>
-        <div class="kpi panel">
-          <div class="kpi-label">Vencendo em 7 Dias</div>
-          <div class="kpi-value" id="kpi-vencendo7d" style="color: #D84315;">0</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">Atenção de prazo</div>
+        <div class="kpi-card">
+          <span class="kpi-card-label">Vencendo em 7d</span>
+          <span class="kpi-card-value" style="color:#B36B00;" id="kpi-vencendo7">0</span>
+          <span class="kpi-card-sub">Atenção imediata</span>
         </div>
-        <div class="kpi panel">
-          <div class="kpi-label">Vencidas</div>
-          <div class="kpi-value" id="kpi-vencidas" style="color: #C62828;">0</div>
-          <div class="muted" style="font-size: 11px; margin-top: 4px;">Prazo expirado</div>
+        <div class="kpi-card">
+          <span class="kpi-card-label">Vencidas</span>
+          <span class="kpi-card-value" style="color:#A82B2B;" id="kpi-vencidas">0</span>
+          <span class="kpi-card-sub">Prazo expirado</span>
         </div>
       </div>
 
-      <!-- Charts Grid (6 Charts with visual labels) -->
-      <div class="shell-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
-        
-        <!-- Chart 1: Status -->
-        <div class="panel">
-          <div class="chart-box-header">
-            1. Distribuição por Status
-            <span>Fluxo de trabalho</span>
-          </div>
-          <div class="chart-box" id="chart-status-box"></div>
+      <!-- 6 Charts with VISIBLE NUMBERS on every element -->
+      <div class="charts-grid">
+        <!-- 1. Distribuição por Status - Rosca -->
+        <div class="chart-card">
+          <h3 class="chart-card-title">1. Distribuição por Status</h3>
+          <p class="chart-card-sub">Volume de tarefas pelo fluxo atual</p>
+          <div class="chart-card-body" id="chart-status-box"></div>
         </div>
 
-        <!-- Chart 2: Dept -->
-        <div class="panel">
-          <div class="chart-box-header">
-            2. Distribuição por Departamento
-            <span>Demanda por setor</span>
-          </div>
-          <div class="chart-box" id="chart-dept-box"></div>
+        <!-- 2. Distribuição por Departamento - Barras Horizontais -->
+        <div class="chart-card">
+          <h3 class="chart-card-title">2. Distribuição por Departamento</h3>
+          <p class="chart-card-sub">Demandas por área da Transnova</p>
+          <div class="chart-card-body" id="chart-dept-box"></div>
         </div>
 
-        <!-- Chart 3: Prioridade -->
-        <div class="panel">
-          <div class="chart-box-header">
-            3. Distribuição por Prioridade
-            <span>Urgência / Relevância</span>
-          </div>
-          <div class="chart-box" id="chart-prio-box"></div>
+        <!-- 3. Distribuição por Prioridade - Pizza -->
+        <div class="chart-card">
+          <h3 class="chart-card-title">3. Distribuição por Prioridade</h3>
+          <p class="chart-card-sub">Criticidade das atividades</p>
+          <div class="chart-card-body" id="chart-prio-box"></div>
         </div>
 
-        <!-- Chart 4: Radar Dono -->
-        <div class="panel">
-          <div class="chart-box-header">
-            4. Carga por Dono (Perfil)
-            <span>Métricas por responsável</span>
-          </div>
-          <div class="chart-box" id="chart-radar-box">
-            <!-- Custom SVG Radar Chart -->
-            <svg class="radar-chart-svg" viewBox="0 0 300 220" id="radar-svg">
-              <!-- Rendered via JS -->
-            </svg>
-          </div>
+        <!-- 4. Carga por Dono - Radar / Matriz de Atuação -->
+        <div class="chart-card">
+          <h3 class="chart-card-title">4. Carga por Dono</h3>
+          <p class="chart-card-sub">Distribuição da carteira por responsável</p>
+          <div class="chart-card-body" id="chart-dono-box"></div>
         </div>
 
-        <!-- Chart 5: Abertos vs Concluídos -->
-        <div class="panel">
-          <div class="chart-box-header">
-            5. Proporção Abertos × Concluídos
-            <span>Equilíbrio geral</span>
-          </div>
-          <div class="chart-box" id="chart-abertos-box"></div>
+        <!-- 5. Abertos × Concluídos -->
+        <div class="chart-card">
+          <h3 class="chart-card-title">5. Abertos × Concluídos</h3>
+          <p class="chart-card-sub">Proporção operacional e avanço</p>
+          <div class="chart-card-body" id="chart-abertos-box"></div>
         </div>
 
-        <!-- Chart 6: Tendência / Origem -->
-        <div class="panel">
-          <div class="chart-box-header">
-            6. Origem das Demandas
-            <span>Entrada de tarefas</span>
-          </div>
-          <div class="chart-box" id="chart-origem-box"></div>
+        <!-- 6. Concluídos ao longo do tempo / Origem -->
+        <div class="chart-card">
+          <h3 class="chart-card-title">6. Concluídos & Tendência por Origem</h3>
+          <p class="chart-card-sub">Origem e evolução das entregas</p>
+          <div class="chart-card-body" id="chart-tempo-box"></div>
         </div>
-
       </div>
     </section>
 
-    <!-- SCREEN 2: TAREFAS (LISTA/TABELA) -->
-    <section id="screen-tarefas" class="screen-content">
-      <div class="filter-bar">
-        <div class="filter-group">
-          <label>Buscar Tarefa</label>
-          <input type="text" id="filter-search" placeholder="Buscar por título ou ID..." oninput="renderTaskList()">
-        </div>
-        <div class="filter-group">
-          <label>Departamento</label>
-          <select id="filter-dept" onchange="renderTaskList()">
-            <option value="">Todos os Departamentos</option>
+    <!-- ==================== SCREEN 2: TAREFAS ==================== -->
+    <section id="screen-tarefas" class="screen-view">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 style="font-size:18px; font-weight:700; margin:0; color:#2E2D2B;">Lista de Tarefas</h2>
+        <span id="tasks-count-pill" style="font-size:12px; font-weight:600; color:#777; background:#FFF; border:1px solid #DDD; padding:4px 10px; border-radius:999px;">0 tarefas</span>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="filters-bar">
+        <div class="filter-item">
+          <label class="filter-label" for="filter-dept">Departamento</label>
+          <select id="filter-dept" class="filter-select" onchange="renderTarefasList()">
+            <option value="">Todos</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label>Prioridade</label>
-          <select id="filter-prio" onchange="renderTaskList()">
-            <option value="">Todas as Prioridades</option>
+        <div class="filter-item">
+          <label class="filter-label" for="filter-prio">Prioridade</label>
+          <select id="filter-prio" class="filter-select" onchange="renderTarefasList()">
+            <option value="">Todas</option>
             <option value="Alta">Alta</option>
             <option value="Média">Média</option>
             <option value="Baixa">Baixa</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label>Dono / Responsável</label>
-          <select id="filter-dono" onchange="renderTaskList()">
-            <option value="">Todos os Responsáveis</option>
-            <option value="Renato">Renato</option>
-            <option value="Equipe">Equipe</option>
-            <option value="Terceiro">Terceiro</option>
+        <div class="filter-item">
+          <label class="filter-label" for="filter-dono">Dono</label>
+          <select id="filter-dono" class="filter-select" onchange="renderTarefasList()">
+            <option value="">Todos</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label>Status</label>
-          <select id="filter-status" onchange="renderTaskList()">
-            <option value="">Todos os Status</option>
-            <option value="Abertos">Somente Abertos</option>
+        <div class="filter-item">
+          <label class="filter-label" for="filter-status">Status</label>
+          <select id="filter-status" class="filter-select" onchange="renderTarefasList()">
+            <option value="">Todos</option>
             <option value="Ideia">Ideia</option>
             <option value="A Fazer">A Fazer</option>
             <option value="Em Andamento">Em Andamento</option>
             <option value="Concluídos">Concluídos</option>
+            <option value="__ABERTOS__">Abertos (Não Concluídos)</option>
           </select>
         </div>
       </div>
 
-      <div class="task-table-container">
-        <table class="shell-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tarefa / Descrição</th>
-              <th>Departamento</th>
-              <th>Prioridade</th>
-              <th>Prazo</th>
-              <th>Dono</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="task-table-body">
-            <!-- Rendered JS -->
-          </tbody>
-        </table>
-      </div>
+      <!-- Tasks Cards Container -->
+      <div id="tarefas-list-container" class="task-list"></div>
     </section>
 
-    <!-- SCREEN 3: KANBAN BOARD -->
-    <section id="screen-kanban" class="screen-content">
-      <div class="kanban-grid">
-        <!-- Ideia -->
-        <div class="kanban-column">
-          <div class="kanban-header">
-            <span class="kanban-title">
-              <span class="status-pill badge-status-ideia">Ideia</span>
+    <!-- ==================== SCREEN 3: KANBAN ==================== -->
+    <section id="screen-kanban" class="screen-view">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+          <h2 style="font-size:18px; font-weight:700; margin:0; color:#2E2D2B;">Quadro Kanban</h2>
+          <p style="font-size:12px; color:#777; margin:2px 0 0 0;">Fluxo contínuo de entregas Transnova</p>
+        </div>
+      </div>
+
+      <div class="kanban-board">
+        <!-- Col: Ideia -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#9E9E9E;"></span>
+              Ideia
             </span>
-            <span class="kanban-count" id="count-kanban-ideia">0</span>
+            <span class="kanban-count" id="kanban-count-ideia">0</span>
           </div>
-          <div class="kanban-cards" id="cards-kanban-ideia"></div>
+          <div class="kanban-cards-wrapper" id="kanban-col-ideia"></div>
         </div>
 
-        <!-- A Fazer -->
-        <div class="kanban-column">
-          <div class="kanban-header">
-            <span class="kanban-title">
-              <span class="status-pill badge-status-afazer">A Fazer</span>
+        <!-- Col: A Fazer -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#5C9BD1;"></span>
+              A Fazer
             </span>
-            <span class="kanban-count" id="count-kanban-afazer">0</span>
+            <span class="kanban-count" id="kanban-count-afazer">0</span>
           </div>
-          <div class="kanban-cards" id="cards-kanban-afazer"></div>
+          <div class="kanban-cards-wrapper" id="kanban-col-afazer"></div>
         </div>
 
-        <!-- Em Andamento -->
-        <div class="kanban-column">
-          <div class="kanban-header">
-            <span class="kanban-title">
-              <span class="status-pill badge-status-emandamento">Em Andamento</span>
+        <!-- Col: Em Andamento -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#D69E3D;"></span>
+              Em Andamento
             </span>
-            <span class="kanban-count" id="count-kanban-emandamento">0</span>
+            <span class="kanban-count" id="kanban-count-andamento">0</span>
           </div>
-          <div class="kanban-cards" id="cards-kanban-emandamento"></div>
+          <div class="kanban-cards-wrapper" id="kanban-col-andamento"></div>
         </div>
 
-        <!-- Concluídos -->
-        <div class="kanban-column">
-          <div class="kanban-header">
-            <span class="kanban-title">
-              <span class="status-pill badge-status-concluidos">Concluídos</span>
+        <!-- Col: Concluídos -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#3C9C66;"></span>
+              Concluídos
             </span>
-            <span class="kanban-count" id="count-kanban-concluidos">0</span>
+            <span class="kanban-count" id="kanban-count-concluidos">0</span>
           </div>
-          <div class="kanban-cards" id="cards-kanban-concluidos"></div>
+          <div class="kanban-cards-wrapper" id="kanban-col-concluidos"></div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="shell-footer" style="text-align: center; font-size: 12px; color: #888; padding: 20px; margin-top: 30px; border-top: 1px solid var(--border);">
+  <!-- Mobile Bottom Tab Navigation -->
+  <nav class="nav-mobile">
+    <button type="button" class="mobile-tab-btn active" id="mob-btn-inicio" onclick="showScreen('inicio')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Início</span>
+    </button>
+    <button type="button" class="mobile-tab-btn" id="mob-btn-tarefas" onclick="showScreen('tarefas')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+      <span>Tarefas</span>
+    </button>
+    <button type="button" class="mobile-add-btn" onclick="openNewTask()" aria-label="Adicionar Tarefa">
+      +
+    </button>
+    <button type="button" class="mobile-tab-btn" id="mob-btn-kanban" onclick="showScreen('kanban')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"></rect><rect x="14" y="3" width="7" height="10" rx="1"></rect></svg>
+      <span>Kanban</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: Detalhes & Edição de Tarefa -->
+  <div id="modal-task" class="modal-backdrop" onclick="handleBackdropClick(event, 'modal-task')">
+    <div class="modal-window">
+      <div class="modal-head">
+        <h3 class="modal-title" id="edit-modal-heading">Editar Tarefa</h3>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-task')">&times;</button>
+      </div>
+      <div class="modal-body grid-2">
+        <div class="form-group">
+          <label class="form-label" for="edit-id">ID</label>
+          <input type="text" id="edit-id" class="form-input" readonly style="background:#F0EFEA; font-weight:700; color:#555;">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-prio">Prioridade</label>
+          <select id="edit-prio" class="form-select">
+            <option value="Alta">Alta</option>
+            <option value="Média">Média</option>
+            <option value="Baixa">Baixa</option>
+          </select>
+        </div>
+        <div class="form-group col-span-2">
+          <label class="form-label" for="edit-tarefa">Tarefa / Descrição *</label>
+          <input type="text" id="edit-tarefa" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-dept">Departamento</label>
+          <input type="text" id="edit-dept" class="form-input" list="list-dept">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-status">Status</label>
+          <select id="edit-status" class="form-select">
+            <option value="Ideia">Ideia</option>
+            <option value="A Fazer">A Fazer</option>
+            <option value="Em Andamento">Em Andamento</option>
+            <option value="Concluídos">Concluídos</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-dono">Dono</label>
+          <input type="text" id="edit-dono" class="form-input" list="list-dono">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-prazo">Prazo (DD/MM/AAAA)</label>
+          <input type="text" id="edit-prazo" class="form-input" placeholder="ex: 25/11/2026">
+        </div>
+        <div class="form-group col-span-2">
+          <label class="form-label" for="edit-origem">Origem</label>
+          <input type="text" id="edit-origem" class="form-input" placeholder="Projeto, Reunião, E-mail...">
+        </div>
+        <div class="form-group col-span-2">
+          <label class="form-label" for="edit-obs">Observações</label>
+          <textarea id="edit-obs" class="form-textarea" rows="3" placeholder="Anotações adicionais..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" onclick="changeStatusFromModal('Em Andamento')" style="background:#FFF1D6; color:#784D09; border:1px solid #E6CA92;">Iniciar</button>
+        <button type="button" class="btn" onclick="changeStatusFromModal('Concluídos')" style="background:#D8F2E2; color:#186337; border:1px solid #B0DCBE;">Concluir</button>
+        <button type="button" class="btn" onclick="closeModal('modal-task')">Fechar</button>
+        <button type="button" class="btn-add" onclick="saveTask()">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nova Tarefa -->
+  <div id="modal-new" class="modal-backdrop" onclick="handleBackdropClick(event, 'modal-new')">
+    <div class="modal-window">
+      <div class="modal-head">
+        <h3 class="modal-title">Nova Tarefa</h3>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-new')">&times;</button>
+      </div>
+      <div class="modal-body grid-2">
+        <div class="form-group col-span-2">
+          <label class="form-label" for="new-tarefa">Tarefa / Descrição *</label>
+          <input type="text" id="new-tarefa" class="form-input" placeholder="Ex: Homologar fornecedor de frete" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-dept">Departamento</label>
+          <input type="text" id="new-dept" class="form-input" list="list-dept" placeholder="Dpto Projetos">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-prio">Prioridade</label>
+          <select id="new-prio" class="form-select">
+            <option value="Alta">Alta</option>
+            <option value="Média" selected>Média</option>
+            <option value="Baixa">Baixa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-status">Status</label>
+          <select id="new-status" class="form-select">
+            <option value="Ideia">Ideia</option>
+            <option value="A Fazer" selected>A Fazer</option>
+            <option value="Em Andamento">Em Andamento</option>
+            <option value="Concluídos">Concluídos</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-prazo">Prazo (DD/MM/AAAA)</label>
+          <input type="text" id="new-prazo" class="form-input" placeholder="DD/MM/AAAA">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-dono">Dono</label>
+          <input type="text" id="new-dono" class="form-input" list="list-dono" placeholder="Renato">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-origem">Origem</label>
+          <input type="text" id="new-origem" class="form-input" placeholder="Projeto, E-mail...">
+        </div>
+        <div class="form-group col-span-2">
+          <label class="form-label" for="new-obs">Observações</label>
+          <textarea id="new-obs" class="form-textarea" rows="3" placeholder="Informações contextuais..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" onclick="closeModal('modal-new')">Cancelar</button>
+        <button type="button" class="btn-add" onclick="addTask()">Salvar Tarefa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datalists for autocomplete -->
+  <datalist id="list-dept">
+    <option value="Dpto Projetos"></option>
+    <option value="Dpto GGC"></option>
+    <option value="Dpto Qualidade"></option>
+    <option value="Dpto Frota"></option>
+    <option value="Dpto Operacional"></option>
+    <option value="Dpto TI"></option>
+  </datalist>
+
+  <datalist id="list-dono">
+    <option value="Renato"></option>
+    <option value="Equipe"></option>
+    <option value="Terceiro"></option>
+  </datalist>
+
+  <!-- Toast Notification Bar -->
+  <div id="toast"></div>
+
+  <!-- Footer Note -->
+  <footer class="app-footer-note">
     Dados sincronizados com a planilha <strong>Gestao_Tarefas_Transnova</strong> (fonte de verdade).
   </footer>
 
-  <!-- Mobile Bottom Nav -->
-  <div class="mobile-nav">
-    <button class="mobile-tab active" id="mtab-inicio" onclick="showScreen('inicio')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      Início
-    </button>
-    <button class="mobile-tab" id="mtab-tarefas" onclick="showScreen('tarefas')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      Tarefas
-    </button>
-    <button class="mobile-add-btn" onclick="openNewTask()" title="Nova Tarefa">+</button>
-    <button class="mobile-tab" id="mtab-kanban" onclick="showScreen('kanban')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="11" y="3" width="5" height="12" rx="1"/><rect x="19" y="3" width="2" height="8" rx="1"/></svg>
-      Kanban
-    </button>
-  </div>
-
-  <!-- Toast Container -->
-  <div id="toast-container" class="toast-container"></div>
-
-  <!-- MODAL EDIT TASK -->
-  <div class="modal-backdrop" id="modal-edit-task">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="modal-task-title">Editar Tarefa</h3>
-        <button style="background:none; border:none; font-size:20px; cursor:pointer;" onclick="closeModal('modal-edit-task')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>ID da Tarefa</label>
-          <input type="text" id="edit-id" readonly style="background:#F0F0F0; cursor:not-allowed;">
-        </div>
-
-        <div class="form-group">
-          <label>Departamento</label>
-          <select id="edit-dept">
-            <option value="Dpto Projetos">Dpto Projetos</option>
-            <option value="Dpto GGC">Dpto GGC</option>
-            <option value="Dpto Qualidade">Dpto Qualidade</option>
-            <option value="Dpto Frota">Dpto Frota</option>
-            <option value="Dpto Operacional">Dpto Operacional</option>
-            <option value="Dpto Comercial">Dpto Comercial</option>
-            <option value="Dpto TI">Dpto TI</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label>Descrição da Tarefa</label>
-          <input type="text" id="edit-tarefa">
-        </div>
-
-        <div class="form-group">
-          <label>Prioridade</label>
-          <select id="edit-prio">
-            <option value="Alta">Alta</option>
-            <option value="Média">Média</option>
-            <option value="Baixa">Baixa</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Prazo</label>
-          <input type="text" id="edit-prazo" placeholder="DD/MM/AAAA">
-        </div>
-
-        <div class="form-group">
-          <label>Status</label>
-          <select id="edit-status">
-            <option value="Ideia">Ideia</option>
-            <option value="A Fazer">A Fazer</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluídos">Concluídos</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Dono / Responsável</label>
-          <select id="edit-dono">
-            <option value="Renato">Renato</option>
-            <option value="Equipe">Equipe</option>
-            <option value="Terceiro">Terceiro</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Origem</label>
-          <input type="text" id="edit-origem" placeholder="Ex: Projeto, Reunião, E-mail...">
-        </div>
-
-        <div class="form-group full-width">
-          <label>Observações</label>
-          <textarea id="edit-obs" rows="3" placeholder="Anotações adicionais..."></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" style="background:#E0E0E0;" onclick="closeModal('modal-edit-task')">Fechar</button>
-        <button class="btn" style="background:#F2D8A7; color:#614611;" onclick="changeStatusFromModal('Em Andamento')">Iniciar</button>
-        <button class="btn" style="background:#B8DCC8; color:#1B4D2E;" onclick="changeStatusFromModal('Concluídos')">Concluir</button>
-        <button class="btn btn-primary" style="background:var(--accent); color:#FFF;" onclick="saveTask()">Salvar Alterações</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL NEW TASK -->
-  <div class="modal-backdrop" id="modal-new-task">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Nova Tarefa</h3>
-        <button style="background:none; border:none; font-size:20px; cursor:pointer;" onclick="closeModal('modal-new-task')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group full-width">
-          <label>Descrição da Tarefa *</label>
-          <input type="text" id="new-tarefa" placeholder="Digite o nome ou descrição da tarefa...">
-        </div>
-
-        <div class="form-group">
-          <label>Departamento</label>
-          <select id="new-dept">
-            <option value="Dpto Projetos">Dpto Projetos</option>
-            <option value="Dpto GGC">Dpto GGC</option>
-            <option value="Dpto Qualidade">Dpto Qualidade</option>
-            <option value="Dpto Frota">Dpto Frota</option>
-            <option value="Dpto Operacional">Dpto Operacional</option>
-            <option value="Dpto Comercial">Dpto Comercial</option>
-            <option value="Dpto TI">Dpto TI</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Prioridade</label>
-          <select id="new-prio">
-            <option value="Média">Média</option>
-            <option value="Alta">Alta</option>
-            <option value="Baixa">Baixa</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Prazo (Opcional)</label>
-          <input type="text" id="new-prazo" placeholder="DD/MM/AAAA">
-        </div>
-
-        <div class="form-group">
-          <label>Status Inicial</label>
-          <select id="new-status">
-            <option value="A Fazer">A Fazer</option>
-            <option value="Ideia">Ideia</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluídos">Concluídos</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Dono / Responsável</label>
-          <select id="new-dono">
-            <option value="Renato">Renato</option>
-            <option value="Equipe">Equipe</option>
-            <option value="Terceiro">Terceiro</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Origem</label>
-          <input type="text" id="new-origem" placeholder="Ex: Reunião, Projeto, E-mail...">
-        </div>
-
-        <div class="form-group full-width">
-          <label>Observações</label>
-          <textarea id="new-obs" rows="3" placeholder="Detalhes adicionais..."></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" style="background:#E0E0E0;" onclick="closeModal('modal-new-task')">Cancelar</button>
-        <button class="btn btn-primary" style="background:var(--accent); color:#FFF;" onclick="addTask()">Adicionar Tarefa</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- APPLICATION JAVASCRIPT LOGIC -->
+  <!-- SCRIPT INTEGRATION & RENDER LOGIC -->
   <script>
-    // Configuration & Endpoints
+    // URLs de Integração (CONFORME ESPECIFICADO - NÃO ALTERAR)
     const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
-    const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ubl_ofQtSCVVVldp-ixQbaruWuPW5i-R5nfHfOKX1ftkEQz5YEtoLOMM38yEWa7cF4wnupKryVG/pub?gid=0&single=true&output=csv';
-    const STORAGE_KEY = 'meuExecutor_tarefas';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ubl_ofQtSCVVVldp-ixQbaruWuPW5i-R5nfHfOKX1ftkEQz5YEtoLOMM38yEWa7cF4wnupKryVG/pub?gid=0&single=true&output=csv';
 
-    // Fallback Data
+    // DADOS DE FALLBACK (CONFORME ESPECIFICADO)
     const tarefasFallback = [
       {id:'TAR-001', tarefa:'Cronograma Mestre PMO', dept:'Dpto Projetos', prio:'Alta', prazo:'22/10/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
       {id:'TAR-002', tarefa:'Auditoria de Frota GGC', dept:'Dpto GGC', prio:'Alta', prazo:'25/10/2026', status:'A Fazer', dono:'Equipe', origem:'Reunião', obs:''},
@@ -1157,668 +1252,362 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       {id:'TAR-010', tarefa:'Endomarketing campanha', dept:'Dpto GGC', prio:'Baixa', prazo:'30/11/2026', status:'Concluídos', dono:'Equipe', origem:'Reunião', obs:''}
     ];
 
-    // Global State
+    // Estado da aplicação
     let tasks = [];
-    let isOnline = false;
+    let currentEditingTaskId = null;
 
-    // Helper: Toast Notifications
-    function showToast(message, isError = false) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      if (isError) toast.style.borderLeft = '4px solid #F44336';
-      else toast.style.borderLeft = '4px solid #4CAF50';
-      toast.innerHTML = `<span>${message}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
+    // Toast feedback
+    function showToast(msg, duration = 3200) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      clearTimeout(window.__toastTimeout);
+      window.__toastTimeout = setTimeout(() => {
+        toast.style.display = 'none';
+      }, duration);
     }
 
-    // Update connection indicator badge
-    function updateSyncBadge(statusText, state) {
-      const badge = document.getElementById('sync-status-badge');
-      const text = document.getElementById('sync-status-text');
-      text.textContent = statusText;
-      badge.className = 'sync-status ' + (state || '');
+    function setSyncStatus(state, label) {
+      const badge = document.getElementById('sync-status');
+      const text = document.getElementById('sync-text');
+      if (!badge || !text) return;
+      badge.className = 'sync-badge';
+      if (state === 'synced') {
+        badge.classList.add('synced');
+        text.textContent = label || 'Sincronizado ✓';
+      } else if (state === 'offline') {
+        badge.classList.add('offline');
+        text.textContent = label || 'Salvo localmente (offline)';
+      } else {
+        badge.classList.add('syncing');
+        text.textContent = label || 'Sincronizando...';
+      }
     }
 
-    // CSV Parser with robust quotes/commas handling
+    // Navegação entre telas
+    function showScreen(screenId) {
+      const screens = ['inicio', 'tarefas', 'kanban'];
+      screens.forEach(s => {
+        const el = document.getElementById('screen-' + s);
+        const deskBtn = document.getElementById('desk-btn-' + s);
+        const mobBtn = document.getElementById('mob-btn-' + s);
+
+        if (s === screenId) {
+          if (el) el.classList.add('active');
+          if (deskBtn) deskBtn.classList.add('active');
+          if (mobBtn) mobBtn.classList.add('active');
+        } else {
+          if (el) el.classList.remove('active');
+          if (deskBtn) deskBtn.classList.remove('active');
+          if (mobBtn) mobBtn.classList.remove('active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Helper de Parser de CSV robusto
     function parseCSV(text) {
       const lines = [];
       let row = [];
       let inQuotes = false;
-      let currentVal = '';
+      let token = '';
 
       for (let i = 0; i < text.length; i++) {
-        const c = text[i];
-        const nextC = text[i+1];
+        const char = text[i];
+        const nextChar = text[i + 1];
 
-        if (c === '"') {
-          if (inQuotes && nextC === '"') {
-            currentVal += '"';
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            token += '"';
             i++;
           } else {
             inQuotes = !inQuotes;
           }
-        } else if (c === ',' && !inQuotes) {
-          row.push(currentVal.trim());
-          currentVal = '';
-        } else if ((c === '\r' || c === '\n') && !inQuotes) {
-          if (c === '\r' && nextC === '\n') { i++; }
-          row.push(currentVal.trim());
-          if (row.length > 1 || row[0] !== '') lines.push(row);
+        } else if (char === ',' && !inQuotes) {
+          row.push(token.trim());
+          token = '';
+        } else if ((char === '\r' || char === '\n') && !inQuotes) {
+          if (char === '\r' && nextChar === '\n') i++;
+          row.push(token.trim());
+          if (row.length > 0 && row.some(cell => cell !== '')) {
+            lines.push(row);
+          }
           row = [];
-          currentVal = '';
+          token = '';
         } else {
-          currentVal += c;
+          token += char;
         }
       }
-      if (currentVal || row.length > 0) {
-        row.push(currentVal.trim());
+      if (token.length > 0 || row.length > 0) {
+        row.push(token.trim());
         lines.push(row);
       }
-
-      if (lines.length <= 1) return [];
-
-      const parsedTasks = [];
-      // Skip header (row 0)
-      for (let i = 1; i < lines.length; i++) {
-        const r = lines[i];
-        if (!r || r.length < 2) continue;
-        parsedTasks.push({
-          id: r[0] || ('TAR-' + String(i).padStart(3, '0')),
-          tarefa: r[1] || '',
-          dept: r[2] || 'Outros',
-          prio: r[3] || 'Média',
-          prazo: r[4] || '',
-          status: normalizeStatus(r[5]),
-          dono: r[6] || 'Equipe',
-          origem: r[7] || 'Geral',
-          obs: r[8] || ''
-        });
-      }
-      return parsedTasks;
+      return lines;
     }
 
-    function normalizeStatus(rawStatus) {
-      if (!rawStatus) return 'A Fazer';
-      const st = rawStatus.trim();
-      if (st.includes('Ideia')) return 'Ideia';
-      if (st.includes('Fazer')) return 'A Fazer';
-      if (st.includes('Andamento')) return 'Em Andamento';
-      if (st.includes('Conclu')) return 'Concluídos';
-      return 'A Fazer';
-    }
-
-    // READ Tasks with 3 Redundancy Paths
+    // Leitura da Planilha com 3 níveis de redundância
     async function loadFromSheet() {
-      // 1. LocalStorage
-      const localData = localStorage.getItem(STORAGE_KEY);
-      if (localData) {
-        try {
-          tasks = JSON.parse(localData);
-          renderAll();
-          updateSyncBadge('Salvo localmente (offline)', 'offline');
-        } catch (e) {
-          console.error('Erro local storage:', e);
+      setSyncStatus('syncing', 'Sincronizando...');
+
+      // 1. Tentar Apps Script GET
+      try {
+        const res = await fetch(URL_APPS_SCRIPT, { method: 'GET', redirect: 'follow' });
+        let data;
+        const resUrl = res.url || '';
+        // Tratamento de redirect para googleusercontent se necessário
+        if (resUrl.includes('script.googleusercontent.com') || res.status === 302 || res.status === 303) {
+          const secondRes = await fetch(resUrl, { method: 'GET' });
+          data = await secondRes.json();
+        } else {
+          data = await res.json();
         }
+
+        if (data && data.success && Array.isArray(data.tasks) && data.tasks.length > 0) {
+          tasks = normalizeTasks(data.tasks);
+          localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
+          setSyncStatus('synced', 'Sincronizado ✓');
+          renderAll();
+          return;
+        }
+      } catch (err) {
+        console.warn('Falha Apps Script GET, tentando CSV...', err);
       }
 
-      updateSyncBadge('Sincronizando...', 'syncing');
-
-      // 2. Apps Script GET
+      // 2. Tentar CSV Publicado
       try {
-        let response = await fetch(URL_APPS_SCRIPT, { method: 'GET', redirect: 'follow' });
-        // Handle redirect 302/303 if fetch followed or needed second fetch
-        if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 303) {
-          const finalUrl = response.url;
-          if (finalUrl) response = await fetch(finalUrl, { method: 'GET' });
-        }
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data && (data.success || data.tasks)) {
-            tasks = data.tasks || data.data || [];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-            isOnline = true;
-            updateSyncBadge('Sincronizado ✓', '');
-            renderAll();
-            return;
+        const csvRes = await fetch(CSV_URL, { cache: 'no-store' });
+        if (csvRes.ok) {
+          const rawText = await csvRes.text();
+          const rows = parseCSV(rawText);
+          if (rows.length > 1) {
+            // Mapear colunas: ID, Tarefa / Descrição, Departamento, Prioridade, Prazo / Data, Status, Dono, Origem, Observações
+            const parsed = [];
+            for (let i = 1; i < rows.length; i++) {
+              const r = rows[i];
+              if (!r[0] && !r[1]) continue;
+              parsed.push({
+                id: r[0] || ('TAR-' + String(i).padStart(3, '0')),
+                tarefa: r[1] || '',
+                dept: r[2] || '',
+                prio: r[3] || 'Média',
+                prazo: r[4] || '',
+                status: r[5] || 'A Fazer',
+                dono: r[6] || '',
+                origem: r[7] || '',
+                obs: r[8] || ''
+              });
+            }
+            if (parsed.length > 0) {
+              tasks = normalizeTasks(parsed);
+              localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
+              setSyncStatus('synced', 'Sincronizado ✓ (CSV)');
+              renderAll();
+              return;
+            }
           }
         }
       } catch (err) {
-        console.warn('Apps Script GET falhou ou CORS, tentando CSV...', err);
+        console.warn('Falha leitura CSV...', err);
       }
 
-      // 3. CSV Published
-      try {
-        const csvRes = await fetch(URL_CSV, { cache: 'no-store' });
-        if (csvRes.ok) {
-          const csvText = await csvRes.text();
-          const csvTasks = parseCSV(csvText);
-          if (csvTasks && csvTasks.length > 0) {
-            tasks = csvTasks;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-            isOnline = true;
-            updateSyncBadge('Sincronizado ✓', '');
-            renderAll();
-            return;
-          }
-        }
-      } catch (csvErr) {
-        console.warn('CSV Published falhou:', csvErr);
+      // Se falhar a rede, manter localStorage ou fallback
+      const cached = localStorage.getItem('meuExecutor_tarefas');
+      if (cached) {
+        setSyncStatus('offline', 'Salvo localmente (offline)');
+      } else {
+        tasks = normalizeTasks(tarefasFallback);
+        localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
+        setSyncStatus('offline', 'Modo offline (fallback)');
       }
-
-      // 4. Fallback if empty
-      if (!tasks || tasks.length === 0) {
-        tasks = [...tarefasFallback];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-      }
-      updateSyncBadge('Salvo localmente (offline)', 'offline');
       renderAll();
     }
 
-    // WRITE to Sheet via Apps Script POST
+    // Escrita na planilha via POST
     async function writeToSheet(payload) {
-      updateSyncBadge('Salvando na planilha...', 'syncing');
-      showToast('Enviando alterações...');
-
+      showToast('Salvando na planilha...');
+      setSyncStatus('syncing', 'Salvando...');
       try {
-        let res = await fetch(URL_APPS_SCRIPT, {
+        const res = await fetch(URL_APPS_SCRIPT, {
           method: 'POST',
           body: JSON.stringify(payload),
           headers: { 'Content-Type': 'text/plain' },
           redirect: 'follow'
         });
 
-        if (res.type === 'opaqueredirect' || res.status === 302 || res.status === 303) {
-          const targetUrl = res.url;
-          if (targetUrl) {
-            res = await fetch(targetUrl, {
-              method: 'POST',
-              body: JSON.stringify(payload),
-              headers: { 'Content-Type': 'text/plain' }
-            });
-          }
+        let data;
+        const resUrl = res.url || '';
+        if (resUrl.includes('script.googleusercontent.com') || res.status === 302 || res.status === 303) {
+          const secondRes = await fetch(resUrl, { method: 'GET' });
+          data = await secondRes.json();
+        } else {
+          data = await res.json();
         }
 
-        const data = await res.json();
-        if (data && (data.success || data.id)) {
-          updateSyncBadge('Sincronizado ✓', '');
+        if (data && data.success) {
+          setSyncStatus('synced', 'Sincronizado ✓');
           showToast('Salvo na planilha ✓');
-          return { success: true, id: data.id };
+          return { success: true, data: data };
         } else {
-          throw new Error(data.error || 'Resposta inválida do servidor');
+          throw new Error((data && data.error) || 'Resposta sem sucesso');
         }
       } catch (err) {
-        console.warn('Erro ao salvar na planilha online, mantendo alterações locais:', err);
-        updateSyncBadge('Salvo localmente (offline)', 'offline');
-        showToast('Salvo somente localmente (offline)', true);
+        console.warn('Erro ao salvar remotamente, gravado local:', err);
+        setSyncStatus('offline', 'Salvo localmente (offline)');
+        showToast('Salvo localmente (offline)');
         return { success: false, error: err.message };
       }
     }
 
-    // Helpers to Parse Dates
-    function parseDateBR(dateStr) {
-      if (!dateStr) return null;
-      const parts = dateStr.split('/');
-      if (parts.length === 3) {
-        const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1;
-        const year = parseInt(parts[2], 10);
-        return new Date(year, month, day);
-      }
-      return null;
-    }
+    // Normalizador de tarefas para os 4 status válidos
+    function normalizeTasks(list) {
+      return list.map(t => {
+        let st = (t.status || 'A Fazer').trim();
+        // Mapeamentos para garantir APENAS os 4 status válidos
+        if (st.toLowerCase().includes('concl')) st = 'Concluídos';
+        else if (st.toLowerCase().includes('andamento') || st.toLowerCase().includes('execu')) st = 'Em Andamento';
+        else if (st.toLowerCase().includes('fazer')) st = 'A Fazer';
+        else if (st.toLowerCase().includes('ideia')) st = 'Ideia';
+        else st = 'A Fazer';
 
-    // Render KPIs & Charts
-    function renderKPIsAndCharts() {
-      const total = tasks.length;
-      const emAndamento = tasks.filter(t => t.status === 'Em Andamento').length;
-      const concluidos = tasks.filter(t => t.status === 'Concluídos').length;
-      const abertos = tasks.filter(t => t.status !== 'Concluídos').length;
-      const pct = total > 0 ? Math.round((concluidos / total) * 100) : 0;
-
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      const in7Days = new Date(today);
-      in7Days.setDate(today.getDate() + 7);
-
-      let vencendo7d = 0;
-      let vencidas = 0;
-
-      tasks.forEach(t => {
-        if (t.status !== 'Concluídos' && t.prazo) {
-          const d = parseDateBR(t.prazo);
-          if (d) {
-            if (d < today) vencidas++;
-            else if (d >= today && d <= in7Days) vencendo7d++;
-          }
+        let prio = (t.prio || 'Média').trim();
+        if (!['Alta', 'Média', 'Baixa'].includes(prio)) {
+          if (prio.toLowerCase().includes('alt')) prio = 'Alta';
+          else if (prio.toLowerCase().includes('baix')) prio = 'Baixa';
+          else prio = 'Média';
         }
-      });
 
-      document.getElementById('kpi-total').textContent = total;
-      document.getElementById('kpi-emandamento').textContent = emAndamento;
-      document.getElementById('kpi-concluidos').textContent = concluidos;
-      document.getElementById('kpi-abertos').textContent = abertos;
-      document.getElementById('kpi-pct-conclusao').textContent = pct + '%';
-      document.getElementById('kpi-vencendo7d').textContent = vencendo7d;
-      document.getElementById('kpi-vencidas').textContent = vencidas;
-
-      // Ensure SkipChart calls are available
-      if (window.skipChart) {
-        // 1. Status Donut
-        const statusCounts = { 'Ideia': 0, 'A Fazer': 0, 'Em Andamento': 0, 'Concluídos': 0 };
-        tasks.forEach(t => { if (statusCounts[t.status] !== undefined) statusCounts[t.status]++; });
-        const chartStatusEl = document.getElementById('chart-status-box');
-        chartStatusEl.innerHTML = '';
-        window.skipChart.donut(chartStatusEl, {
-          labels: ['Ideia', 'A Fazer', 'Em Andamento', 'Concluídos'],
-          values: [statusCounts['Ideia'], statusCounts['A Fazer'], statusCounts['Em Andamento'], statusCounts['Concluídos']],
-          colors: ['#E5E5E5', '#A8C8E8', '#F2D8A7', '#B8DCC8']
-        });
-
-        // 2. Department Bar Chart
-        const deptCounts = {};
-        tasks.forEach(t => {
-          const d = t.dept || 'Outros';
-          deptCounts[d] = (deptCounts[d] || 0) + 1;
-        });
-        const deptLabels = Object.keys(deptCounts);
-        const deptValues = Object.values(deptCounts);
-        const chartDeptEl = document.getElementById('chart-dept-box');
-        chartDeptEl.innerHTML = '';
-        window.skipChart.bar(chartDeptEl, {
-          labels: deptLabels,
-          values: deptValues,
-          color: '#C9A86A',
-          format: 'num'
-        });
-
-        // 3. Priority Donut
-        const prioCounts = { 'Alta': 0, 'Média': 0, 'Baixa': 0 };
-        tasks.forEach(t => { if (prioCounts[t.prio] !== undefined) prioCounts[t.prio]++; });
-        const chartPrioEl = document.getElementById('chart-prio-box');
-        chartPrioEl.innerHTML = '';
-        window.skipChart.donut(chartPrioEl, {
-          labels: ['Alta', 'Média', 'Baixa'],
-          values: [prioCounts['Alta'], prioCounts['Média'], prioCounts['Baixa']],
-          colors: ['#F2C4C4', '#F5E3C0', '#CDE8D8']
-        });
-
-        // 5. Abertos vs Concluídos Donut
-        const chartAbertosEl = document.getElementById('chart-abertos-box');
-        chartAbertosEl.innerHTML = '';
-        window.skipChart.donut(chartAbertosEl, {
-          labels: ['Abertos', 'Concluídos'],
-          values: [abertos, concluidos],
-          colors: ['#A8C8E8', '#B8DCC8']
-        });
-
-        // 6. Origem Bar Chart
-        const origemCounts = {};
-        tasks.forEach(t => {
-          const o = t.origem || 'Geral';
-          origemCounts[o] = (origemCounts[o] || 0) + 1;
-        });
-        const chartOrigemEl = document.getElementById('chart-origem-box');
-        chartOrigemEl.innerHTML = '';
-        window.skipChart.bar(chartOrigemEl, {
-          labels: Object.keys(origemCounts),
-          values: Object.values(origemCounts),
-          color: '#8A6827',
-          format: 'num'
-        });
-      }
-
-      // Render 4. Custom Radar Chart (Owner Workload)
-      renderRadarChart();
-    }
-
-    // Render Custom SVG Radar Chart for Dono Workload
-    function renderRadarChart() {
-      const svg = document.getElementById('radar-svg');
-      if (!svg) return;
-
-      const owners = ['Renato', 'Equipe', 'Terceiro'];
-      const metrics = ['Ativas', 'Concluídas', 'Vencendo 7d', 'Vencidas'];
-
-      // Calculate workload breakdown per owner
-      const data = {};
-      const today = new Date(); today.setHours(0,0,0,0);
-      const in7Days = new Date(today); in7Days.setDate(today.getDate() + 7);
-
-      owners.forEach(o => {
-        data[o] = { 'Ativas': 0, 'Concluídas': 0, 'Vencendo 7d': 0, 'Vencidas': 0 };
-      });
-
-      tasks.forEach(t => {
-        const o = owners.includes(t.dono) ? t.dono : 'Equipe';
-        if (t.status === 'Concluídos') {
-          data[o]['Concluídas']++;
-        } else {
-          data[o]['Ativas']++;
-          if (t.prazo) {
-            const d = parseDateBR(t.prazo);
-            if (d) {
-              if (d < today) data[o]['Vencidas']++;
-              else if (d >= today && d <= in7Days) data[o]['Vencendo 7d']++;
-            }
-          }
-        }
-      });
-
-      // SVG radar specs
-      const cx = 150, cy = 100, r = 70;
-      const numAxes = metrics.length;
-      let html = '';
-
-      // Draw Grid Rings (25%, 50%, 75%, 100%)
-      [0.25, 0.5, 0.75, 1].forEach(pct => {
-        let points = [];
-        for (let i = 0; i < numAxes; i++) {
-          const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
-          const x = cx + Math.cos(angle) * (r * pct);
-          const y = cy + Math.sin(angle) * (r * pct);
-          points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-        }
-        html += `<polygon points="${points.join(' ')}" class="radar-grid"/>`;
-      });
-
-      // Draw Axes and Labels
-      metrics.forEach((m, i) => {
-        const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
-        const x2 = cx + Math.cos(angle) * r;
-        const y2 = cy + Math.sin(angle) * r;
-        html += `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="radar-axis"/>`;
-
-        // Text Position
-        const lx = cx + Math.cos(angle) * (r + 18);
-        const ly = cy + Math.sin(angle) * (r + 12);
-        html += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="10" font-weight="600" fill="#555" text-anchor="middle" dominant-baseline="middle">${m}</text>`;
-      });
-
-      // Find Max Value for scaling
-      let maxVal = 1;
-      owners.forEach(o => {
-        metrics.forEach(m => {
-          if (data[o][m] > maxVal) maxVal = data[o][m];
-        });
-      });
-
-      // Render Polygons for each Owner
-      const colors = {
-        'Renato': { class: 'radar-area-renato', stroke: '#C9A86A' },
-        'Equipe': { class: 'radar-area-equipe', stroke: '#4A90E2' },
-        'Terceiro': { class: 'radar-area-terceiro', stroke: '#2E7D32' }
-      };
-
-      owners.forEach(o => {
-        let points = [];
-        metrics.forEach((m, i) => {
-          const val = data[o][m];
-          const pct = Math.max(0.08, val / maxVal);
-          const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
-          const x = cx + Math.cos(angle) * (r * pct);
-          const y = cy + Math.sin(angle) * (r * pct);
-          points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-        });
-        html += `<polygon points="${points.join(' ')}" class="${colors[o].class}"/>`;
-      });
-
-      // Draw Legend at the bottom
-      html += `
-        <g transform="translate(45, 198)">
-          <rect x="0" y="0" width="10" height="10" rx="2" fill="#C9A86A"/>
-          <text x="14" y="9" font-size="10" fill="#333">Renato</text>
-
-          <rect x="75" y="0" width="10" height="10" rx="2" fill="#4A90E2"/>
-          <text x="89" y="9" font-size="10" fill="#333">Equipe</text>
-
-          <rect x="150" y="0" width="10" height="10" rx="2" fill="#2E7D32"/>
-          <text x="164" y="9" font-size="10" fill="#333">Terceiro</text>
-        </g>
-      `;
-
-      svg.innerHTML = html;
-    }
-
-    // Populate Filters Options
-    function populateFilterOptions() {
-      const deptSelect = document.getElementById('filter-dept');
-      const depts = Array.from(new Set(tasks.map(t => t.dept || 'Outros'))).filter(Boolean);
-      
-      const currentVal = deptSelect.value;
-      deptSelect.innerHTML = '<option value="">Todos os Departamentos</option>';
-      depts.forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        deptSelect.appendChild(opt);
-      });
-      deptSelect.value = currentVal;
-    }
-
-    // Render Task Table
-    function renderTaskList() {
-      const search = (document.getElementById('filter-search').value || '').toLowerCase();
-      const dept = document.getElementById('filter-dept').value;
-      const prio = document.getElementById('filter-prio').value;
-      const dono = document.getElementById('filter-dono').value;
-      const status = document.getElementById('filter-status').value;
-
-      const tbody = document.getElementById('task-table-body');
-      tbody.innerHTML = '';
-
-      const filtered = tasks.filter(t => {
-        if (search && !t.tarefa.toLowerCase().includes(search) && !t.id.toLowerCase().includes(search)) return false;
-        if (dept && t.dept !== dept) return false;
-        if (prio && t.prio !== prio) return false;
-        if (dono && t.dono !== dono) return false;
-        if (status === 'Abertos' && t.status === 'Concluídos') return false;
-        if (status && status !== 'Abertos' && t.status !== status) return false;
-        return true;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px; color: #888;">Nenhuma tarefa encontrada.</td></tr>';
-        return;
-      }
-
-      filtered.forEach(t => {
-        const tr = document.createElement('tr');
-        tr.onclick = () => openTask(t.id);
-
-        const statusClass = getStatusClass(t.status);
-        const prioClass = getPrioClass(t.prio);
-
-        tr.innerHTML = `
-          <td class="task-id">${t.id}</td>
-          <td><strong>${t.tarefa}</strong></td>
-          <td>${t.dept || '-'}</td>
-          <td><span class="status-pill ${prioClass}">${t.prio || 'Média'}</span></td>
-          <td>${t.prazo || '-'}</td>
-          <td>${t.dono || 'Equipe'}</td>
-          <td><span class="status-pill ${statusClass}">${t.status}</span></td>
-        `;
-        tbody.appendChild(tr);
+        return {
+          id: t.id || 'TAR-' + Math.floor(Math.random() * 900 + 100),
+          tarefa: t.tarefa || 'Sem título',
+          dept: t.dept || 'Geral',
+          prio: prio,
+          prazo: t.prazo || '',
+          status: st,
+          dono: t.dono || 'Renato',
+          origem: t.origem || 'Projeto',
+          obs: t.obs || ''
+        };
       });
     }
 
-    // Render Kanban Board
-    function renderKanban() {
-      const cols = {
-        'Ideia': document.getElementById('cards-kanban-ideia'),
-        'A Fazer': document.getElementById('cards-kanban-afazer'),
-        'Em Andamento': document.getElementById('cards-kanban-emandamento'),
-        'Concluídos': document.getElementById('cards-kanban-concluidos')
-      };
-
-      const counts = { 'Ideia': 0, 'A Fazer': 0, 'Em Andamento': 0, 'Concluídos': 0 };
-
-      Object.keys(cols).forEach(k => { if(cols[k]) cols[k].innerHTML = ''; });
-
-      tasks.forEach(t => {
-        const st = cols[t.status] ? t.status : 'A Fazer';
-        counts[st]++;
-
-        if (cols[st]) {
-          const card = document.createElement('div');
-          card.className = 'task-card';
-          card.onclick = () => openTask(t.id);
-
-          const prioClass = getPrioClass(t.prio);
-
-          card.innerHTML = `
-            <div class="task-card-header">
-              <span class="task-id">${t.id}</span>
-              <span class="status-pill ${prioClass}">${t.prio || 'Média'}</span>
-            </div>
-            <div class="task-title">${t.tarefa}</div>
-            <div class="task-meta">
-              <span class="task-meta-item">📁 ${t.dept || 'Geral'}</span>
-              <span class="task-meta-item">👤 ${t.dono || 'Equipe'}</span>
-              ${t.prazo ? `<span class="task-meta-item">📅 ${t.prazo}</span>` : ''}
-            </div>
-          `;
-          cols[st].appendChild(card);
-        }
-      });
-
-      document.getElementById('count-kanban-ideia').textContent = counts['Ideia'];
-      document.getElementById('count-kanban-afazer').textContent = counts['A Fazer'];
-      document.getElementById('count-kanban-emandamento').textContent = counts['Em Andamento'];
-      document.getElementById('count-kanban-concluidos').textContent = counts['Concluídos'];
-    }
-
-    function getStatusClass(st) {
-      switch(st) {
-        case 'Ideia': return 'badge-status-ideia';
-        case 'A Fazer': return 'badge-status-afazer';
-        case 'Em Andamento': return 'badge-status-emandamento';
-        case 'Concluídos': return 'badge-status-concluidos';
-        default: return 'badge-status-afazer';
-      }
-    }
-
-    function getPrioClass(prio) {
-      switch(prio) {
-        case 'Alta': return 'badge-prio-alta';
-        case 'Média': return 'badge-prio-media';
-        case 'Baixa': return 'badge-prio-baixa';
-        default: return 'badge-prio-media';
-      }
-    }
-
-    // Render All Views
-    function renderAll() {
-      populateFilterOptions();
-      renderKPIsAndCharts();
-      renderTaskList();
-      renderKanban();
-    }
-
-    // Navigation Switcher
-    function showScreen(screenName) {
-      document.querySelectorAll('.screen-content').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
-
-      const target = document.getElementById('screen-' + screenName);
-      if (target) target.classList.add('active');
-
-      // Update Desktop Nav Buttons
-      const desktopBtns = document.querySelectorAll('.nav-bar .nav-btn');
-      desktopBtns.forEach(b => {
-        if (b.textContent.toLowerCase().includes(screenName)) b.classList.add('active');
-      });
-
-      // Update Mobile Nav
-      const mobileTab = document.getElementById('mtab-' + screenName);
-      if (mobileTab) mobileTab.classList.add('active');
-    }
-
-    // Modal Control
+    // Modal helpers
     function openModal(id) {
-      document.getElementById(id).classList.add('open');
+      const el = document.getElementById(id);
+      if (el) el.classList.add('open');
     }
 
     function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('open');
     }
 
-    // Task Editing
-    let currentEditId = null;
+    function handleBackdropClick(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
 
+    // Abrir modal de edição com dados
     function openTask(id) {
       const task = tasks.find(t => t.id === id);
       if (!task) return;
+      currentEditingTaskId = id;
 
-      currentEditId = id;
+      document.getElementById('edit-modal-heading').textContent = `Tarefa ${task.id}`;
       document.getElementById('edit-id').value = task.id;
       document.getElementById('edit-tarefa').value = task.tarefa;
-      document.getElementById('edit-dept').value = task.dept || 'Dpto Projetos';
-      document.getElementById('edit-prio').value = task.prio || 'Média';
-      document.getElementById('edit-prazo').value = task.prazo || '';
-      document.getElementById('edit-status').value = task.status || 'A Fazer';
-      document.getElementById('edit-dono').value = task.dono || 'Renato';
-      document.getElementById('edit-origem').value = task.origem || '';
-      document.getElementById('edit-obs').value = task.obs || '';
+      document.getElementById('edit-dept').value = task.dept;
+      document.getElementById('edit-prio').value = task.prio;
+      document.getElementById('edit-status').value = task.status;
+      document.getElementById('edit-dono').value = task.dono;
+      document.getElementById('edit-prazo').value = task.prazo;
+      document.getElementById('edit-origem').value = task.origem;
+      document.getElementById('edit-obs').value = task.obs;
 
-      openModal('modal-edit-task');
+      openModal('modal-task');
     }
 
+    // Salvar tarefa editada
     async function saveTask() {
-      if (!currentEditId) return;
+      if (!currentEditingTaskId) return;
+      const t = tasks.find(item => item.id === currentEditingTaskId);
+      if (!t) return;
 
-      const updatedTask = {
-        action: 'update',
-        id: currentEditId,
-        tarefa: document.getElementById('edit-tarefa').value,
-        dept: document.getElementById('edit-dept').value,
-        prio: document.getElementById('edit-prio').value,
-        prazo: document.getElementById('edit-prazo').value,
-        status: document.getElementById('edit-status').value,
-        dono: document.getElementById('edit-dono').value,
-        origem: document.getElementById('edit-origem').value,
-        obs: document.getElementById('edit-obs').value
-      };
-
-      // Update local array
-      const idx = tasks.findIndex(t => t.id === currentEditId);
-      if (idx !== -1) {
-        tasks[idx] = { ...tasks[idx], ...updatedTask };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-        renderAll();
+      const tarefaVal = document.getElementById('edit-tarefa').value.trim();
+      if (!tarefaVal) {
+        alert('Por favor, informe a descrição da tarefa.');
+        return;
       }
 
-      closeModal('modal-edit-task');
+      t.tarefa = tarefaVal;
+      t.dept = document.getElementById('edit-dept').value.trim() || 'Geral';
+      t.prio = document.getElementById('edit-prio').value;
+      t.status = document.getElementById('edit-status').value;
+      t.dono = document.getElementById('edit-dono').value.trim() || 'Renato';
+      t.prazo = document.getElementById('edit-prazo').value.trim();
+      t.origem = document.getElementById('edit-origem').value.trim();
+      t.obs = document.getElementById('edit-obs').value.trim();
 
-      // Write to sheet
-      await writeToSheet(updatedTask);
+      closeModal('modal-task');
+      localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
+      renderAll();
+
+      await writeToSheet({
+        action: 'update',
+        id: t.id,
+        tarefa: t.tarefa,
+        dept: t.dept,
+        prio: t.prio,
+        prazo: t.prazo,
+        status: t.status,
+        dono: t.dono,
+        origem: t.origem,
+        obs: t.obs
+      });
     }
 
-    async function changeStatusFromModal(newStatus) {
+    // Botões de atalho no modal: Iniciar / Concluir
+    function changeStatusFromModal(newStatus) {
       document.getElementById('edit-status').value = newStatus;
-      await saveTask();
+      saveTask();
     }
 
-    // Add New Task Modal & Action
+    // Mudar status diretamente (para Kanban / Ações)
+    async function changeStatus(id, newStatus) {
+      const t = tasks.find(item => item.id === id);
+      if (!t) return;
+      t.status = newStatus;
+      localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
+      renderAll();
+
+      await writeToSheet({
+        action: 'update',
+        id: t.id,
+        tarefa: t.tarefa,
+        dept: t.dept,
+        prio: t.prio,
+        prazo: t.prazo,
+        status: t.status,
+        dono: t.dono,
+        origem: t.origem,
+        obs: t.obs
+      });
+    }
+
+    // Abrir Modal de Nova Tarefa
     function openNewTask() {
       document.getElementById('new-tarefa').value = '';
       document.getElementById('new-dept').value = 'Dpto Projetos';
       document.getElementById('new-prio').value = 'Média';
-      document.getElementById('new-prazo').value = '';
       document.getElementById('new-status').value = 'A Fazer';
+      document.getElementById('new-prazo').value = '';
       document.getElementById('new-dono').value = 'Renato';
-      document.getElementById('new-origem').value = 'Reunião';
+      document.getElementById('new-origem').value = 'Projeto';
       document.getElementById('new-obs').value = '';
 
-      openModal('modal-new-task');
+      openModal('modal-new');
     }
 
+    // Adicionar Nova Tarefa
     async function addTask() {
       const tarefaVal = document.getElementById('new-tarefa').value.trim();
       if (!tarefaVal) {
@@ -1826,66 +1615,793 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         return;
       }
 
-      // Generate next sequential ID TAR-011, TAR-012...
+      // Próximo ID TAR-XXX sequencial
       let maxNum = 0;
       tasks.forEach(t => {
-        const match = t.id.match(/TAR-(\d+)/);
+        const match = t.id && t.id.match(/TAR-(\d+)/i);
         if (match) {
           const num = parseInt(match[1], 10);
           if (num > maxNum) maxNum = num;
         }
       });
-      const newId = 'TAR-' + String(maxNum + 1).padStart(3, '0');
+      const nextId = 'TAR-' + String(maxNum + 1).padStart(3, '0');
 
       const newTask = {
-        action: 'add',
-        id: newId,
+        id: nextId,
         tarefa: tarefaVal,
-        dept: document.getElementById('new-dept').value,
+        dept: document.getElementById('new-dept').value.trim() || 'Dpto Projetos',
         prio: document.getElementById('new-prio').value,
-        prazo: document.getElementById('new-prazo').value,
         status: document.getElementById('new-status').value,
-        dono: document.getElementById('new-dono').value,
-        origem: document.getElementById('new-origem').value,
-        obs: document.getElementById('new-obs').value
+        prazo: document.getElementById('new-prazo').value.trim(),
+        dono: document.getElementById('new-dono').value.trim() || 'Renato',
+        origem: document.getElementById('new-origem').value.trim() || 'Projeto',
+        obs: document.getElementById('new-obs').value.trim()
       };
 
-      // Add to local state immediately
-      tasks.push(newTask);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      tasks.unshift(newTask);
+      localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
+      closeModal('modal-new');
       renderAll();
 
-      closeModal('modal-new-task');
+      const result = await writeToSheet({
+        action: 'add',
+        tarefa: newTask.tarefa,
+        dept: newTask.dept,
+        prio: newTask.prio,
+        prazo: newTask.prazo,
+        status: newTask.status,
+        dono: newTask.dono,
+        origem: newTask.origem,
+        obs: newTask.obs
+      });
 
-      // Sync online
-      const res = await writeToSheet(newTask);
-      if (res && res.id && res.id !== newId) {
-        // Update assigned ID if server generated a different one
-        newTask.id = res.id;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      // Se a planilha retornou um ID específico, atualiza
+      if (result && result.success && result.data && result.data.id) {
+        newTask.id = result.data.id;
+        localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
         renderAll();
       }
     }
 
-    // Expose functions to window
-    window.showScreen = showScreen;
-    window.openTask = openTask;
-    window.closeModal = closeModal;
-    window.saveTask = saveTask;
-    window.changeStatusFromModal = changeStatusFromModal;
-    window.openNewTask = openNewTask;
-    window.addTask = addTask;
-    window.writeToSheet = writeToSheet;
-    window.loadFromSheet = loadFromSheet;
-    window.renderAll = renderAll;
-    window.renderTaskList = renderTaskList;
+    // Parsing de data brasileira DD/MM/AAAA para objeto Date
+    function parseDateBR(str) {
+      if (!str) return null;
+      const parts = str.trim().split('/');
+      if (parts.length === 3) {
+        const d = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const y = parseInt(parts[2], 10);
+        const dt = new Date(y, m, d);
+        if (!isNaN(dt.getTime())) return dt;
+      }
+      return null;
+    }
 
-    // Initialize application on DOMContentLoaded
+    // ==========================================
+    // RENDERIZAÇÃO COMPLETA: KPIs, GRÁFICOS, LISTA, KANBAN
+    // ==========================================
+    function renderAll() {
+      renderKPIs();
+      renderAllCharts();
+      populateFilterOptions();
+      renderTarefasList();
+      renderKanban();
+    }
+
+    // 1. KPIs
+    function renderKPIs() {
+      const total = tasks.length;
+      const andamento = tasks.filter(t => t.status === 'Em Andamento').length;
+      const concluidos = tasks.filter(t => t.status === 'Concluídos').length;
+      const abertos = tasks.filter(t => t.status !== 'Concluídos').length;
+      const pct = total > 0 ? Math.round((concluidos / total) * 100) : 0;
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const in7Days = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+      let vencendo7 = 0;
+      let vencidas = 0;
+
+      tasks.forEach(t => {
+        if (t.status === 'Concluídos') return;
+        const dt = parseDateBR(t.prazo);
+        if (dt) {
+          dt.setHours(0,0,0,0);
+          if (dt < now) {
+            vencidas++;
+          } else if (dt <= in7Days) {
+            vencendo7++;
+          }
+        }
+      });
+
+      document.getElementById('kpi-total').textContent = total;
+      document.getElementById('kpi-andamento').textContent = andamento;
+      document.getElementById('kpi-concluidos').textContent = concluidos;
+      document.getElementById('kpi-abertos').textContent = abertos;
+      document.getElementById('kpi-pct').textContent = pct + '%';
+      document.getElementById('kpi-vencendo7').textContent = vencendo7;
+      document.getElementById('kpi-vencidas').textContent = vencidas;
+    }
+
+    // =========================================================================
+    // 2. GRÁFICOS COM NÚMEROS / INDICADORES SEMPRE VISÍVEIS (REQUISITO CRÍTICO)
+    // Usando SVG nativo perfeitamente renderizado, sem depender de scripts externos
+    // que poderiam falhar ao carregar no ambiente sandbox ou bloquear labels.
+    // =========================================================================
+
+    // Helper: Gráfico de Rosca / Donut com NÚMEROS GRANDES E VISÍVEIS dentro de cada fatia
+    function renderSvgDonut(containerId, items, centerText, centerLabel) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const total = items.reduce((acc, it) => acc + it.value, 0);
+
+      const size = 220;
+      const center = size / 2;
+      const radius = 78;
+      const innerRadius = 42;
+
+      let currentAngle = -Math.PI / 2;
+      let paths = '';
+      let labels = '';
+
+      if (total === 0) {
+        el.innerHTML = '<div style="padding:40px; text-align:center; color:#999; font-size:13px;">Nenhum dado para exibir</div>';
+        return;
+      }
+
+      items.forEach(it => {
+        if (it.value <= 0) return;
+        const sliceAngle = (it.value / total) * (2 * Math.PI);
+        const endAngle = currentAngle + sliceAngle;
+
+        // Coordenadas externas
+        const x1 = center + radius * Math.cos(currentAngle);
+        const y1 = center + radius * Math.sin(currentAngle);
+        const x2 = center + radius * Math.cos(endAngle);
+        const y2 = center + radius * Math.sin(endAngle);
+
+        // Coordenadas internas
+        const ix1 = center + innerRadius * Math.cos(endAngle);
+        const iy1 = center + innerRadius * Math.sin(endAngle);
+        const ix2 = center + innerRadius * Math.cos(currentAngle);
+        const iy2 = center + innerRadius * Math.sin(currentAngle);
+
+        const largeArc = sliceAngle > Math.PI ? 1 : 0;
+
+        const pathD = `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${ix2} ${iy2} Z`;
+
+        paths += `<path d="${pathD}" fill="${it.color}" stroke="#FFFFFF" stroke-width="2.5" />`;
+
+        // Posição central da fatia para O NÚMERO VISÍVEL
+        const midAngle = currentAngle + (sliceAngle / 2);
+        const labelRadius = (radius + innerRadius) / 2;
+        const lx = center + labelRadius * Math.cos(midAngle);
+        const ly = center + labelRadius * Math.sin(midAngle);
+
+        // NÚMERO VISÍVEL COM FONTE PESADA E CONTRASTE
+        labels += `
+          <g transform="translate(${lx}, ${ly})">
+            <circle cx="0" cy="0" r="11" fill="rgba(255,255,255,0.85)" stroke="${it.color}" stroke-width="1" />
+            <text x="0" y="4" fill="#222" font-size="12" font-weight="800" text-anchor="middle">${it.value}</text>
+          </g>
+        `;
+
+        currentAngle = endAngle;
+      });
+
+      // Legenda inferior sem sobrepor
+      let legendHtml = '<div class="svg-legend">';
+      items.forEach(it => {
+        legendHtml += `
+          <span class="svg-legend-item">
+            <span class="svg-legend-color" style="background:${it.color};"></span>
+            <span>${it.label}: <strong>${it.value}</strong></span>
+          </span>
+        `;
+      });
+      legendHtml += '</div>';
+
+      el.innerHTML = `
+        <div class="svg-chart-container">
+          <div style="display:flex; justify-content:center; align-items:center; flex:1;">
+            <svg viewBox="0 0 ${size} ${size}" width="100%" height="190" style="max-width:230px; display:block;">
+              ${paths}
+              ${labels}
+              <circle cx="${center}" cy="${center}" r="${innerRadius - 4}" fill="#FAF9F7" />
+              <text x="${center}" y="${center + 1}" text-anchor="middle" font-size="18" font-weight="800" fill="#333">${centerText}</text>
+              <text x="${center}" y="${center + 14}" text-anchor="middle" font-size="9" font-weight="600" fill="#888">${centerLabel || 'TOTAL'}</text>
+            </svg>
+          </div>
+          ${legendHtml}
+        </div>
+      `;
+    }
+
+    // Helper: Gráfico de Pizza com NÚMEROS VISÍVEIS em cada fatia
+    function renderSvgPie(containerId, items) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const total = items.reduce((acc, it) => acc + it.value, 0);
+
+      const size = 220;
+      const center = size / 2;
+      const radius = 80;
+
+      let currentAngle = -Math.PI / 2;
+      let paths = '';
+      let labels = '';
+
+      if (total === 0) {
+        el.innerHTML = '<div style="padding:40px; text-align:center; color:#999; font-size:13px;">Nenhum dado</div>';
+        return;
+      }
+
+      items.forEach(it => {
+        if (it.value <= 0) return;
+        const sliceAngle = (it.value / total) * (2 * Math.PI);
+        const endAngle = currentAngle + sliceAngle;
+
+        const x1 = center + radius * Math.cos(currentAngle);
+        const y1 = center + radius * Math.sin(currentAngle);
+        const x2 = center + radius * Math.cos(endAngle);
+        const y2 = center + radius * Math.sin(endAngle);
+
+        const largeArc = sliceAngle > Math.PI ? 1 : 0;
+        const pathD = `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+        paths += `<path d="${pathD}" fill="${it.color}" stroke="#FFFFFF" stroke-width="2.5" />`;
+
+        // Posição para o NÚMERO VISÍVEL
+        const midAngle = currentAngle + (sliceAngle / 2);
+        const labelRadius = radius * 0.62;
+        const lx = center + labelRadius * Math.cos(midAngle);
+        const ly = center + labelRadius * Math.sin(midAngle);
+
+        labels += `
+          <g transform="translate(${lx}, ${ly})">
+            <circle cx="0" cy="0" r="12" fill="#FFFFFF" stroke="${it.color}" stroke-width="1.5" />
+            <text x="0" y="4" fill="#222" font-size="12" font-weight="800" text-anchor="middle">${it.value}</text>
+          </g>
+        `;
+
+        currentAngle = endAngle;
+      });
+
+      let legendHtml = '<div class="svg-legend">';
+      items.forEach(it => {
+        legendHtml += `
+          <span class="svg-legend-item">
+            <span class="svg-legend-color" style="background:${it.color};"></span>
+            <span>${it.label}: <strong>${it.value}</strong></span>
+          </span>
+        `;
+      });
+      legendHtml += '</div>';
+
+      el.innerHTML = `
+        <div class="svg-chart-container">
+          <div style="display:flex; justify-content:center; align-items:center; flex:1;">
+            <svg viewBox="0 0 ${size} ${size}" width="100%" height="190" style="max-width:230px; display:block;">
+              ${paths}
+              ${labels}
+            </svg>
+          </div>
+          ${legendHtml}
+        </div>
+      `;
+    }
+
+    // Helper: Barras Horizontais com NÚMERO VISÍVEL NO FINAL DE CADA BARRA
+    function renderSvgHorizontalBars(containerId, items) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      const maxVal = Math.max(...items.map(it => it.value), 1);
+      const rowHeight = 36;
+      const width = 340;
+      const height = items.length * rowHeight + 20;
+      const labelColWidth = 110;
+      const barMaxWidth = width - labelColWidth - 45;
+
+      let rowsSvg = '';
+      items.forEach((it, idx) => {
+        const y = idx * rowHeight + 12;
+        const barWidth = Math.max(8, (it.value / maxVal) * barMaxWidth);
+
+        rowsSvg += `
+          <!-- Label do Departamento -->
+          <text x="${labelColWidth - 8}" y="${y + 14}" text-anchor="end" font-size="12" font-weight="600" fill="#444">
+            ${it.label.length > 15 ? it.label.substring(0, 14) + '…' : it.label}
+          </text>
+
+          <!-- Barra de Fundo Suave -->
+          <rect x="${labelColWidth}" y="${y}" width="${barMaxWidth}" height="20" rx="4" fill="#F4F1EC" />
+
+          <!-- Barra de Valor Pastel -->
+          <rect x="${labelColWidth}" y="${y}" width="${barWidth}" height="20" rx="4" fill="${it.color}" />
+
+          <!-- NÚMERO NO FINAL DA BARRA (SEMPRE VISÍVEL COM DESTAQUE) -->
+          <circle cx="${labelColWidth + barWidth + 14}" cy="${y + 10}" r="10" fill="#FFFFFF" stroke="${it.color}" stroke-width="1.5" />
+          <text x="${labelColWidth + barWidth + 14}" y="${y + 14}" text-anchor="middle" font-size="11.5" font-weight="800" fill="#222">
+            ${it.value}
+          </text>
+        `;
+      });
+
+      el.innerHTML = `
+        <div class="svg-chart-container" style="justify-content:center;">
+          <svg viewBox="0 0 ${width} ${height}" width="100%" height="${Math.min(230, height)}" style="display:block;">
+            ${rowsSvg}
+          </svg>
+        </div>
+      `;
+    }
+
+    // Helper: Radar com NÚMEROS VISÍVEIS EM CADA PONTO
+    function renderSvgRadar(containerId, categories, series) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      const size = 260;
+      const center = size / 2;
+      const radius = 80;
+      const numPoints = categories.length;
+
+      // Calcular valor máximo
+      let maxVal = 1;
+      series.forEach(s => {
+        s.values.forEach(v => {
+          if (v > maxVal) maxVal = v;
+        });
+      });
+      maxVal = Math.max(maxVal, 4);
+
+      // Grid de polígonos de fundo
+      let gridSvg = '';
+      const levels = 4;
+      for (let l = 1; l <= levels; l++) {
+        const r = (radius / levels) * l;
+        const pts = [];
+        for (let i = 0; i < numPoints; i++) {
+          const angle = (Math.PI * 2 / numPoints) * i - (Math.PI / 2);
+          pts.push(`${center + r * Math.cos(angle)},${center + r * Math.sin(angle)}`);
+        }
+        gridSvg += `<polygon points="${pts.join(' ')}" fill="none" stroke="#E5E0D8" stroke-width="1" />`;
+      }
+
+      // Eixos e Labels de categorias
+      let axisSvg = '';
+      for (let i = 0; i < numPoints; i++) {
+        const angle = (Math.PI * 2 / numPoints) * i - (Math.PI / 2);
+        const x = center + radius * Math.cos(angle);
+        const y = center + radius * Math.sin(angle);
+        axisSvg += `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="#DDD7CE" stroke-width="1" />`;
+
+        const lx = center + (radius + 20) * Math.cos(angle);
+        const ly = center + (radius + 18) * Math.sin(angle);
+        const anchor = Math.abs(Math.cos(angle)) < 0.3 ? 'middle' : (Math.cos(angle) > 0 ? 'start' : 'end');
+        axisSvg += `<text x="${lx}" y="${ly + 4}" text-anchor="${anchor}" font-size="11" font-weight="700" fill="#666">${categories[i]}</text>`;
+      }
+
+      // Séries e NÚMEROS EM CADA PONTO
+      let seriesSvg = '';
+      let pointsAndNumbers = '';
+
+      series.forEach(s => {
+        const pts = [];
+        s.values.forEach((v, i) => {
+          const r = (v / maxVal) * radius;
+          const angle = (Math.PI * 2 / numPoints) * i - (Math.PI / 2);
+          const px = center + r * Math.cos(angle);
+          const py = center + r * Math.sin(angle);
+          pts.push(`${px},${py}`);
+
+          // NÚMERO VISÍVEL EM CADA PONTO DO RADAR
+          pointsAndNumbers += `
+            <g transform="translate(${px}, ${py})">
+              <circle cx="0" cy="0" r="10" fill="#FFFFFF" stroke="${s.color}" stroke-width="2" />
+              <text x="0" y="3.5" text-anchor="middle" font-size="10.5" font-weight="800" fill="#222">${v}</text>
+            </g>
+          `;
+        });
+        seriesSvg += `<polygon points="${pts.join(' ')}" fill="${s.fillColor}" stroke="${s.color}" stroke-width="2.5" />`;
+      });
+
+      // Legenda inferior
+      let legendHtml = '<div class="svg-legend">';
+      series.forEach(s => {
+        legendHtml += `
+          <span class="svg-legend-item">
+            <span class="svg-legend-color" style="background:${s.color};"></span>
+            <span>${s.name}</span>
+          </span>
+        `;
+      });
+      legendHtml += '</div>';
+
+      el.innerHTML = `
+        <div class="svg-chart-container">
+          <div style="display:flex; justify-content:center; align-items:center; flex:1;">
+            <svg viewBox="0 0 ${size} ${size}" width="100%" height="200" style="max-width:260px; display:block;">
+              ${gridSvg}
+              ${axisSvg}
+              ${seriesSvg}
+              ${pointsAndNumbers}
+            </svg>
+          </div>
+          ${legendHtml}
+        </div>
+      `;
+    }
+
+    // Helper: Linha/Área com NÚMEROS VISÍVEIS EM CADA PONTO
+    function renderSvgLineArea(containerId, items) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      const width = 340;
+      const height = 190;
+      const padLeft = 32;
+      const padRight = 32;
+      const padTop = 32;
+      const padBottom = 38;
+
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      const maxVal = Math.max(...items.map(it => it.value), 3);
+      const stepX = items.length > 1 ? chartW / (items.length - 1) : chartW / 2;
+
+      const coords = items.map((it, idx) => {
+        const x = padLeft + (items.length === 1 ? chartW / 2 : idx * stepX);
+        const y = padTop + chartH - ((it.value / maxVal) * chartH);
+        return { x, y, value: it.value, label: it.label };
+      });
+
+      // Linha SVG e Área
+      let pathLine = '';
+      let pathArea = '';
+      coords.forEach((pt, idx) => {
+        if (idx === 0) {
+          pathLine += `M ${pt.x} ${pt.y}`;
+          pathArea += `M ${pt.x} ${padTop + chartH} L ${pt.x} ${pt.y}`;
+        } else {
+          pathLine += ` L ${pt.x} ${pt.y}`;
+          pathArea += ` L ${pt.x} ${pt.y}`;
+        }
+      });
+      if (coords.length > 0) {
+        pathArea += ` L ${coords[coords.length - 1].x} ${padTop + chartH} Z`;
+      }
+
+      // Pontos e NÚMEROS VISÍVEIS
+      let dotsSvg = '';
+      coords.forEach(pt => {
+        dotsSvg += `
+          <!-- Linha vertical suave -->
+          <line x1="${pt.x}" y1="${pt.y}" x2="${pt.x}" y2="${padTop + chartH}" stroke="#E6E0D5" stroke-dasharray="3,3" />
+
+          <!-- Marcador com NÚMERO VISÍVEL CENTRALIZADO -->
+          <g transform="translate(${pt.x}, ${pt.y - 14})">
+            <rect x="-14" y="-12" width="28" height="18" rx="5" fill="#3A3A3A" />
+            <text x="0" y="1" fill="#FFFFFF" font-size="11" font-weight="800" text-anchor="middle">${pt.value}</text>
+          </g>
+          <circle cx="${pt.x}" cy="${pt.y}" r="4.5" fill="#C9A86A" stroke="#FFFFFF" stroke-width="2" />
+
+          <!-- Rótulo do eixo X -->
+          <text x="${pt.x}" y="${padTop + chartH + 18}" text-anchor="middle" font-size="11" font-weight="600" fill="#555">
+            ${pt.label}
+          </text>
+        `;
+      });
+
+      el.innerHTML = `
+        <div class="svg-chart-container">
+          <svg viewBox="0 0 ${width} ${height}" width="100%" height="200" style="display:block;">
+            <!-- Eixo base -->
+            <line x1="${padLeft}" y1="${padTop + chartH}" x2="${width - padRight}" y2="${padTop + chartH}" stroke="#D5CFC5" stroke-width="1.5" />
+            <path d="${pathArea}" fill="rgba(201, 168, 106, 0.18)" />
+            <path d="${pathLine}" fill="none" stroke="#C9A86A" stroke-width="3" stroke-linecap="round" />
+            ${dotsSvg}
+          </svg>
+        </div>
+      `;
+    }
+
+    // RENDER DE TODOS OS 6 GRÁFICOS COM INDICADORES
+    function renderAllCharts() {
+      // 1. Distribuição por Status - ROSCA (Ideia, A Fazer, Em Andamento, Concluídos)
+      const statusCounts = {
+        'Ideia': tasks.filter(t => t.status === 'Ideia').length,
+        'A Fazer': tasks.filter(t => t.status === 'A Fazer').length,
+        'Em Andamento': tasks.filter(t => t.status === 'Em Andamento').length,
+        'Concluídos': tasks.filter(t => t.status === 'Concluídos').length
+      };
+
+      renderSvgDonut('chart-status-box', [
+        { label: 'Ideia', value: statusCounts['Ideia'], color: '#C0C0C0' },
+        { label: 'A Fazer', value: statusCounts['A Fazer'], color: '#90BDE8' },
+        { label: 'Em Andamento', value: statusCounts['Em Andamento'], color: '#EFC77B' },
+        { label: 'Concluídos', value: statusCounts['Concluídos'], color: '#88CDA5' }
+      ], tasks.length, 'TOTAL');
+
+      // 2. Distribuição por Departamento - BARRAS HORIZONTAIS
+      const deptMap = {};
+      tasks.forEach(t => {
+        const d = t.dept || 'Geral';
+        deptMap[d] = (deptMap[d] || 0) + 1;
+      });
+      const deptColors = ['#A8C8E8', '#F2D8A7', '#B8DCC8', '#F2C4C4', '#D4C5E2', '#CDE8D8'];
+      const deptItems = Object.keys(deptMap).map((k, idx) => ({
+        label: k,
+        value: deptMap[k],
+        color: deptColors[idx % deptColors.length]
+      })).sort((a,b) => b.value - a.value);
+
+      renderSvgHorizontalBars('chart-dept-box', deptItems.length > 0 ? deptItems : [{label:'Geral', value:0, color:'#A8C8E8'}]);
+
+      // 3. Distribuição por Prioridade - PIZZA (Alta, Média, Baixa)
+      const prioCounts = {
+        'Alta': tasks.filter(t => t.prio === 'Alta').length,
+        'Média': tasks.filter(t => t.prio === 'Média').length,
+        'Baixa': tasks.filter(t => t.prio === 'Baixa').length
+      };
+      renderSvgPie('chart-prio-box', [
+        { label: 'Alta', value: prioCounts['Alta'], color: '#F2AFAF' },
+        { label: 'Média', value: prioCounts['Média'], color: '#F7D694' },
+        { label: 'Baixa', value: prioCounts['Baixa'], color: '#A5D6B6' }
+      ]);
+
+      // 4. Carga por Dono - RADAR (Ativas, Vencendo 7d, Vencidas, Concluídas por Renato, Equipe, Terceiro)
+      const now = new Date(); now.setHours(0,0,0,0);
+      const in7Days = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+      const calcDonoStats = (donoName) => {
+        const dTasks = tasks.filter(t => (t.dono || '').toLowerCase().includes(donoName.toLowerCase()));
+        const ativas = dTasks.filter(t => t.status !== 'Concluídos').length;
+        const concluidas = dTasks.filter(t => t.status === 'Concluídos').length;
+        let v7 = 0;
+        let vct = 0;
+        dTasks.forEach(t => {
+          if (t.status === 'Concluídos') return;
+          const dt = parseDateBR(t.prazo);
+          if (dt) {
+            dt.setHours(0,0,0,0);
+            if (dt < now) vct++;
+            else if (dt <= in7Days) v7++;
+          }
+        });
+        return [ativas, v7, vct, concluidas];
+      };
+
+      const categories = ['Ativas', 'Vencendo 7d', 'Vencidas', 'Concluídas'];
+      const radarSeries = [
+        { name: 'Renato', color: '#9A752B', fillColor: 'rgba(201, 168, 106, 0.25)', values: calcDonoStats('Renato') },
+        { name: 'Equipe', color: '#2B6EA6', fillColor: 'rgba(74, 144, 226, 0.20)', values: calcDonoStats('Equipe') },
+        { name: 'Terceiro', color: '#5B8C5A', fillColor: 'rgba(91, 140, 90, 0.18)', values: calcDonoStats('Terceiro') }
+      ];
+
+      renderSvgRadar('chart-dono-box', categories, radarSeries);
+
+      // 5. Abertos × Concluídos - ROSCA DE PROPORÇÃO
+      const concluidasCount = tasks.filter(t => t.status === 'Concluídos').length;
+      const abertasCount = tasks.filter(t => t.status !== 'Concluídos').length;
+      renderSvgDonut('chart-abertos-box', [
+        { label: 'Abertos (Fluxo)', value: abertasCount, color: '#F2C779' },
+        { label: 'Concluídos (Entregas)', value: concluidasCount, color: '#82CCA0' }
+      ], (tasks.length > 0 ? Math.round((concluidasCount / tasks.length) * 100) + '%' : '0%'), 'ENTREGA');
+
+      // 6. Concluídos & Tendência por Origem - LINHA/ÁREA com números
+      const origemMap = {};
+      tasks.forEach(t => {
+        const orig = t.origem || 'Outros';
+        origemMap[orig] = (origemMap[orig] || 0) + 1;
+      });
+      const lineItems = Object.keys(origemMap).map(k => ({
+        label: k,
+        value: origemMap[k]
+      }));
+      // Garantir ao menos 2 pontos para a linha
+      if (lineItems.length === 0) {
+        lineItems.push({ label: 'Projeto', value: 0 }, { label: 'Reunião', value: 0 });
+      } else if (lineItems.length === 1) {
+        lineItems.push({ label: 'Outros', value: 0 });
+      }
+      renderSvgLineArea('chart-tempo-box', lineItems);
+    }
+
+    // Popular filtros dinâmicos
+    function populateFilterOptions() {
+      const deptSelect = document.getElementById('filter-dept');
+      const donoSelect = document.getElementById('filter-dono');
+      if (!deptSelect || !donoSelect) return;
+
+      const currentDept = deptSelect.value;
+      const currentDono = donoSelect.value;
+
+      const depts = new Set();
+      const donos = new Set();
+      tasks.forEach(t => {
+        if (t.dept) depts.add(t.dept);
+        if (t.dono) donos.add(t.dono);
+      });
+
+      deptSelect.innerHTML = '<option value="">Todos os Departamentos</option>';
+      Array.from(depts).sort().forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        deptSelect.appendChild(opt);
+      });
+      deptSelect.value = currentDept;
+
+      donoSelect.innerHTML = '<option value="">Todos os Responsáveis</option>';
+      Array.from(donos).sort().forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        donoSelect.appendChild(opt);
+      });
+      donoSelect.value = currentDono;
+    }
+
+    // 3. Lista de Tarefas
+    function renderTarefasList() {
+      const container = document.getElementById('tarefas-list-container');
+      const pill = document.getElementById('tasks-count-pill');
+      if (!container) return;
+
+      const fDept = document.getElementById('filter-dept').value;
+      const fPrio = document.getElementById('filter-prio').value;
+      const fDono = document.getElementById('filter-dono').value;
+      const fStatus = document.getElementById('filter-status').value;
+
+      const filtered = tasks.filter(t => {
+        if (fDept && t.dept !== fDept) return false;
+        if (fPrio && t.prio !== fPrio) return false;
+        if (fDono && t.dono !== fDono) return false;
+        if (fStatus) {
+          if (fStatus === '__ABERTOS__') {
+            if (t.status === 'Concluídos') return false;
+          } else if (t.status !== fStatus) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (pill) pill.textContent = `${filtered.length} de ${tasks.length} tarefas`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="background:#FFF; padding:40px; text-align:center; border:1px solid var(--border); border-radius:var(--radius); color:#888;">
+            Nenhuma tarefa encontrada com os filtros aplicados.
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(t => {
+        const statusSlug = t.status.toLowerCase().replace(/\s+/g, '-');
+        const prioSlug = t.prio.toLowerCase().replace('é', 'e');
+
+        html += `
+          <div class="task-row-card" onclick="openTask('${t.id}')">
+            <div class="task-main">
+              <div class="task-header-line">
+                <span class="task-id">${t.id}</span>
+                <span class="task-title">${escapeHtml(t.tarefa)}</span>
+              </div>
+              <div class="task-meta">
+                <span>📁 ${escapeHtml(t.dept)}</span>
+                <span>👤 ${escapeHtml(t.dono)}</span>
+                ${t.prazo ? `<span>📅 Prazo: ${escapeHtml(t.prazo)}</span>` : ''}
+                ${t.origem ? `<span>🔗 ${escapeHtml(t.origem)}</span>` : ''}
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+              <span class="badge-prio prio-${prioSlug}">${t.prio}</span>
+              <span class="badge-status badge-${statusSlug}">${t.status}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 4. Kanban
+    function renderKanban() {
+      const colIdeia = document.getElementById('kanban-col-ideia');
+      const colAfazer = document.getElementById('kanban-col-afazer');
+      const colAndamento = document.getElementById('kanban-col-andamento');
+      const colConcluidos = document.getElementById('kanban-col-concluidos');
+
+      if (!colIdeia || !colAfazer || !colAndamento || !colConcluidos) return;
+
+      const itemsIdeia = tasks.filter(t => t.status === 'Ideia');
+      const itemsAfazer = tasks.filter(t => t.status === 'A Fazer');
+      const itemsAndamento = tasks.filter(t => t.status === 'Em Andamento');
+      const itemsConcluidos = tasks.filter(t => t.status === 'Concluídos');
+
+      document.getElementById('kanban-count-ideia').textContent = itemsIdeia.length;
+      document.getElementById('kanban-count-afazer').textContent = itemsAfazer.length;
+      document.getElementById('kanban-count-andamento').textContent = itemsAndamento.length;
+      document.getElementById('kanban-count-concluidos').textContent = itemsConcluidos.length;
+
+      const renderCards = (arr) => {
+        if (arr.length === 0) {
+          return '<div style="padding:16px; text-align:center; font-size:12px; color:#A09E9B;">Sem tarefas</div>';
+        }
+        return arr.map(t => {
+          const prioSlug = t.prio.toLowerCase().replace('é', 'e');
+          return `
+            <div class="kanban-item" onclick="openTask('${t.id}')">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; font-weight:700; color:#9A752B;">${t.id}</span>
+                <span class="badge-prio prio-${prioSlug}">${t.prio}</span>
+              </div>
+              <div style="font-size:13.5px; font-weight:600; color:#2F2F2F; line-height:1.3;">
+                ${escapeHtml(t.tarefa)}
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#7A7A7A; border-top:1px dashed #ECE8E0; padding-top:6px; margin-top:2px;">
+                <span>${escapeHtml(t.dept)}</span>
+                <span style="font-weight:600; color:#555;">${escapeHtml(t.dono)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      colIdeia.innerHTML = renderCards(itemsIdeia);
+      colAfazer.innerHTML = renderCards(itemsAfazer);
+      colAndamento.innerHTML = renderCards(itemsAndamento);
+      colConcluidos.innerHTML = renderCards(itemsConcluidos);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // ==========================================
+    // INICIALIZAÇÃO CONTROLADA
+    // ==========================================
     window.addEventListener('DOMContentLoaded', function() {
+      // 1. Mostrar tela Início imediatamente
       showScreen('inicio');
+
+      // 2. Renderizar IMEDIATAMENTE de forma síncrona com localStorage ou fallback
+      const cached = localStorage.getItem('meuExecutor_tarefas');
+      if (cached) {
+        try {
+          tasks = normalizeTasks(JSON.parse(cached));
+          setSyncStatus('synced', 'Dados em cache ✓');
+        } catch(e) {
+          tasks = normalizeTasks(tarefasFallback);
+          setSyncStatus('offline', 'Modo offline');
+        }
+      } else {
+        tasks = normalizeTasks(tarefasFallback);
+        setSyncStatus('syncing', 'Carregando planilha...');
+      }
+
+      // Renderiza todos os cards e gráficos com números visíveis
+      renderAll();
+
+      // 3. Executar sincronização assíncrona com a planilha (Apps Script -> CSV -> Fallback)
       loadFromSheet();
     });
   </script>
+
 <script>
 /* Skip artifact shell — fixed helpers served beside every artifact. */
 (function () {
