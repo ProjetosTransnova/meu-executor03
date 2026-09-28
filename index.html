@@ -1,2553 +1,745 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Meu Executor — App sincronizado com a planilha</title>
-
-  <!-- Allowed Basecoat CDN and Shell stylesheets -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
-  <style>
-/* Skip artifact shell — fixed styles served beside every artifact.
-   Complements basecoat; artifacts override --accent for their own identity. */
-:root {
-  color-scheme: light dark;
-  --accent: #2563eb;
-  --accent-contrast: #ffffff;
-  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
-  --bg: #f8f9fb;
-  --surface: #ffffff;
-  --text: #14171f;
-  --text-muted: #5b6472;
-  --border: rgba(20, 23, 31, 0.10);
-  --radius: 10px;
-  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
-  --space: 16px;
-}
-/* Theme resolution. Without data-theme the viewer's system preference decides,
-   as it always did. With it, the artifact's own choice wins in BOTH directions:
-   a page that hardcodes one palette must not be handed the opposite set of
-   tokens by the machine it happens to be opened on. The dark values appear
-   twice because a media query cannot be folded into a selector list.
-   The attribute sits inside :where() so these blocks keep the specificity of a
-   bare :root — the page's own <style> is linked after this file and must go on
-   overriding any token it wants, exactly as it could before. */
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
-    --bg: #101318;
-    --surface: #181c23;
-    --text: #eef1f6;
-    --text-muted: #9aa4b2;
-    --border: rgba(238, 241, 246, 0.12);
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  }
-}
-:root:where([data-theme="dark"]) {
-  color-scheme: dark;
-  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
-  --bg: #101318;
-  --surface: #181c23;
-  --text: #eef1f6;
-  --text-muted: #9aa4b2;
-  --border: rgba(238, 241, 246, 0.12);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-:root:where([data-theme="light"]) { color-scheme: light; }
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-}
-img { max-width: 100%; display: block; }
-
-.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-.shell-section { padding: calc(var(--space) * 2) 0; }
-.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
-.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
-
-.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
-.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
-.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
-
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: var(--space);
-}
-
-.kpi { display: flex; flex-direction: column; gap: 4px; }
-.kpi .kpi-value { font-size: 28px; font-weight: 650; line-height: 1.1; }
-.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
-.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
-.kpi .kpi-delta.up { color: #0a8f3c; }
-.kpi .kpi-delta.down { color: #cf3131; }
-
-table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
-table.shell-table th {
-  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
-  color: var(--text-muted); font-weight: 600;
-}
-table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
-table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
-table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
-
-.chart-box { width: 100%; min-height: 220px; }
-.chart-box svg { width: 100%; height: auto; display: block; }
-
-.muted { color: var(--text-muted); }
-.accent { color: var(--accent-text); }
-.shell-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .shell-fade { animation: shell-fade 400ms ease both; }
-  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-}
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Executor — Transnova Transportes</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","SF Compact","Helvetica Neue",Arial,sans-serif;background:#FAF8F6;color:#3A3A3A;padding-bottom:90px}
+header{background:#FFFFFF;border-bottom:1px solid #ECECEC;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{color:#C9A86A;font-size:26px;line-height:1}
+.brand h1{font-size:18px;font-weight:700;letter-spacing:.2px}
+.brand .sub{display:block;font-size:12px;color:#C9A86A;font-weight:600;letter-spacing:1px}
+.conn{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:#E4F2E8;color:#3E8E5E}
+.conn.off{background:#F2E4C8;color:#9A7726}
+.btn-add{background:#C9A86A;color:#FFF;border:none;border-radius:22px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.btn-add:hover{background:#B8975A}
+nav{display:flex;gap:6px;background:#F4F1EC;border-radius:24px;padding:4px}
+nav button{border:none;background:transparent;padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;color:#6A6A6A;cursor:pointer}
+nav button.active{background:#FFFFFF;color:#C9A86A;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+main{max-width:1100px;margin:0 auto;padding:18px}
+section{display:none}
+section.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:#FFFFFF;border:1px solid #ECECEC;border-radius:14px;padding:14px}
+.kpi .num{font-size:24px;font-weight:800;color:#3A3A3A}
+.kpi .lbl{font-size:11px;color:#9A9A9A;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.kpi .dsc{font-size:10px;color:#C9A86A;margin-top:2px}
+.grid-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.chart-card{background:#FFFFFF;border:1px solid #ECECEC;border-radius:14px;padding:16px}
+.chart-card h3{font-size:14px;font-weight:700;margin-bottom:4px;color:#3A3A3A}
+.chart-card p{font-size:11px;color:#9A9A9A;margin-bottom:10px}
+.chart-wrap{position:relative;height:300px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.filters select{border:1px solid #ECECEC;border-radius:10px;padding:8px 10px;font-size:13px;background:#FFF;color:#3A3A3A}
+.task-card{background:#FFFFFF;border:1px solid #ECECEC;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:box-shadow .15s}
+.task-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.task-card.excl{opacity:.55}
+.task-id{font-size:11px;font-weight:700;color:#C9A86A;min-width:58px}
+.task-title{font-size:14px;font-weight:600;flex:1}
+.task-meta{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px}
+.chip.dept{background:#F0EDE8;color:#6A6A6A}
+.chip.A{background:#F2C4C4;color:#94414A}
+.chip.M{background:#F5E3C0;color:#8A6A2A}
+.chip.B{background:#CDE8D8;color:#3E7A5A}
+.chip.ideia{background:#E5E5E5;color:#6A6A6A}
+.chip.afazer{background:#A8C8E8;color:#2E5A8A}
+.chip.andamento{background:#F2D8A7;color:#8A6A2A}
+.chip.concluidos{background:#B8DCC8;color:#2E6A4A}
+.chip.excluido{background:#E8D5D1;color:#8A4A42}
+.kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.kcol{background:#F4F1EC;border-radius:14px;padding:12px;min-height:200px}
+.kcol.exc{background:#F3EDEA;opacity:.85}
+.kcol h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#6A6A6A;margin-bottom:10px;display:flex;justify-content:space-between}
+.kcol h4 span{background:#FFF;border-radius:10px;padding:1px 8px;font-size:11px}
+.kcard{background:#FFF;border:1px solid #ECECEC;border-left:4px solid #C9A86A;border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer}
+.kcard.exc{opacity:.65;border-left-color:#C9A0A0}
+.kcard .kt{font-size:13px;font-weight:600;margin-bottom:4px}
+.kcard .km{font-size:11px;color:#9A9A9A}
+.modal-overlay{position:fixed;inset:0;background:rgba(58,58,58,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{background:#FFF;border-radius:16px;max-width:520px;width:100%;padding:20px;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:16px;font-weight:800;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid .full{grid-column:1/-1}
+label{font-size:11px;font-weight:700;color:#9A9A9A;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px}
+input,select,textarea{width:100%;border:1px solid #ECECEC;border-radius:10px;padding:9px 10px;font-size:13px;color:#3A3A3A;background:#FFF;font-family:inherit}
+textarea{resize:vertical;min-height:60px}
+.modal-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn{border:none;border-radius:22px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.btn.primary{background:#C9A86A;color:#FFF}
+.btn.green{background:#B8DCC8;color:#2E6A4A}
+.btn.danger{background:#E8CCCC;color:#8A4444}
+.btn.ghost{background:#F4F1EC;color:#6A6A6A}
+.btn:hover{opacity:.9}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#3A3A3A;color:#FFF;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+footer{text-align:center;color:#B5B0A8;font-size:11px;padding:18px}
+@media(max-width:600px){.brand h1{font-size:15px}nav button{padding:6px 10px;font-size:12px}}
 </style>
-  
-
-  <style>
-    :root {
-      --accent: #C9A86A;
-      --accent-contrast: #221B0F;
-      --bg: #FAF8F6;
-      --surface: #FFFFFF;
-      --text: #3A3A3A;
-      --text-muted: #7A7A7A;
-      --border: #ECECEC;
-      --radius: 14px;
-      --radius-sm: 8px;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Header & Navigation */
-    .app-header {
-      background: #FFFFFF;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: #FFF9ED;
-      border: 1px solid #F2E3C4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #9A752B;
-    }
-
-    .brand-title {
-      font-size: 19px;
-      font-weight: 700;
-      margin: 0;
-      line-height: 1.2;
-      color: #2F2D2B;
-      letter-spacing: -0.3px;
-    }
-
-    .brand-sub {
-      font-size: 12px;
-      font-weight: 600;
-      color: #9A752B;
-      letter-spacing: 0.2px;
-      margin: 0;
-    }
-
-    .sync-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: #EDF7F1;
-      color: #1F6E43;
-      font-weight: 600;
-      border: 1px solid #CEE8D8;
-    }
-    .sync-badge.offline {
-      background: #F8F4EE;
-      color: #8C6A28;
-      border-color: #EBD8B3;
-    }
-    .sync-badge.syncing {
-      background: #EBF3FB;
-      color: #2A6496;
-      border-color: #C6DEF2;
-    }
-
-    .nav-desktop {
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
-
-    @media (min-width: 768px) {
-      .nav-desktop { display: flex; }
-      .nav-mobile { display: none !important; }
-    }
-
-    .nav-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-btn:hover {
-      background: #F4F1EC;
-      color: var(--text);
-    }
-
-    .nav-btn.active {
-      background: #F4EEDF;
-      color: #664A12;
-      border-color: #E6D5B4;
-    }
-
-    .btn-add {
-      background: #C9A86A;
-      color: #221B0F;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 13.5px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(201, 168, 106, 0.35);
-      transition: transform 0.1s ease, filter 0.15s;
-    }
-
-    .btn-add:hover {
-      filter: brightness(1.05);
-      transform: translateY(-1px);
-    }
-
-    /* Content Layout */
-    .app-main {
-      flex: 1;
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 20px 16px 80px 16px;
-      box-sizing: border-box;
-    }
-
-    @media (min-width: 768px) {
-      .app-main {
-        padding: 24px 20px 40px 20px;
-      }
-    }
-
-    .screen-view {
-      display: none;
-    }
-
-    .screen-view.active {
-      display: block;
-      animation: fadeIn 0.2s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* KPI Grid */
-    .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .kpi-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .kpi-card-label {
-      font-size: 11.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-    }
-
-    .kpi-card-value {
-      font-size: 26px;
-      font-weight: 700;
-      color: #2D2D2D;
-      line-height: 1.1;
-    }
-
-    .kpi-card-sub {
-      font-size: 11px;
-      color: #8A8A8A;
-    }
-
-    /* Charts Section */
-    .charts-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    @media (min-width: 768px) {
-      .charts-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1080px) {
-      .charts-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .chart-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .chart-card-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #333333;
-      margin: 0 0 4px 0;
-    }
-
-    .chart-card-sub {
-      font-size: 11.5px;
-      color: #8C8C8C;
-      margin: 0 0 12px 0;
-    }
-
-    .chart-card-body {
-      flex: 1;
-      position: relative;
-      min-height: 250px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Visual Badges */
-    .badge-status {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: capitalize;
-    }
-    .badge-ideia { background: #E5E5E5; color: #404040; }
-    .badge-a-fazer { background: #D5E6F5; color: #1E466E; }
-    .badge-em-andamento { background: #FCE8C4; color: #6D4C0A; }
-    .badge-concluidos { background: #CEEADB; color: #155734; }
-
-    .badge-prio {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .prio-alta { background: #FDE2E2; color: #8F2D2D; }
-    .prio-media { background: #FBEFDB; color: #805315; }
-    .prio-baixa { background: #E2F2E9; color: #22613D; }
-
-    /* Filters Bar */
-    .filters-bar {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .filter-item {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-      min-width: 130px;
-    }
-
-    .filter-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #888;
-      text-transform: uppercase;
-    }
-
-    .filter-select {
-      background: #FAF9F7;
-      border: 1px solid #DDD;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 13px;
-      color: #333;
-      outline: none;
-    }
-
-    /* Tasks List */
-    .task-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .task-row-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-    }
-
-    .task-row-card:hover {
-      border-color: #D6C29E;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-    }
-
-    .task-main {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
-
-    .task-header-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .task-id {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #9A752B;
-      letter-spacing: 0.3px;
-    }
-
-    .task-title {
-      font-size: 14.5px;
-      font-weight: 600;
-      color: #2F2F2F;
-    }
-
-    .task-meta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 12px;
-      color: #7E7E7E;
-      flex-wrap: wrap;
-    }
-
-    .task-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Kanban */
-    .kanban-board {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    @media (min-width: 900px) {
-      .kanban-board {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
-    .kanban-col {
-      background: #F4F2EF;
-      border-radius: var(--radius);
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      min-height: 480px;
-    }
-
-    .kanban-col-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 4px 10px 4px;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      margin-bottom: 10px;
-    }
-
-    .kanban-col-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #4A4A4A;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .kanban-count {
-      background: #FFFFFF;
-      border-radius: 999px;
-      font-size: 11px;
-      padding: 1px 8px;
-      font-weight: 700;
-      color: #666;
-    }
-
-    .kanban-cards-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex: 1;
-    }
-
-    .kanban-item {
-      background: #FFFFFF;
-      border: 1px solid #E6E3DE;
-      border-radius: 10px;
-      padding: 12px;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-      transition: all 0.15s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .kanban-item:hover {
-      border-color: #C9A86A;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-    }
-
-    /* Modal */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(20, 20, 20, 0.45);
-      backdrop-filter: blur(2px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-window {
-      background: #FFFFFF;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-      border: 1px solid #EBE8E3;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .modal-head {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin: 0;
-      color: #2B2A29;
-    }
-
-    .modal-close-btn {
-      background: none;
-      border: none;
-      font-size: 22px;
-      color: #999;
-      cursor: pointer;
-      line-height: 1;
-      padding: 4px;
-    }
-
-    .modal-body {
-      padding: 20px 22px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    @media (min-width: 520px) {
-      .modal-body.grid-2 {
-        grid-template-columns: 1fr 1fr;
-      }
-      .col-span-2 {
-        grid-column: span 2;
-      }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .form-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .form-input, .form-select, .form-textarea {
-      background: #FAF9F6;
-      border: 1px solid #DCD8D0;
-      border-radius: 8px;
-      padding: 8px 11px;
-      font-size: 13.5px;
-      color: #2F2F2F;
-      font-family: inherit;
-    }
-
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none;
-      border-color: #C9A86A;
-      background: #FFF;
-      box-shadow: 0 0 0 2px rgba(201,168,106,0.2);
-    }
-
-    .modal-footer {
-      padding: 16px 22px;
-      border-top: 1px solid var(--border);
-      background: #FDFBF8;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* Mobile Bottom Bar */
-    .nav-mobile {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #FFFFFF;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 8px 10px;
-      z-index: 50;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
-    }
-
-    .mobile-tab-btn {
-      background: none;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #8C8C8C;
-      cursor: pointer;
-      padding: 4px 10px;
-    }
-
-    .mobile-tab-btn.active {
-      color: #9A752B;
-    }
-
-    .mobile-add-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #C9A86A;
-      color: #221B0F;
-      border: none;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 8px rgba(201,168,106,0.4);
-      cursor: pointer;
-    }
-
-    /* Footer Note */
-    .app-footer-note {
-      text-align: center;
-      font-size: 12px;
-      color: #8E8A82;
-      padding: 24px 16px;
-      border-top: 1px solid var(--border);
-      background: #FAF8F6;
-    }
-
-    /* Toast notification */
-    #toast {
-      position: fixed;
-      bottom: 74px;
-      right: 20px;
-      background: #2E2E2E;
-      color: #FFF;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      z-index: 200;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: none;
-      animation: fadeIn 0.15s ease;
-    }
-    @media (min-width: 768px) {
-      #toast { bottom: 24px; }
-    }
-
-    /* SVG Chart Helpers */
-    .svg-chart-container {
-      width: 100%;
-      height: 100%;
-      min-height: 220px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .svg-legend {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 10px;
-      font-size: 11.5px;
-      color: #555;
-    }
-    .svg-legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .svg-legend-color {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      display: inline-block;
-    }
-  </style>
 </head>
 <body>
 
-  <!-- Top Application Header -->
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="brand-group">
-        <div class="brand-icon" title="Transnova Transportes e Logística">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="9" y1="18" x2="15" y2="18"></line>
-            <line x1="10" y1="22" x2="14" y2="22"></line>
-            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path>
-          </svg>
-        </div>
-        <div>
-          <h1 class="brand-title">Meu Executor</h1>
-          <p class="brand-sub">Transnova Transportes &bull; Renato Rodrigues</p>
-        </div>
-      </div>
-
-      <div style="display:flex; align-items:center; gap:16px;">
-        <span id="sync-status" class="sync-badge syncing">
-          <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:currentColor;"></span>
-          <span id="sync-text">Sincronizando...</span>
-        </span>
-
-        <!-- Desktop Navigation -->
-        <nav class="nav-desktop">
-          <button type="button" class="nav-btn active" id="desk-btn-inicio" onclick="showScreen('inicio')">Início</button>
-          <button type="button" class="nav-btn" id="desk-btn-tarefas" onclick="showScreen('tarefas')">Tarefas</button>
-          <button type="button" class="nav-btn" id="desk-btn-kanban" onclick="showScreen('kanban')">Kanban</button>
-          <button type="button" class="btn-add" onclick="openNewTask()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Nova Tarefa
-          </button>
-        </nav>
-      </div>
+<header>
+  <div class="brand">
+    <div class="logo">💡</div>
+    <div>
+      <h1>Meu Executor</h1>
+      <span class="sub">TRANSNOVA TRANSPORTES</span>
     </div>
-  </header>
-
-  <!-- Main View Screens -->
-  <main class="app-main">
-
-    <!-- ==================== SCREEN 1: INÍCIO ==================== -->
-    <section id="screen-inicio" class="screen-view active">
-      <!-- Upper KPI Grid -->
-      <div class="kpi-row">
-        <div class="kpi-card">
-          <span class="kpi-card-label">Total de Tarefas</span>
-          <span class="kpi-card-value" id="kpi-total">0</span>
-          <span class="kpi-card-sub">Base consolidada</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-card-label">Em Andamento</span>
-          <span class="kpi-card-value" style="color:#A17013;" id="kpi-andamento">0</span>
-          <span class="kpi-card-sub">Em execução</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-card-label">Concluídos</span>
-          <span class="kpi-card-value" style="color:#206E44;" id="kpi-concluidos">0</span>
-          <span class="kpi-card-sub">Finalizadas</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-card-label">Abertos</span>
-          <span class="kpi-card-value" style="color:#2A5F9E;" id="kpi-abertos">0</span>
-          <span class="kpi-card-sub">Ideia + Fazer + And.</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-card-label">% Abertos × Conc.</span>
-          <span class="kpi-card-value" id="kpi-pct">0%</span>
-          <span class="kpi-card-sub">Taxa de entrega</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-card-label">Vencendo em 7d</span>
-          <span class="kpi-card-value" style="color:#B36B00;" id="kpi-vencendo7">0</span>
-          <span class="kpi-card-sub">Atenção imediata</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-card-label">Vencidas</span>
-          <span class="kpi-card-value" style="color:#A82B2B;" id="kpi-vencidas">0</span>
-          <span class="kpi-card-sub">Prazo expirado</span>
-        </div>
-      </div>
-
-      <!-- 6 Charts with VISIBLE NUMBERS on every element -->
-      <div class="charts-grid">
-        <!-- 1. Distribuição por Status - Rosca -->
-        <div class="chart-card">
-          <h3 class="chart-card-title">1. Distribuição por Status</h3>
-          <p class="chart-card-sub">Volume de tarefas pelo fluxo atual</p>
-          <div class="chart-card-body" id="chart-status-box"></div>
-        </div>
-
-        <!-- 2. Distribuição por Departamento - Barras Horizontais -->
-        <div class="chart-card">
-          <h3 class="chart-card-title">2. Distribuição por Departamento</h3>
-          <p class="chart-card-sub">Demandas por área da Transnova</p>
-          <div class="chart-card-body" id="chart-dept-box"></div>
-        </div>
-
-        <!-- 3. Distribuição por Prioridade - Pizza -->
-        <div class="chart-card">
-          <h3 class="chart-card-title">3. Distribuição por Prioridade</h3>
-          <p class="chart-card-sub">Criticidade das atividades</p>
-          <div class="chart-card-body" id="chart-prio-box"></div>
-        </div>
-
-        <!-- 4. Carga por Dono - Radar / Matriz de Atuação -->
-        <div class="chart-card">
-          <h3 class="chart-card-title">4. Carga por Dono</h3>
-          <p class="chart-card-sub">Distribuição da carteira por responsável</p>
-          <div class="chart-card-body" id="chart-dono-box"></div>
-        </div>
-
-        <!-- 5. Abertos × Concluídos -->
-        <div class="chart-card">
-          <h3 class="chart-card-title">5. Abertos × Concluídos</h3>
-          <p class="chart-card-sub">Proporção operacional e avanço</p>
-          <div class="chart-card-body" id="chart-abertos-box"></div>
-        </div>
-
-        <!-- 6. Concluídos ao longo do tempo / Origem -->
-        <div class="chart-card">
-          <h3 class="chart-card-title">6. Concluídos & Tendência por Origem</h3>
-          <p class="chart-card-sub">Origem e evolução das entregas</p>
-          <div class="chart-card-body" id="chart-tempo-box"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== SCREEN 2: TAREFAS ==================== -->
-    <section id="screen-tarefas" class="screen-view">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <h2 style="font-size:18px; font-weight:700; margin:0; color:#2E2D2B;">Lista de Tarefas</h2>
-        <span id="tasks-count-pill" style="font-size:12px; font-weight:600; color:#777; background:#FFF; border:1px solid #DDD; padding:4px 10px; border-radius:999px;">0 tarefas</span>
-      </div>
-
-      <!-- Filters Row -->
-      <div class="filters-bar">
-        <div class="filter-item">
-          <label class="filter-label" for="filter-dept">Departamento</label>
-          <select id="filter-dept" class="filter-select" onchange="renderTarefasList()">
-            <option value="">Todos</option>
-          </select>
-        </div>
-        <div class="filter-item">
-          <label class="filter-label" for="filter-prio">Prioridade</label>
-          <select id="filter-prio" class="filter-select" onchange="renderTarefasList()">
-            <option value="">Todas</option>
-            <option value="Alta">Alta</option>
-            <option value="Média">Média</option>
-            <option value="Baixa">Baixa</option>
-          </select>
-        </div>
-        <div class="filter-item">
-          <label class="filter-label" for="filter-dono">Dono</label>
-          <select id="filter-dono" class="filter-select" onchange="renderTarefasList()">
-            <option value="">Todos</option>
-          </select>
-        </div>
-        <div class="filter-item">
-          <label class="filter-label" for="filter-status">Status</label>
-          <select id="filter-status" class="filter-select" onchange="renderTarefasList()">
-            <option value="">Todos</option>
-            <option value="Ideia">Ideia</option>
-            <option value="A Fazer">A Fazer</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluídos">Concluídos</option>
-            <option value="__ABERTOS__">Abertos (Não Concluídos)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Tasks Cards Container -->
-      <div id="tarefas-list-container" class="task-list"></div>
-    </section>
-
-    <!-- ==================== SCREEN 3: KANBAN ==================== -->
-    <section id="screen-kanban" class="screen-view">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <div>
-          <h2 style="font-size:18px; font-weight:700; margin:0; color:#2E2D2B;">Quadro Kanban</h2>
-          <p style="font-size:12px; color:#777; margin:2px 0 0 0;">Fluxo contínuo de entregas Transnova</p>
-        </div>
-      </div>
-
-      <div class="kanban-board">
-        <!-- Col: Ideia -->
-        <div class="kanban-col">
-          <div class="kanban-col-header">
-            <span class="kanban-col-title">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#9E9E9E;"></span>
-              Ideia
-            </span>
-            <span class="kanban-count" id="kanban-count-ideia">0</span>
-          </div>
-          <div class="kanban-cards-wrapper" id="kanban-col-ideia"></div>
-        </div>
-
-        <!-- Col: A Fazer -->
-        <div class="kanban-col">
-          <div class="kanban-col-header">
-            <span class="kanban-col-title">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#5C9BD1;"></span>
-              A Fazer
-            </span>
-            <span class="kanban-count" id="kanban-count-afazer">0</span>
-          </div>
-          <div class="kanban-cards-wrapper" id="kanban-col-afazer"></div>
-        </div>
-
-        <!-- Col: Em Andamento -->
-        <div class="kanban-col">
-          <div class="kanban-col-header">
-            <span class="kanban-col-title">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#D69E3D;"></span>
-              Em Andamento
-            </span>
-            <span class="kanban-count" id="kanban-count-andamento">0</span>
-          </div>
-          <div class="kanban-cards-wrapper" id="kanban-col-andamento"></div>
-        </div>
-
-        <!-- Col: Concluídos -->
-        <div class="kanban-col">
-          <div class="kanban-col-header">
-            <span class="kanban-col-title">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#3C9C66;"></span>
-              Concluídos
-            </span>
-            <span class="kanban-count" id="kanban-count-concluidos">0</span>
-          </div>
-          <div class="kanban-cards-wrapper" id="kanban-col-concluidos"></div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Mobile Bottom Tab Navigation -->
-  <nav class="nav-mobile">
-    <button type="button" class="mobile-tab-btn active" id="mob-btn-inicio" onclick="showScreen('inicio')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-      <span>Início</span>
-    </button>
-    <button type="button" class="mobile-tab-btn" id="mob-btn-tarefas" onclick="showScreen('tarefas')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-      <span>Tarefas</span>
-    </button>
-    <button type="button" class="mobile-add-btn" onclick="openNewTask()" aria-label="Adicionar Tarefa">
-      +
-    </button>
-    <button type="button" class="mobile-tab-btn" id="mob-btn-kanban" onclick="showScreen('kanban')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"></rect><rect x="14" y="3" width="7" height="10" rx="1"></rect></svg>
-      <span>Kanban</span>
-    </button>
+  </div>
+  <span id="connStatus" class="conn off">Salvo localmente (offline)</span>
+  <nav>
+    <button id="tab-inicio" class="active" onclick="showScreen('inicio')">Início</button>
+    <button id="tab-tarefas" onclick="showScreen('tarefas')">Tarefas</button>
+    <button id="tab-kanban" onclick="showScreen('kanban')">Kanban</button>
   </nav>
+  <button class="btn-add" onclick="openNewTask()">+ Nova Tarefa</button>
+</header>
 
-  <!-- MODAL: Detalhes & Edição de Tarefa -->
-  <div id="modal-task" class="modal-backdrop" onclick="handleBackdropClick(event, 'modal-task')">
-    <div class="modal-window">
-      <div class="modal-head">
-        <h3 class="modal-title" id="edit-modal-heading">Editar Tarefa</h3>
-        <button type="button" class="modal-close-btn" onclick="closeModal('modal-task')">&times;</button>
-      </div>
-      <div class="modal-body grid-2">
-        <div class="form-group">
-          <label class="form-label" for="edit-id">ID</label>
-          <input type="text" id="edit-id" class="form-input" readonly style="background:#F0EFEA; font-weight:700; color:#555;">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="edit-prio">Prioridade</label>
-          <select id="edit-prio" class="form-select">
-            <option value="Alta">Alta</option>
-            <option value="Média">Média</option>
-            <option value="Baixa">Baixa</option>
-          </select>
-        </div>
-        <div class="form-group col-span-2">
-          <label class="form-label" for="edit-tarefa">Tarefa / Descrição *</label>
-          <input type="text" id="edit-tarefa" class="form-input" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="edit-dept">Departamento</label>
-          <input type="text" id="edit-dept" class="form-input" list="list-dept">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="edit-status">Status</label>
-          <select id="edit-status" class="form-select">
-            <option value="Ideia">Ideia</option>
-            <option value="A Fazer">A Fazer</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluídos">Concluídos</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="edit-dono">Dono</label>
-          <input type="text" id="edit-dono" class="form-input" list="list-dono">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="edit-prazo">Prazo (DD/MM/AAAA)</label>
-          <input type="text" id="edit-prazo" class="form-input" placeholder="ex: 25/11/2026">
-        </div>
-        <div class="form-group col-span-2">
-          <label class="form-label" for="edit-origem">Origem</label>
-          <input type="text" id="edit-origem" class="form-input" placeholder="Projeto, Reunião, E-mail...">
-        </div>
-        <div class="form-group col-span-2">
-          <label class="form-label" for="edit-obs">Observações</label>
-          <textarea id="edit-obs" class="form-textarea" rows="3" placeholder="Anotações adicionais..."></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn" onclick="changeStatusFromModal('Em Andamento')" style="background:#FFF1D6; color:#784D09; border:1px solid #E6CA92;">Iniciar</button>
-        <button type="button" class="btn" onclick="changeStatusFromModal('Concluídos')" style="background:#D8F2E2; color:#186337; border:1px solid #B0DCBE;">Concluir</button>
-        <button type="button" class="btn" onclick="closeModal('modal-task')">Fechar</button>
-        <button type="button" class="btn-add" onclick="saveTask()">Salvar Alterações</button>
-      </div>
+<main>
+  <section id="screen-inicio">
+    <div class="kpis" id="kpis"></div>
+    <div class="grid-charts">
+      <div class="chart-card"><h3>Distribuição por Status</h3><p>Panorama do fluxo de trabalho</p><div class="chart-wrap"><canvas id="chStatus"></canvas></div></div>
+      <div class="chart-card"><h3>Distribuição por Departamento</h3><p>Carga de trabalho por área</p><div class="chart-wrap"><canvas id="chDept"></canvas></div></div>
+      <div class="chart-card"><h3>Distribuição por Prioridade</h3><p>Alta · Média · Baixa</p><div class="chart-wrap"><canvas id="chPrio"></canvas></div></div>
+      <div class="chart-card"><h3>Carga por Dono</h3><p>Rodas: Ativas · Vencendo 7d · Vencidas · Concluídas</p><div class="chart-wrap"><canvas id="chDono"></canvas></div></div>
+      <div class="chart-card"><h3>Abertos × Concluídos</h3><p>Proporção do pipeline</p><div class="chart-wrap"><canvas id="chAberto"></canvas></div></div>
+      <div class="chart-card"><h3>Tendência por Origem</h3><p>De onde vêm as demandas</p><div class="chart-wrap"><canvas id="chOrigem"></canvas></div></div>
+    </div>
+  </section>
+
+  <section id="screen-tarefas">
+    <div class="filters">
+      <select id="fDept" onchange="renderList()"><option value="">Todos os departamentos</option></select>
+      <select id="fPrio" onchange="renderList()"><option value="">Todas as prioridades</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+      <select id="fDono" onchange="renderList()"><option value="">Todos os donos</option></select>
+      <select id="fStatus" onchange="renderList()"><option value="">Todos (sem excluídos)</option><option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option><option>Abertos</option><option>Excluídos</option></select>
+    </div>
+    <div id="taskList"></div>
+  </section>
+
+  <section id="screen-kanban">
+    <div class="kanban" id="kanban"></div>
+  </section>
+</main>
+
+<footer>Dados sincronizados com a planilha Gestao_Tarefas_Transnova (fonte de verdade).</footer>
+
+<div id="modal-editar" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h2>Editar tarefa</h2>
+    <div class="form-grid">
+      <div><label>ID</label><input id="eId" readonly></div>
+      <div><label>Prazo (DD/MM/AAAA)</label><input id="ePrazo" placeholder="28/09/2026"></div>
+      <div class="full"><label>Tarefa / Descrição</label><input id="eTarefa"></div>
+      <div><label>Departamento</label><select id="eDept"></select></div>
+      <div><label>Prioridade</label><select id="ePrio"><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
+      <div><label>Status</label><select id="eStatus"><option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option><option>Excluído</option></select></div>
+      <div><label>Dono</label><select id="eDono"><option>Renato</option><option>Equipe</option><option>Terceiro</option></select></div>
+      <div><label>Origem</label><select id="eOrigem"><option>E-mail</option><option>Reunião</option><option>Caderno</option><option>Decisão</option><option>Projeto</option><option>Ideia</option></select></div>
+      <div class="full"><label>Observações</label><textarea id="eObs"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="saveTask()">Salvar</button>
+      <button class="btn green" onclick="changeStatus('Em Andamento')" id="btnIniciar">Iniciar</button>
+      <button class="btn green" onclick="changeStatus('Concluídos')" id="btnConcluir">Concluir</button>
+      <button class="btn danger" id="btnExcluir" onclick="excluirTask()">Excluir</button>
+      <button class="btn ghost" onclick="closeModal()">Fechar</button>
     </div>
   </div>
+</div>
 
-  <!-- MODAL: Nova Tarefa -->
-  <div id="modal-new" class="modal-backdrop" onclick="handleBackdropClick(event, 'modal-new')">
-    <div class="modal-window">
-      <div class="modal-head">
-        <h3 class="modal-title">Nova Tarefa</h3>
-        <button type="button" class="modal-close-btn" onclick="closeModal('modal-new')">&times;</button>
-      </div>
-      <div class="modal-body grid-2">
-        <div class="form-group col-span-2">
-          <label class="form-label" for="new-tarefa">Tarefa / Descrição *</label>
-          <input type="text" id="new-tarefa" class="form-input" placeholder="Ex: Homologar fornecedor de frete" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="new-dept">Departamento</label>
-          <input type="text" id="new-dept" class="form-input" list="list-dept" placeholder="Dpto Projetos">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="new-prio">Prioridade</label>
-          <select id="new-prio" class="form-select">
-            <option value="Alta">Alta</option>
-            <option value="Média" selected>Média</option>
-            <option value="Baixa">Baixa</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="new-status">Status</label>
-          <select id="new-status" class="form-select">
-            <option value="Ideia">Ideia</option>
-            <option value="A Fazer" selected>A Fazer</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluídos">Concluídos</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="new-prazo">Prazo (DD/MM/AAAA)</label>
-          <input type="text" id="new-prazo" class="form-input" placeholder="DD/MM/AAAA">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="new-dono">Dono</label>
-          <input type="text" id="new-dono" class="form-input" list="list-dono" placeholder="Renato">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="new-origem">Origem</label>
-          <input type="text" id="new-origem" class="form-input" placeholder="Projeto, E-mail...">
-        </div>
-        <div class="form-group col-span-2">
-          <label class="form-label" for="new-obs">Observações</label>
-          <textarea id="new-obs" class="form-textarea" rows="3" placeholder="Informações contextuais..."></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn" onclick="closeModal('modal-new')">Cancelar</button>
-        <button type="button" class="btn-add" onclick="addTask()">Salvar Tarefa</button>
-      </div>
+<div id="modal-nova" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h2>Nova tarefa</h2>
+    <div class="form-grid">
+      <div class="full"><label>Tarefa / Descrição *</label><input id="nTarefa" placeholder="Descreva a tarefa"></div>
+      <div><label>Departamento</label><select id="nDept"></select></div>
+      <div><label>Prioridade</label><select id="nPrio"><option>Média</option><option>Alta</option><option>Baixa</option></select></div>
+      <div><label>Prazo (DD/MM/AAAA)</label><input id="nPrazo" placeholder="28/09/2026"></div>
+      <div><label>Status</label><select id="nStatus"><option>A Fazer</option><option>Ideia</option><option>Em Andamento</option><option>Concluídos</option></select></div>
+      <div><label>Dono</label><select id="nDono"><option>Renato</option><option>Equipe</option><option>Terceiro</option></select></div>
+      <div><label>Origem</label><select id="nOrigem"><option>Reunião</option><option>E-mail</option><option>Caderno</option><option>Decisão</option><option>Projeto</option><option>Ideia</option></select></div>
+      <div class="full"><label>Observações</label><textarea id="nObs"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="addTask()">Salvar</button>
+      <button class="btn ghost" onclick="closeNewModal()">Cancelar</button>
     </div>
   </div>
+</div>
 
-  <!-- Datalists for autocomplete -->
-  <datalist id="list-dept">
-    <option value="Dpto Projetos"></option>
-    <option value="Dpto GGC"></option>
-    <option value="Dpto Qualidade"></option>
-    <option value="Dpto Frota"></option>
-    <option value="Dpto Operacional"></option>
-    <option value="Dpto TI"></option>
-  </datalist>
-
-  <datalist id="list-dono">
-    <option value="Renato"></option>
-    <option value="Equipe"></option>
-    <option value="Terceiro"></option>
-  </datalist>
-
-  <!-- Toast Notification Bar -->
-  <div id="toast"></div>
-
-  <!-- Footer Note -->
-  <footer class="app-footer-note">
-    Dados sincronizados com a planilha <strong>Gestao_Tarefas_Transnova</strong> (fonte de verdade).
-  </footer>
-
-  <!-- SCRIPT INTEGRATION & RENDER LOGIC -->
-  <script>
-    // URLs de Integração (CONFORME ESPECIFICADO - NÃO ALTERAR)
-    const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ubl_ofQtSCVVVldp-ixQbaruWuPW5i-R5nfHfOKX1ftkEQz5YEtoLOMM38yEWa7cF4wnupKryVG/pub?gid=0&single=true&output=csv';
-
-    // DADOS DE FALLBACK (CONFORME ESPECIFICADO)
-    const tarefasFallback = [
-      {id:'TAR-001', tarefa:'Cronograma Mestre PMO', dept:'Dpto Projetos', prio:'Alta', prazo:'22/10/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
-      {id:'TAR-002', tarefa:'Auditoria de Frota GGC', dept:'Dpto GGC', prio:'Alta', prazo:'25/10/2026', status:'A Fazer', dono:'Equipe', origem:'Reunião', obs:''},
-      {id:'TAR-003', tarefa:'Revisão Procedimento ISO', dept:'Dpto Qualidade', prio:'Média', prazo:'29/10/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
-      {id:'TAR-004', tarefa:'Calibração de Rastreadores', dept:'Dpto Frota', prio:'Média', prazo:'04/11/2026', status:'A Fazer', dono:'Terceiro', origem:'E-mail', obs:''},
-      {id:'TAR-005', tarefa:'Checklist Diário Operação', dept:'Dpto Operacional', prio:'Baixa', prazo:'10/11/2026', status:'A Fazer', dono:'Equipe', origem:'Decisão', obs:''},
-      {id:'TAR-006', tarefa:'App motorista offline', dept:'Dpto Projetos', prio:'Média', prazo:'', status:'Ideia', dono:'Renato', origem:'Ideia', obs:''},
-      {id:'TAR-007', tarefa:'Dashboard TV no pátio', dept:'Dpto Operacional', prio:'Baixa', prazo:'', status:'Ideia', dono:'Equipe', origem:'Caderno', obs:''},
-      {id:'TAR-008', tarefa:'Migração frota GNV', dept:'Dpto Frota', prio:'Alta', prazo:'20/11/2026', status:'Em Andamento', dono:'Renato', origem:'Projeto', obs:''},
-      {id:'TAR-009', tarefa:'Certificação ANVISA', dept:'Dpto Qualidade', prio:'Alta', prazo:'15/11/2026', status:'A Fazer', dono:'Renato', origem:'E-mail', obs:''},
-      {id:'TAR-010', tarefa:'Endomarketing campanha', dept:'Dpto GGC', prio:'Baixa', prazo:'30/11/2026', status:'Concluídos', dono:'Equipe', origem:'Reunião', obs:''}
-    ];
-
-    // Estado da aplicação
-    let tasks = [];
-    let currentEditingTaskId = null;
-
-    // Toast feedback
-    function showToast(msg, duration = 3200) {
-      const toast = document.getElementById('toast');
-      if (!toast) return;
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      clearTimeout(window.__toastTimeout);
-      window.__toastTimeout = setTimeout(() => {
-        toast.style.display = 'none';
-      }, duration);
-    }
-
-    function setSyncStatus(state, label) {
-      const badge = document.getElementById('sync-status');
-      const text = document.getElementById('sync-text');
-      if (!badge || !text) return;
-      badge.className = 'sync-badge';
-      if (state === 'synced') {
-        badge.classList.add('synced');
-        text.textContent = label || 'Sincronizado ✓';
-      } else if (state === 'offline') {
-        badge.classList.add('offline');
-        text.textContent = label || 'Salvo localmente (offline)';
-      } else {
-        badge.classList.add('syncing');
-        text.textContent = label || 'Sincronizando...';
-      }
-    }
-
-    // Navegação entre telas
-    function showScreen(screenId) {
-      const screens = ['inicio', 'tarefas', 'kanban'];
-      screens.forEach(s => {
-        const el = document.getElementById('screen-' + s);
-        const deskBtn = document.getElementById('desk-btn-' + s);
-        const mobBtn = document.getElementById('mob-btn-' + s);
-
-        if (s === screenId) {
-          if (el) el.classList.add('active');
-          if (deskBtn) deskBtn.classList.add('active');
-          if (mobBtn) mobBtn.classList.add('active');
-        } else {
-          if (el) el.classList.remove('active');
-          if (deskBtn) deskBtn.classList.remove('active');
-          if (mobBtn) mobBtn.classList.remove('active');
-        }
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Helper de Parser de CSV robusto
-    function parseCSV(text) {
-      const lines = [];
-      let row = [];
-      let inQuotes = false;
-      let token = '';
-
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const nextChar = text[i + 1];
-
-        if (char === '"') {
-          if (inQuotes && nextChar === '"') {
-            token += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (char === ',' && !inQuotes) {
-          row.push(token.trim());
-          token = '';
-        } else if ((char === '\r' || char === '\n') && !inQuotes) {
-          if (char === '\r' && nextChar === '\n') i++;
-          row.push(token.trim());
-          if (row.length > 0 && row.some(cell => cell !== '')) {
-            lines.push(row);
-          }
-          row = [];
-          token = '';
-        } else {
-          token += char;
-        }
-      }
-      if (token.length > 0 || row.length > 0) {
-        row.push(token.trim());
-        lines.push(row);
-      }
-      return lines;
-    }
-
-    // Leitura da Planilha com 3 níveis de redundância
-    async function loadFromSheet() {
-      setSyncStatus('syncing', 'Sincronizando...');
-
-      // 1. Tentar Apps Script GET
-      try {
-        const res = await fetch(URL_APPS_SCRIPT, { method: 'GET', redirect: 'follow' });
-        let data;
-        const resUrl = res.url || '';
-        // Tratamento de redirect para googleusercontent se necessário
-        if (resUrl.includes('script.googleusercontent.com') || res.status === 302 || res.status === 303) {
-          const secondRes = await fetch(resUrl, { method: 'GET' });
-          data = await secondRes.json();
-        } else {
-          data = await res.json();
-        }
-
-        if (data && data.success && Array.isArray(data.tasks) && data.tasks.length > 0) {
-          tasks = normalizeTasks(data.tasks);
-          localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-          setSyncStatus('synced', 'Sincronizado ✓');
-          renderAll();
-          return;
-        }
-      } catch (err) {
-        console.warn('Falha Apps Script GET, tentando CSV...', err);
-      }
-
-      // 2. Tentar CSV Publicado
-      try {
-        const csvRes = await fetch(CSV_URL, { cache: 'no-store' });
-        if (csvRes.ok) {
-          const rawText = await csvRes.text();
-          const rows = parseCSV(rawText);
-          if (rows.length > 1) {
-            // Mapear colunas: ID, Tarefa / Descrição, Departamento, Prioridade, Prazo / Data, Status, Dono, Origem, Observações
-            const parsed = [];
-            for (let i = 1; i < rows.length; i++) {
-              const r = rows[i];
-              if (!r[0] && !r[1]) continue;
-              parsed.push({
-                id: r[0] || ('TAR-' + String(i).padStart(3, '0')),
-                tarefa: r[1] || '',
-                dept: r[2] || '',
-                prio: r[3] || 'Média',
-                prazo: r[4] || '',
-                status: r[5] || 'A Fazer',
-                dono: r[6] || '',
-                origem: r[7] || '',
-                obs: r[8] || ''
-              });
-            }
-            if (parsed.length > 0) {
-              tasks = normalizeTasks(parsed);
-              localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-              setSyncStatus('synced', 'Sincronizado ✓ (CSV)');
-              renderAll();
-              return;
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Falha leitura CSV...', err);
-      }
-
-      // Se falhar a rede, manter localStorage ou fallback
-      const cached = localStorage.getItem('meuExecutor_tarefas');
-      if (cached) {
-        setSyncStatus('offline', 'Salvo localmente (offline)');
-      } else {
-        tasks = normalizeTasks(tarefasFallback);
-        localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-        setSyncStatus('offline', 'Modo offline (fallback)');
-      }
-      renderAll();
-    }
-
-    // Escrita na planilha via POST
-    async function writeToSheet(payload) {
-      showToast('Salvando na planilha...');
-      setSyncStatus('syncing', 'Salvando...');
-      try {
-        const res = await fetch(URL_APPS_SCRIPT, {
-          method: 'POST',
-          body: JSON.stringify(payload),
-          headers: { 'Content-Type': 'text/plain' },
-          redirect: 'follow'
-        });
-
-        let data;
-        const resUrl = res.url || '';
-        if (resUrl.includes('script.googleusercontent.com') || res.status === 302 || res.status === 303) {
-          const secondRes = await fetch(resUrl, { method: 'GET' });
-          data = await secondRes.json();
-        } else {
-          data = await res.json();
-        }
-
-        if (data && data.success) {
-          setSyncStatus('synced', 'Sincronizado ✓');
-          showToast('Salvo na planilha ✓');
-          return { success: true, data: data };
-        } else {
-          throw new Error((data && data.error) || 'Resposta sem sucesso');
-        }
-      } catch (err) {
-        console.warn('Erro ao salvar remotamente, gravado local:', err);
-        setSyncStatus('offline', 'Salvo localmente (offline)');
-        showToast('Salvo localmente (offline)');
-        return { success: false, error: err.message };
-      }
-    }
-
-    // Normalizador de tarefas para os 4 status válidos
-    function normalizeTasks(list) {
-      return list.map(t => {
-        let st = (t.status || 'A Fazer').trim();
-        // Mapeamentos para garantir APENAS os 4 status válidos
-        if (st.toLowerCase().includes('concl')) st = 'Concluídos';
-        else if (st.toLowerCase().includes('andamento') || st.toLowerCase().includes('execu')) st = 'Em Andamento';
-        else if (st.toLowerCase().includes('fazer')) st = 'A Fazer';
-        else if (st.toLowerCase().includes('ideia')) st = 'Ideia';
-        else st = 'A Fazer';
-
-        let prio = (t.prio || 'Média').trim();
-        if (!['Alta', 'Média', 'Baixa'].includes(prio)) {
-          if (prio.toLowerCase().includes('alt')) prio = 'Alta';
-          else if (prio.toLowerCase().includes('baix')) prio = 'Baixa';
-          else prio = 'Média';
-        }
-
-        return {
-          id: t.id || 'TAR-' + Math.floor(Math.random() * 900 + 100),
-          tarefa: t.tarefa || 'Sem título',
-          dept: t.dept || 'Geral',
-          prio: prio,
-          prazo: t.prazo || '',
-          status: st,
-          dono: t.dono || 'Renato',
-          origem: t.origem || 'Projeto',
-          obs: t.obs || ''
-        };
-      });
-    }
-
-    // Modal helpers
-    function openModal(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('open');
-    }
-
-    function closeModal(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('open');
-    }
-
-    function handleBackdropClick(e, id) {
-      if (e.target.id === id) closeModal(id);
-    }
-
-    // Abrir modal de edição com dados
-    function openTask(id) {
-      const task = tasks.find(t => t.id === id);
-      if (!task) return;
-      currentEditingTaskId = id;
-
-      document.getElementById('edit-modal-heading').textContent = `Tarefa ${task.id}`;
-      document.getElementById('edit-id').value = task.id;
-      document.getElementById('edit-tarefa').value = task.tarefa;
-      document.getElementById('edit-dept').value = task.dept;
-      document.getElementById('edit-prio').value = task.prio;
-      document.getElementById('edit-status').value = task.status;
-      document.getElementById('edit-dono').value = task.dono;
-      document.getElementById('edit-prazo').value = task.prazo;
-      document.getElementById('edit-origem').value = task.origem;
-      document.getElementById('edit-obs').value = task.obs;
-
-      openModal('modal-task');
-    }
-
-    // Salvar tarefa editada
-    async function saveTask() {
-      if (!currentEditingTaskId) return;
-      const t = tasks.find(item => item.id === currentEditingTaskId);
-      if (!t) return;
-
-      const tarefaVal = document.getElementById('edit-tarefa').value.trim();
-      if (!tarefaVal) {
-        alert('Por favor, informe a descrição da tarefa.');
-        return;
-      }
-
-      t.tarefa = tarefaVal;
-      t.dept = document.getElementById('edit-dept').value.trim() || 'Geral';
-      t.prio = document.getElementById('edit-prio').value;
-      t.status = document.getElementById('edit-status').value;
-      t.dono = document.getElementById('edit-dono').value.trim() || 'Renato';
-      t.prazo = document.getElementById('edit-prazo').value.trim();
-      t.origem = document.getElementById('edit-origem').value.trim();
-      t.obs = document.getElementById('edit-obs').value.trim();
-
-      closeModal('modal-task');
-      localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-      renderAll();
-
-      await writeToSheet({
-        action: 'update',
-        id: t.id,
-        tarefa: t.tarefa,
-        dept: t.dept,
-        prio: t.prio,
-        prazo: t.prazo,
-        status: t.status,
-        dono: t.dono,
-        origem: t.origem,
-        obs: t.obs
-      });
-    }
-
-    // Botões de atalho no modal: Iniciar / Concluir
-    function changeStatusFromModal(newStatus) {
-      document.getElementById('edit-status').value = newStatus;
-      saveTask();
-    }
-
-    // Mudar status diretamente (para Kanban / Ações)
-    async function changeStatus(id, newStatus) {
-      const t = tasks.find(item => item.id === id);
-      if (!t) return;
-      t.status = newStatus;
-      localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-      renderAll();
-
-      await writeToSheet({
-        action: 'update',
-        id: t.id,
-        tarefa: t.tarefa,
-        dept: t.dept,
-        prio: t.prio,
-        prazo: t.prazo,
-        status: t.status,
-        dono: t.dono,
-        origem: t.origem,
-        obs: t.obs
-      });
-    }
-
-    // Abrir Modal de Nova Tarefa
-    function openNewTask() {
-      document.getElementById('new-tarefa').value = '';
-      document.getElementById('new-dept').value = 'Dpto Projetos';
-      document.getElementById('new-prio').value = 'Média';
-      document.getElementById('new-status').value = 'A Fazer';
-      document.getElementById('new-prazo').value = '';
-      document.getElementById('new-dono').value = 'Renato';
-      document.getElementById('new-origem').value = 'Projeto';
-      document.getElementById('new-obs').value = '';
-
-      openModal('modal-new');
-    }
-
-    // Adicionar Nova Tarefa
-    async function addTask() {
-      const tarefaVal = document.getElementById('new-tarefa').value.trim();
-      if (!tarefaVal) {
-        alert('Por favor, informe a descrição da tarefa.');
-        return;
-      }
-
-      // Próximo ID TAR-XXX sequencial
-      let maxNum = 0;
-      tasks.forEach(t => {
-        const match = t.id && t.id.match(/TAR-(\d+)/i);
-        if (match) {
-          const num = parseInt(match[1], 10);
-          if (num > maxNum) maxNum = num;
-        }
-      });
-      const nextId = 'TAR-' + String(maxNum + 1).padStart(3, '0');
-
-      const newTask = {
-        id: nextId,
-        tarefa: tarefaVal,
-        dept: document.getElementById('new-dept').value.trim() || 'Dpto Projetos',
-        prio: document.getElementById('new-prio').value,
-        status: document.getElementById('new-status').value,
-        prazo: document.getElementById('new-prazo').value.trim(),
-        dono: document.getElementById('new-dono').value.trim() || 'Renato',
-        origem: document.getElementById('new-origem').value.trim() || 'Projeto',
-        obs: document.getElementById('new-obs').value.trim()
-      };
-
-      tasks.unshift(newTask);
-      localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-      closeModal('modal-new');
-      renderAll();
-
-      const result = await writeToSheet({
-        action: 'add',
-        tarefa: newTask.tarefa,
-        dept: newTask.dept,
-        prio: newTask.prio,
-        prazo: newTask.prazo,
-        status: newTask.status,
-        dono: newTask.dono,
-        origem: newTask.origem,
-        obs: newTask.obs
-      });
-
-      // Se a planilha retornou um ID específico, atualiza
-      if (result && result.success && result.data && result.data.id) {
-        newTask.id = result.data.id;
-        localStorage.setItem('meuExecutor_tarefas', JSON.stringify(tasks));
-        renderAll();
-      }
-    }
-
-    // Parsing de data brasileira DD/MM/AAAA para objeto Date
-    function parseDateBR(str) {
-      if (!str) return null;
-      const parts = str.trim().split('/');
-      if (parts.length === 3) {
-        const d = parseInt(parts[0], 10);
-        const m = parseInt(parts[1], 10) - 1;
-        const y = parseInt(parts[2], 10);
-        const dt = new Date(y, m, d);
-        if (!isNaN(dt.getTime())) return dt;
-      }
-      return null;
-    }
-
-    // ==========================================
-    // RENDERIZAÇÃO COMPLETA: KPIs, GRÁFICOS, LISTA, KANBAN
-    // ==========================================
-    function renderAll() {
-      renderKPIs();
-      renderAllCharts();
-      populateFilterOptions();
-      renderTarefasList();
-      renderKanban();
-    }
-
-    // 1. KPIs
-    function renderKPIs() {
-      const total = tasks.length;
-      const andamento = tasks.filter(t => t.status === 'Em Andamento').length;
-      const concluidos = tasks.filter(t => t.status === 'Concluídos').length;
-      const abertos = tasks.filter(t => t.status !== 'Concluídos').length;
-      const pct = total > 0 ? Math.round((concluidos / total) * 100) : 0;
-
-      const now = new Date();
-      now.setHours(0,0,0,0);
-      const in7Days = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
-
-      let vencendo7 = 0;
-      let vencidas = 0;
-
-      tasks.forEach(t => {
-        if (t.status === 'Concluídos') return;
-        const dt = parseDateBR(t.prazo);
-        if (dt) {
-          dt.setHours(0,0,0,0);
-          if (dt < now) {
-            vencidas++;
-          } else if (dt <= in7Days) {
-            vencendo7++;
-          }
-        }
-      });
-
-      document.getElementById('kpi-total').textContent = total;
-      document.getElementById('kpi-andamento').textContent = andamento;
-      document.getElementById('kpi-concluidos').textContent = concluidos;
-      document.getElementById('kpi-abertos').textContent = abertos;
-      document.getElementById('kpi-pct').textContent = pct + '%';
-      document.getElementById('kpi-vencendo7').textContent = vencendo7;
-      document.getElementById('kpi-vencidas').textContent = vencidas;
-    }
-
-    // =========================================================================
-    // 2. GRÁFICOS COM NÚMEROS / INDICADORES SEMPRE VISÍVEIS (REQUISITO CRÍTICO)
-    // Usando SVG nativo perfeitamente renderizado, sem depender de scripts externos
-    // que poderiam falhar ao carregar no ambiente sandbox ou bloquear labels.
-    // =========================================================================
-
-    // Helper: Gráfico de Rosca / Donut com NÚMEROS GRANDES E VISÍVEIS dentro de cada fatia
-    function renderSvgDonut(containerId, items, centerText, centerLabel) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-      const total = items.reduce((acc, it) => acc + it.value, 0);
-
-      const size = 220;
-      const center = size / 2;
-      const radius = 78;
-      const innerRadius = 42;
-
-      let currentAngle = -Math.PI / 2;
-      let paths = '';
-      let labels = '';
-
-      if (total === 0) {
-        el.innerHTML = '<div style="padding:40px; text-align:center; color:#999; font-size:13px;">Nenhum dado para exibir</div>';
-        return;
-      }
-
-      items.forEach(it => {
-        if (it.value <= 0) return;
-        const sliceAngle = (it.value / total) * (2 * Math.PI);
-        const endAngle = currentAngle + sliceAngle;
-
-        // Coordenadas externas
-        const x1 = center + radius * Math.cos(currentAngle);
-        const y1 = center + radius * Math.sin(currentAngle);
-        const x2 = center + radius * Math.cos(endAngle);
-        const y2 = center + radius * Math.sin(endAngle);
-
-        // Coordenadas internas
-        const ix1 = center + innerRadius * Math.cos(endAngle);
-        const iy1 = center + innerRadius * Math.sin(endAngle);
-        const ix2 = center + innerRadius * Math.cos(currentAngle);
-        const iy2 = center + innerRadius * Math.sin(currentAngle);
-
-        const largeArc = sliceAngle > Math.PI ? 1 : 0;
-
-        const pathD = `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${ix2} ${iy2} Z`;
-
-        paths += `<path d="${pathD}" fill="${it.color}" stroke="#FFFFFF" stroke-width="2.5" />`;
-
-        // Posição central da fatia para O NÚMERO VISÍVEL
-        const midAngle = currentAngle + (sliceAngle / 2);
-        const labelRadius = (radius + innerRadius) / 2;
-        const lx = center + labelRadius * Math.cos(midAngle);
-        const ly = center + labelRadius * Math.sin(midAngle);
-
-        // NÚMERO VISÍVEL COM FONTE PESADA E CONTRASTE
-        labels += `
-          <g transform="translate(${lx}, ${ly})">
-            <circle cx="0" cy="0" r="11" fill="rgba(255,255,255,0.85)" stroke="${it.color}" stroke-width="1" />
-            <text x="0" y="4" fill="#222" font-size="12" font-weight="800" text-anchor="middle">${it.value}</text>
-          </g>
-        `;
-
-        currentAngle = endAngle;
-      });
-
-      // Legenda inferior sem sobrepor
-      let legendHtml = '<div class="svg-legend">';
-      items.forEach(it => {
-        legendHtml += `
-          <span class="svg-legend-item">
-            <span class="svg-legend-color" style="background:${it.color};"></span>
-            <span>${it.label}: <strong>${it.value}</strong></span>
-          </span>
-        `;
-      });
-      legendHtml += '</div>';
-
-      el.innerHTML = `
-        <div class="svg-chart-container">
-          <div style="display:flex; justify-content:center; align-items:center; flex:1;">
-            <svg viewBox="0 0 ${size} ${size}" width="100%" height="190" style="max-width:230px; display:block;">
-              ${paths}
-              ${labels}
-              <circle cx="${center}" cy="${center}" r="${innerRadius - 4}" fill="#FAF9F7" />
-              <text x="${center}" y="${center + 1}" text-anchor="middle" font-size="18" font-weight="800" fill="#333">${centerText}</text>
-              <text x="${center}" y="${center + 14}" text-anchor="middle" font-size="9" font-weight="600" fill="#888">${centerLabel || 'TOTAL'}</text>
-            </svg>
-          </div>
-          ${legendHtml}
-        </div>
-      `;
-    }
-
-    // Helper: Gráfico de Pizza com NÚMEROS VISÍVEIS em cada fatia
-    function renderSvgPie(containerId, items) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-      const total = items.reduce((acc, it) => acc + it.value, 0);
-
-      const size = 220;
-      const center = size / 2;
-      const radius = 80;
-
-      let currentAngle = -Math.PI / 2;
-      let paths = '';
-      let labels = '';
-
-      if (total === 0) {
-        el.innerHTML = '<div style="padding:40px; text-align:center; color:#999; font-size:13px;">Nenhum dado</div>';
-        return;
-      }
-
-      items.forEach(it => {
-        if (it.value <= 0) return;
-        const sliceAngle = (it.value / total) * (2 * Math.PI);
-        const endAngle = currentAngle + sliceAngle;
-
-        const x1 = center + radius * Math.cos(currentAngle);
-        const y1 = center + radius * Math.sin(currentAngle);
-        const x2 = center + radius * Math.cos(endAngle);
-        const y2 = center + radius * Math.sin(endAngle);
-
-        const largeArc = sliceAngle > Math.PI ? 1 : 0;
-        const pathD = `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
-
-        paths += `<path d="${pathD}" fill="${it.color}" stroke="#FFFFFF" stroke-width="2.5" />`;
-
-        // Posição para o NÚMERO VISÍVEL
-        const midAngle = currentAngle + (sliceAngle / 2);
-        const labelRadius = radius * 0.62;
-        const lx = center + labelRadius * Math.cos(midAngle);
-        const ly = center + labelRadius * Math.sin(midAngle);
-
-        labels += `
-          <g transform="translate(${lx}, ${ly})">
-            <circle cx="0" cy="0" r="12" fill="#FFFFFF" stroke="${it.color}" stroke-width="1.5" />
-            <text x="0" y="4" fill="#222" font-size="12" font-weight="800" text-anchor="middle">${it.value}</text>
-          </g>
-        `;
-
-        currentAngle = endAngle;
-      });
-
-      let legendHtml = '<div class="svg-legend">';
-      items.forEach(it => {
-        legendHtml += `
-          <span class="svg-legend-item">
-            <span class="svg-legend-color" style="background:${it.color};"></span>
-            <span>${it.label}: <strong>${it.value}</strong></span>
-          </span>
-        `;
-      });
-      legendHtml += '</div>';
-
-      el.innerHTML = `
-        <div class="svg-chart-container">
-          <div style="display:flex; justify-content:center; align-items:center; flex:1;">
-            <svg viewBox="0 0 ${size} ${size}" width="100%" height="190" style="max-width:230px; display:block;">
-              ${paths}
-              ${labels}
-            </svg>
-          </div>
-          ${legendHtml}
-        </div>
-      `;
-    }
-
-    // Helper: Barras Horizontais com NÚMERO VISÍVEL NO FINAL DE CADA BARRA
-    function renderSvgHorizontalBars(containerId, items) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-
-      const maxVal = Math.max(...items.map(it => it.value), 1);
-      const rowHeight = 36;
-      const width = 340;
-      const height = items.length * rowHeight + 20;
-      const labelColWidth = 110;
-      const barMaxWidth = width - labelColWidth - 45;
-
-      let rowsSvg = '';
-      items.forEach((it, idx) => {
-        const y = idx * rowHeight + 12;
-        const barWidth = Math.max(8, (it.value / maxVal) * barMaxWidth);
-
-        rowsSvg += `
-          <!-- Label do Departamento -->
-          <text x="${labelColWidth - 8}" y="${y + 14}" text-anchor="end" font-size="12" font-weight="600" fill="#444">
-            ${it.label.length > 15 ? it.label.substring(0, 14) + '…' : it.label}
-          </text>
-
-          <!-- Barra de Fundo Suave -->
-          <rect x="${labelColWidth}" y="${y}" width="${barMaxWidth}" height="20" rx="4" fill="#F4F1EC" />
-
-          <!-- Barra de Valor Pastel -->
-          <rect x="${labelColWidth}" y="${y}" width="${barWidth}" height="20" rx="4" fill="${it.color}" />
-
-          <!-- NÚMERO NO FINAL DA BARRA (SEMPRE VISÍVEL COM DESTAQUE) -->
-          <circle cx="${labelColWidth + barWidth + 14}" cy="${y + 10}" r="10" fill="#FFFFFF" stroke="${it.color}" stroke-width="1.5" />
-          <text x="${labelColWidth + barWidth + 14}" y="${y + 14}" text-anchor="middle" font-size="11.5" font-weight="800" fill="#222">
-            ${it.value}
-          </text>
-        `;
-      });
-
-      el.innerHTML = `
-        <div class="svg-chart-container" style="justify-content:center;">
-          <svg viewBox="0 0 ${width} ${height}" width="100%" height="${Math.min(230, height)}" style="display:block;">
-            ${rowsSvg}
-          </svg>
-        </div>
-      `;
-    }
-
-    // Helper: Radar com NÚMEROS VISÍVEIS EM CADA PONTO
-    function renderSvgRadar(containerId, categories, series) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-
-      const size = 260;
-      const center = size / 2;
-      const radius = 80;
-      const numPoints = categories.length;
-
-      // Calcular valor máximo
-      let maxVal = 1;
-      series.forEach(s => {
-        s.values.forEach(v => {
-          if (v > maxVal) maxVal = v;
-        });
-      });
-      maxVal = Math.max(maxVal, 4);
-
-      // Grid de polígonos de fundo
-      let gridSvg = '';
-      const levels = 4;
-      for (let l = 1; l <= levels; l++) {
-        const r = (radius / levels) * l;
-        const pts = [];
-        for (let i = 0; i < numPoints; i++) {
-          const angle = (Math.PI * 2 / numPoints) * i - (Math.PI / 2);
-          pts.push(`${center + r * Math.cos(angle)},${center + r * Math.sin(angle)}`);
-        }
-        gridSvg += `<polygon points="${pts.join(' ')}" fill="none" stroke="#E5E0D8" stroke-width="1" />`;
-      }
-
-      // Eixos e Labels de categorias
-      let axisSvg = '';
-      for (let i = 0; i < numPoints; i++) {
-        const angle = (Math.PI * 2 / numPoints) * i - (Math.PI / 2);
-        const x = center + radius * Math.cos(angle);
-        const y = center + radius * Math.sin(angle);
-        axisSvg += `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="#DDD7CE" stroke-width="1" />`;
-
-        const lx = center + (radius + 20) * Math.cos(angle);
-        const ly = center + (radius + 18) * Math.sin(angle);
-        const anchor = Math.abs(Math.cos(angle)) < 0.3 ? 'middle' : (Math.cos(angle) > 0 ? 'start' : 'end');
-        axisSvg += `<text x="${lx}" y="${ly + 4}" text-anchor="${anchor}" font-size="11" font-weight="700" fill="#666">${categories[i]}</text>`;
-      }
-
-      // Séries e NÚMEROS EM CADA PONTO
-      let seriesSvg = '';
-      let pointsAndNumbers = '';
-
-      series.forEach(s => {
-        const pts = [];
-        s.values.forEach((v, i) => {
-          const r = (v / maxVal) * radius;
-          const angle = (Math.PI * 2 / numPoints) * i - (Math.PI / 2);
-          const px = center + r * Math.cos(angle);
-          const py = center + r * Math.sin(angle);
-          pts.push(`${px},${py}`);
-
-          // NÚMERO VISÍVEL EM CADA PONTO DO RADAR
-          pointsAndNumbers += `
-            <g transform="translate(${px}, ${py})">
-              <circle cx="0" cy="0" r="10" fill="#FFFFFF" stroke="${s.color}" stroke-width="2" />
-              <text x="0" y="3.5" text-anchor="middle" font-size="10.5" font-weight="800" fill="#222">${v}</text>
-            </g>
-          `;
-        });
-        seriesSvg += `<polygon points="${pts.join(' ')}" fill="${s.fillColor}" stroke="${s.color}" stroke-width="2.5" />`;
-      });
-
-      // Legenda inferior
-      let legendHtml = '<div class="svg-legend">';
-      series.forEach(s => {
-        legendHtml += `
-          <span class="svg-legend-item">
-            <span class="svg-legend-color" style="background:${s.color};"></span>
-            <span>${s.name}</span>
-          </span>
-        `;
-      });
-      legendHtml += '</div>';
-
-      el.innerHTML = `
-        <div class="svg-chart-container">
-          <div style="display:flex; justify-content:center; align-items:center; flex:1;">
-            <svg viewBox="0 0 ${size} ${size}" width="100%" height="200" style="max-width:260px; display:block;">
-              ${gridSvg}
-              ${axisSvg}
-              ${seriesSvg}
-              ${pointsAndNumbers}
-            </svg>
-          </div>
-          ${legendHtml}
-        </div>
-      `;
-    }
-
-    // Helper: Linha/Área com NÚMEROS VISÍVEIS EM CADA PONTO
-    function renderSvgLineArea(containerId, items) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-
-      const width = 340;
-      const height = 190;
-      const padLeft = 32;
-      const padRight = 32;
-      const padTop = 32;
-      const padBottom = 38;
-
-      const chartW = width - padLeft - padRight;
-      const chartH = height - padTop - padBottom;
-
-      const maxVal = Math.max(...items.map(it => it.value), 3);
-      const stepX = items.length > 1 ? chartW / (items.length - 1) : chartW / 2;
-
-      const coords = items.map((it, idx) => {
-        const x = padLeft + (items.length === 1 ? chartW / 2 : idx * stepX);
-        const y = padTop + chartH - ((it.value / maxVal) * chartH);
-        return { x, y, value: it.value, label: it.label };
-      });
-
-      // Linha SVG e Área
-      let pathLine = '';
-      let pathArea = '';
-      coords.forEach((pt, idx) => {
-        if (idx === 0) {
-          pathLine += `M ${pt.x} ${pt.y}`;
-          pathArea += `M ${pt.x} ${padTop + chartH} L ${pt.x} ${pt.y}`;
-        } else {
-          pathLine += ` L ${pt.x} ${pt.y}`;
-          pathArea += ` L ${pt.x} ${pt.y}`;
-        }
-      });
-      if (coords.length > 0) {
-        pathArea += ` L ${coords[coords.length - 1].x} ${padTop + chartH} Z`;
-      }
-
-      // Pontos e NÚMEROS VISÍVEIS
-      let dotsSvg = '';
-      coords.forEach(pt => {
-        dotsSvg += `
-          <!-- Linha vertical suave -->
-          <line x1="${pt.x}" y1="${pt.y}" x2="${pt.x}" y2="${padTop + chartH}" stroke="#E6E0D5" stroke-dasharray="3,3" />
-
-          <!-- Marcador com NÚMERO VISÍVEL CENTRALIZADO -->
-          <g transform="translate(${pt.x}, ${pt.y - 14})">
-            <rect x="-14" y="-12" width="28" height="18" rx="5" fill="#3A3A3A" />
-            <text x="0" y="1" fill="#FFFFFF" font-size="11" font-weight="800" text-anchor="middle">${pt.value}</text>
-          </g>
-          <circle cx="${pt.x}" cy="${pt.y}" r="4.5" fill="#C9A86A" stroke="#FFFFFF" stroke-width="2" />
-
-          <!-- Rótulo do eixo X -->
-          <text x="${pt.x}" y="${padTop + chartH + 18}" text-anchor="middle" font-size="11" font-weight="600" fill="#555">
-            ${pt.label}
-          </text>
-        `;
-      });
-
-      el.innerHTML = `
-        <div class="svg-chart-container">
-          <svg viewBox="0 0 ${width} ${height}" width="100%" height="200" style="display:block;">
-            <!-- Eixo base -->
-            <line x1="${padLeft}" y1="${padTop + chartH}" x2="${width - padRight}" y2="${padTop + chartH}" stroke="#D5CFC5" stroke-width="1.5" />
-            <path d="${pathArea}" fill="rgba(201, 168, 106, 0.18)" />
-            <path d="${pathLine}" fill="none" stroke="#C9A86A" stroke-width="3" stroke-linecap="round" />
-            ${dotsSvg}
-          </svg>
-        </div>
-      `;
-    }
-
-    // RENDER DE TODOS OS 6 GRÁFICOS COM INDICADORES
-    function renderAllCharts() {
-      // 1. Distribuição por Status - ROSCA (Ideia, A Fazer, Em Andamento, Concluídos)
-      const statusCounts = {
-        'Ideia': tasks.filter(t => t.status === 'Ideia').length,
-        'A Fazer': tasks.filter(t => t.status === 'A Fazer').length,
-        'Em Andamento': tasks.filter(t => t.status === 'Em Andamento').length,
-        'Concluídos': tasks.filter(t => t.status === 'Concluídos').length
-      };
-
-      renderSvgDonut('chart-status-box', [
-        { label: 'Ideia', value: statusCounts['Ideia'], color: '#C0C0C0' },
-        { label: 'A Fazer', value: statusCounts['A Fazer'], color: '#90BDE8' },
-        { label: 'Em Andamento', value: statusCounts['Em Andamento'], color: '#EFC77B' },
-        { label: 'Concluídos', value: statusCounts['Concluídos'], color: '#88CDA5' }
-      ], tasks.length, 'TOTAL');
-
-      // 2. Distribuição por Departamento - BARRAS HORIZONTAIS
-      const deptMap = {};
-      tasks.forEach(t => {
-        const d = t.dept || 'Geral';
-        deptMap[d] = (deptMap[d] || 0) + 1;
-      });
-      const deptColors = ['#A8C8E8', '#F2D8A7', '#B8DCC8', '#F2C4C4', '#D4C5E2', '#CDE8D8'];
-      const deptItems = Object.keys(deptMap).map((k, idx) => ({
-        label: k,
-        value: deptMap[k],
-        color: deptColors[idx % deptColors.length]
-      })).sort((a,b) => b.value - a.value);
-
-      renderSvgHorizontalBars('chart-dept-box', deptItems.length > 0 ? deptItems : [{label:'Geral', value:0, color:'#A8C8E8'}]);
-
-      // 3. Distribuição por Prioridade - PIZZA (Alta, Média, Baixa)
-      const prioCounts = {
-        'Alta': tasks.filter(t => t.prio === 'Alta').length,
-        'Média': tasks.filter(t => t.prio === 'Média').length,
-        'Baixa': tasks.filter(t => t.prio === 'Baixa').length
-      };
-      renderSvgPie('chart-prio-box', [
-        { label: 'Alta', value: prioCounts['Alta'], color: '#F2AFAF' },
-        { label: 'Média', value: prioCounts['Média'], color: '#F7D694' },
-        { label: 'Baixa', value: prioCounts['Baixa'], color: '#A5D6B6' }
-      ]);
-
-      // 4. Carga por Dono - RADAR (Ativas, Vencendo 7d, Vencidas, Concluídas por Renato, Equipe, Terceiro)
-      const now = new Date(); now.setHours(0,0,0,0);
-      const in7Days = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
-
-      const calcDonoStats = (donoName) => {
-        const dTasks = tasks.filter(t => (t.dono || '').toLowerCase().includes(donoName.toLowerCase()));
-        const ativas = dTasks.filter(t => t.status !== 'Concluídos').length;
-        const concluidas = dTasks.filter(t => t.status === 'Concluídos').length;
-        let v7 = 0;
-        let vct = 0;
-        dTasks.forEach(t => {
-          if (t.status === 'Concluídos') return;
-          const dt = parseDateBR(t.prazo);
-          if (dt) {
-            dt.setHours(0,0,0,0);
-            if (dt < now) vct++;
-            else if (dt <= in7Days) v7++;
-          }
-        });
-        return [ativas, v7, vct, concluidas];
-      };
-
-      const categories = ['Ativas', 'Vencendo 7d', 'Vencidas', 'Concluídas'];
-      const radarSeries = [
-        { name: 'Renato', color: '#9A752B', fillColor: 'rgba(201, 168, 106, 0.25)', values: calcDonoStats('Renato') },
-        { name: 'Equipe', color: '#2B6EA6', fillColor: 'rgba(74, 144, 226, 0.20)', values: calcDonoStats('Equipe') },
-        { name: 'Terceiro', color: '#5B8C5A', fillColor: 'rgba(91, 140, 90, 0.18)', values: calcDonoStats('Terceiro') }
-      ];
-
-      renderSvgRadar('chart-dono-box', categories, radarSeries);
-
-      // 5. Abertos × Concluídos - ROSCA DE PROPORÇÃO
-      const concluidasCount = tasks.filter(t => t.status === 'Concluídos').length;
-      const abertasCount = tasks.filter(t => t.status !== 'Concluídos').length;
-      renderSvgDonut('chart-abertos-box', [
-        { label: 'Abertos (Fluxo)', value: abertasCount, color: '#F2C779' },
-        { label: 'Concluídos (Entregas)', value: concluidasCount, color: '#82CCA0' }
-      ], (tasks.length > 0 ? Math.round((concluidasCount / tasks.length) * 100) + '%' : '0%'), 'ENTREGA');
-
-      // 6. Concluídos & Tendência por Origem - LINHA/ÁREA com números
-      const origemMap = {};
-      tasks.forEach(t => {
-        const orig = t.origem || 'Outros';
-        origemMap[orig] = (origemMap[orig] || 0) + 1;
-      });
-      const lineItems = Object.keys(origemMap).map(k => ({
-        label: k,
-        value: origemMap[k]
-      }));
-      // Garantir ao menos 2 pontos para a linha
-      if (lineItems.length === 0) {
-        lineItems.push({ label: 'Projeto', value: 0 }, { label: 'Reunião', value: 0 });
-      } else if (lineItems.length === 1) {
-        lineItems.push({ label: 'Outros', value: 0 });
-      }
-      renderSvgLineArea('chart-tempo-box', lineItems);
-    }
-
-    // Popular filtros dinâmicos
-    function populateFilterOptions() {
-      const deptSelect = document.getElementById('filter-dept');
-      const donoSelect = document.getElementById('filter-dono');
-      if (!deptSelect || !donoSelect) return;
-
-      const currentDept = deptSelect.value;
-      const currentDono = donoSelect.value;
-
-      const depts = new Set();
-      const donos = new Set();
-      tasks.forEach(t => {
-        if (t.dept) depts.add(t.dept);
-        if (t.dono) donos.add(t.dono);
-      });
-
-      deptSelect.innerHTML = '<option value="">Todos os Departamentos</option>';
-      Array.from(depts).sort().forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        deptSelect.appendChild(opt);
-      });
-      deptSelect.value = currentDept;
-
-      donoSelect.innerHTML = '<option value="">Todos os Responsáveis</option>';
-      Array.from(donos).sort().forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        donoSelect.appendChild(opt);
-      });
-      donoSelect.value = currentDono;
-    }
-
-    // 3. Lista de Tarefas
-    function renderTarefasList() {
-      const container = document.getElementById('tarefas-list-container');
-      const pill = document.getElementById('tasks-count-pill');
-      if (!container) return;
-
-      const fDept = document.getElementById('filter-dept').value;
-      const fPrio = document.getElementById('filter-prio').value;
-      const fDono = document.getElementById('filter-dono').value;
-      const fStatus = document.getElementById('filter-status').value;
-
-      const filtered = tasks.filter(t => {
-        if (fDept && t.dept !== fDept) return false;
-        if (fPrio && t.prio !== fPrio) return false;
-        if (fDono && t.dono !== fDono) return false;
-        if (fStatus) {
-          if (fStatus === '__ABERTOS__') {
-            if (t.status === 'Concluídos') return false;
-          } else if (t.status !== fStatus) {
-            return false;
-          }
-        }
-        return true;
-      });
-
-      if (pill) pill.textContent = `${filtered.length} de ${tasks.length} tarefas`;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div style="background:#FFF; padding:40px; text-align:center; border:1px solid var(--border); border-radius:var(--radius); color:#888;">
-            Nenhuma tarefa encontrada com os filtros aplicados.
-          </div>
-        `;
-        return;
-      }
-
-      let html = '';
-      filtered.forEach(t => {
-        const statusSlug = t.status.toLowerCase().replace(/\s+/g, '-');
-        const prioSlug = t.prio.toLowerCase().replace('é', 'e');
-
-        html += `
-          <div class="task-row-card" onclick="openTask('${t.id}')">
-            <div class="task-main">
-              <div class="task-header-line">
-                <span class="task-id">${t.id}</span>
-                <span class="task-title">${escapeHtml(t.tarefa)}</span>
-              </div>
-              <div class="task-meta">
-                <span>📁 ${escapeHtml(t.dept)}</span>
-                <span>👤 ${escapeHtml(t.dono)}</span>
-                ${t.prazo ? `<span>📅 Prazo: ${escapeHtml(t.prazo)}</span>` : ''}
-                ${t.origem ? `<span>🔗 ${escapeHtml(t.origem)}</span>` : ''}
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-              <span class="badge-prio prio-${prioSlug}">${t.prio}</span>
-              <span class="badge-status badge-${statusSlug}">${t.status}</span>
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    // 4. Kanban
-    function renderKanban() {
-      const colIdeia = document.getElementById('kanban-col-ideia');
-      const colAfazer = document.getElementById('kanban-col-afazer');
-      const colAndamento = document.getElementById('kanban-col-andamento');
-      const colConcluidos = document.getElementById('kanban-col-concluidos');
-
-      if (!colIdeia || !colAfazer || !colAndamento || !colConcluidos) return;
-
-      const itemsIdeia = tasks.filter(t => t.status === 'Ideia');
-      const itemsAfazer = tasks.filter(t => t.status === 'A Fazer');
-      const itemsAndamento = tasks.filter(t => t.status === 'Em Andamento');
-      const itemsConcluidos = tasks.filter(t => t.status === 'Concluídos');
-
-      document.getElementById('kanban-count-ideia').textContent = itemsIdeia.length;
-      document.getElementById('kanban-count-afazer').textContent = itemsAfazer.length;
-      document.getElementById('kanban-count-andamento').textContent = itemsAndamento.length;
-      document.getElementById('kanban-count-concluidos').textContent = itemsConcluidos.length;
-
-      const renderCards = (arr) => {
-        if (arr.length === 0) {
-          return '<div style="padding:16px; text-align:center; font-size:12px; color:#A09E9B;">Sem tarefas</div>';
-        }
-        return arr.map(t => {
-          const prioSlug = t.prio.toLowerCase().replace('é', 'e');
-          return `
-            <div class="kanban-item" onclick="openTask('${t.id}')">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:11px; font-weight:700; color:#9A752B;">${t.id}</span>
-                <span class="badge-prio prio-${prioSlug}">${t.prio}</span>
-              </div>
-              <div style="font-size:13.5px; font-weight:600; color:#2F2F2F; line-height:1.3;">
-                ${escapeHtml(t.tarefa)}
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#7A7A7A; border-top:1px dashed #ECE8E0; padding-top:6px; margin-top:2px;">
-                <span>${escapeHtml(t.dept)}</span>
-                <span style="font-weight:600; color:#555;">${escapeHtml(t.dono)}</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-      };
-
-      colIdeia.innerHTML = renderCards(itemsIdeia);
-      colAfazer.innerHTML = renderCards(itemsAfazer);
-      colAndamento.innerHTML = renderCards(itemsAndamento);
-      colConcluidos.innerHTML = renderCards(itemsConcluidos);
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    // ==========================================
-    // INICIALIZAÇÃO CONTROLADA
-    // ==========================================
-    window.addEventListener('DOMContentLoaded', function() {
-      // 1. Mostrar tela Início imediatamente
-      showScreen('inicio');
-
-      // 2. Renderizar IMEDIATAMENTE de forma síncrona com localStorage ou fallback
-      const cached = localStorage.getItem('meuExecutor_tarefas');
-      if (cached) {
-        try {
-          tasks = normalizeTasks(JSON.parse(cached));
-          setSyncStatus('synced', 'Dados em cache ✓');
-        } catch(e) {
-          tasks = normalizeTasks(tarefasFallback);
-          setSyncStatus('offline', 'Modo offline');
-        }
-      } else {
-        tasks = normalizeTasks(tarefasFallback);
-        setSyncStatus('syncing', 'Carregando planilha...');
-      }
-
-      // Renderiza todos os cards e gráficos com números visíveis
-      renderAll();
-
-      // 3. Executar sincronização assíncrona com a planilha (Apps Script -> CSV -> Fallback)
-      loadFromSheet();
-    });
-  </script>
+<div id="toast"></div>
 
 <script>
-/* Skip artifact shell — fixed helpers served beside every artifact. */
-(function () {
-  "use strict";
+Chart.register(ChartDataLabels);
 
-  var fmt = {
-    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
-    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
-    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); }
+var APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
+var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ubl_ofQtSCVVVldp-ixQbaruWuPW5i-R5nfHfOKX1ftkEQz5YEtoLOMM38yEWa7cF4wnupKryVG/pub?gid=0&single=true&output=csv';
+var STORAGE_KEY = 'meuExecutor_tarefas';
+var DEPTS = ['Dpto Atendimento','Dpto Comercial','Dpto Compras','Dpto Diretoria','Dpto Faturamento','Dpto Financeiro','Dpto Frota','Dpto GGC','Dpto Operacional','Dpto Projetos','Dpto Qualidade','Dpto Transportes','Pessoal'];
+
+var tarefas = [];
+var charts = {};
+var editarId = null;
+
+var tarefasFallback = [
+ {id:'TAR-001',tarefa:'Cronograma Mestre PMO',dept:'Dpto Projetos',prio:'Alta',prazo:'22/10/2026',status:'Em Andamento',dono:'Renato',origem:'Projeto',obs:''},
+ {id:'TAR-002',tarefa:'Auditoria de Frota GGC',dept:'Dpto GGC',prio:'Alta',prazo:'25/10/2026',status:'A Fazer',dono:'Equipe',origem:'Reunião',obs:''},
+ {id:'TAR-003',tarefa:'Revisão Procedimento ISO',dept:'Dpto Qualidade',prio:'Média',prazo:'29/10/2026',status:'Em Andamento',dono:'Renato',origem:'Projeto',obs:''},
+ {id:'TAR-004',tarefa:'Calibração de Rastreadores',dept:'Dpto Frota',prio:'Média',prazo:'04/11/2026',status:'A Fazer',dono:'Terceiro',origem:'E-mail',obs:''},
+ {id:'TAR-005',tarefa:'Checklist Diário Operação',dept:'Dpto Operacional',prio:'Baixa',prazo:'10/11/2026',status:'A Fazer',dono:'Equipe',origem:'Decisão',obs:''},
+ {id:'TAR-006',tarefa:'App motorista offline',dept:'Dpto Projetos',prio:'Média',prazo:'',status:'Ideia',dono:'Renato',origem:'Ideia',obs:''},
+ {id:'TAR-007',tarefa:'Dashboard TV no pátio',dept:'Dpto Operacional',prio:'Baixa',prazo:'',status:'Ideia',dono:'Equipe',origem:'Caderno',obs:''},
+ {id:'TAR-008',tarefa:'Migração frota GNV',dept:'Dpto Frota',prio:'Alta',prazo:'20/11/2026',status:'Em Andamento',dono:'Renato',origem:'Projeto',obs:''},
+ {id:'TAR-009',tarefa:'Certificação ANVISA',dept:'Dpto Qualidade',prio:'Alta',prazo:'15/11/2026',status:'A Fazer',dono:'Renato',origem:'E-mail',obs:''},
+ {id:'TAR-010',tarefa:'Endomarketing campanha',dept:'Dpto GGC',prio:'Baixa',prazo:'30/11/2026',status:'Concluídos',dono:'Equipe',origem:'Reunião',obs:''}
+];
+
+/* ===== FORMATO DE DATA — DD/MM/AAAA (sem bug de fuso) ===== */
+function formatDate(val) {
+  if (!val) return '';
+  var s = String(val);
+  // ISO (ex.: 2026-10-22T00:00:00.000Z) -> DD/MM/AAAA extraindo direto da string
+  var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return m[3] + '/' + m[2] + '/' + m[1];
+  // Já em DD/MM/AAAA -> mantém
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
+  return s;
+}
+function parseDateBR(s) {
+  if (!s) return null;
+  var m = String(s).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(parseInt(m[3],10), parseInt(m[2],10)-1, parseInt(m[1],10));
+}
+function hoje() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function addDias(offset) { var d = hoje(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()+offset); }
+
+/* ===== Status de conexão ===== */
+function setConn(ok) {
+  var el = document.getElementById('connStatus');
+  if (ok) { el.textContent = 'Sincronizado ✓'; el.className = 'conn'; }
+  else { el.textContent = 'Salvo localmente (offline)'; el.className = 'conn off'; }
+}
+
+/* ===== Navegação ===== */
+function showScreen(nome) {
+  document.querySelectorAll('main section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('screen-' + nome).classList.add('active');
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.remove('active'); });
+  var tab = document.getElementById('tab-' + nome);
+  if (tab) tab.classList.add('active');
+}
+
+/* ===== Toast ===== */
+var toastTimer = null;
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+}
+
+/* ===== Normalização ===== */
+function normalizeTask(t) {
+  return {
+    id: t.id || '',
+    tarefa: t.tarefa || 'Sem título',
+    dept: t.dept || '',
+    prio: t.prio || 'Média',
+    prazo: formatDate(t.prazo),
+    status: t.status || 'A Fazer',
+    dono: t.dono || 'Renato',
+    origem: t.origem || '',
+    obs: t.obs || ''
   };
+}
 
-  // axisFmt keeps axis tick labels short (compact notation) so long values
-  // (e.g. full BRL amounts) never clip against the plot edge.
-  function axisFmt(v) {
-    return fmt.num(v, { notation: "compact", maximumFractionDigits: 1 });
-  }
-
-  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
-  function coerceFormat(spec) {
-    if (typeof spec === "function") return spec;
-    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
-    return function (v) { return fmt.num(v); };
-  }
-
-  function accent() {
-    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
-  }
-  function mutedColor() {
-    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
-  }
-  function svgEl(tag, attrs) {
-    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (var k in attrs) el.setAttribute(k, attrs[k]);
-    return el;
-  }
-  function frame(el, w, h) {
-    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
-    el.innerHTML = "";
-    el.appendChild(svg);
-    return svg;
-  }
-
-  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
-  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
-  function maxOf(values) {
-    var m = values.length ? Math.max.apply(null, values) : 0;
-    return m > 0 ? m : 1;
-  }
-
-  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
-  function bar(el, cfg) {
-    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
-    var svg = frame(el, W, H);
-    var max = maxOf(cfg.values);
-    var n = cfg.values.length;
-    var plotW = W - padL - 12, plotH = H - padT - padB;
-    var step = plotW / n, bw = Math.min(step * 0.62, 64);
-    var color = cfg.color || accent();
-    var f = coerceFormat(cfg.format);
-    for (var g = 0; g <= 4; g++) {
-      var gy = padT + plotH - (plotH * g) / 4;
-      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 12, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
-      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
-      lbl.textContent = axisFmt((max * g) / 4);
-      svg.appendChild(lbl);
+/* ===== LocalStorage ===== */
+function saveLocal() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tarefas)); } catch(e){} }
+function loadLocal() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length) { tarefas = arr.map(normalizeTask); return true; }
     }
-    cfg.values.forEach(function (v, i) {
-      var bh = Math.max(0, (v / max) * plotH);
-      var x = padL + i * step + (step - bw) / 2;
-      var y = padT + plotH - bh;
-      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: color });
-      var t = svgEl("title", {});
-      t.textContent = cfg.labels[i] + ": " + f(v);
-      r.appendChild(t);
-      svg.appendChild(r);
-      var tx = svgEl("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
-      tx.textContent = cfg.labels[i];
-      svg.appendChild(tx);
-    });
-  }
+  } catch(e){}
+  return false;
+}
 
-  // line(el, {labels:[], values:[], color?, format?}) — single-series line.
-  function line(el, cfg) {
-    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
-    var svg = frame(el, W, H);
-    var max = maxOf(cfg.values);
-    var n = cfg.values.length;
-    var plotW = W - padL - 16, plotH = H - padT - padB;
-    var color = cfg.color || accent();
-    var f = coerceFormat(cfg.format);
-    for (var g = 0; g <= 4; g++) {
-      var gy = padT + plotH - (plotH * g) / 4;
-      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 16, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
-      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
-      lbl.textContent = axisFmt((max * g) / 4);
-      svg.appendChild(lbl);
+/* ===== Escrita na planilha (POST Apps Script) ===== */
+function writeToSheet(payload) {
+  return fetch(APP_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'text/plain' },
+    redirect: 'follow'
+  }).then(function(res){
+    if (res.status >= 300 && res.status < 400) {
+      return fetch(res.url || APP_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain' } });
     }
-    var pts = cfg.values.map(function (v, i) {
-      var x = padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
-      var y = padT + plotH - (v / max) * plotH;
-      return [x, y];
+    return res;
+  }).then(function(res){ return res.json(); })
+  .then(function(data){ return { success: true, data: data }; })
+  .catch(function(err){ return { success: false, error: String(err) }; });
+}
+
+/* ===== Leitura (planilha -> app): Apps Script GET, fallback CSV ===== */
+function loadFromSheet() {
+  fetch(APP_SCRIPT_URL, { method: 'GET', redirect: 'follow' })
+    .then(function(res){
+      if (res.status >= 300 && res.status < 400) return fetch(res.url || APP_SCRIPT_URL, { method: 'GET' });
+      return res;
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data && data.success && data.tasks && data.tasks.length) {
+        tarefas = data.tasks.map(normalizeTask);
+        saveLocal(); setConn(true); renderAll(); toast('Dados sincronizados com a planilha ✓');
+      } else { throw new Error('vazio'); }
+    })
+    .catch(function(){
+      fetch(CSV_URL, { cache: 'no-store' })
+        .then(function(res){ return res.text(); })
+        .then(function(txt){
+          var arr = parseCSV(txt);
+          if (arr && arr.length) {
+            tarefas = arr.map(normalizeTask);
+            saveLocal(); setConn(true); renderAll(); toast('Dados sincronizados (via CSV) ✓');
+          } else { throw new Error('csv'); }
+        })
+        .catch(function(){ setConn(false); });
     });
-    var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
-    svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
-    pts.forEach(function (p, i) {
-      var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
-      var t = svgEl("title", {});
-      t.textContent = cfg.labels[i] + ": " + f(cfg.values[i]);
-      c.appendChild(t);
-      svg.appendChild(c);
-      var tx = svgEl("text", { x: p[0], y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
-      tx.textContent = cfg.labels[i];
-      svg.appendChild(tx);
+}
+
+function parseCSV(texto) {
+  var linhas = [], atual = '', entreAspas = false, i;
+  for (i = 0; i < texto.length; i++) {
+    var c = texto[i];
+    if (entreAspas) {
+      if (c === '"') {
+        if (texto[i+1] === '"') { atual += '"'; i++; } else { entreAspas = false; }
+      } else { atual += c; }
+    } else if (c === '"') { entreAspas = true; }
+    else if (c === ',') { linhas.push(atual); atual = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && texto[i+1] === '\n') i++;
+      linhas.push(atual); atual = '';
+    } else { atual += c; }
+  }
+  linhas.push(atual);
+  var resultado = [], cabecalho = null;
+  for (var r = 0; r < linhas.length; r++) {
+    var cel = linhas[r].split(',');
+    if (r === 0) { cabecalho = cel; continue; }
+    var obj = {};
+    for (var c2 = 0; c2 < cabecalho.length; c2++) obj[cabecalho[c2]] = (cel[c2] !== undefined ? cel[c2] : '');
+    if (obj['ID']) resultado.push({
+      id: obj['ID'], tarefa: obj['Tarefa / Descrição'] || obj['Tarefa'] || '',
+      dept: obj['Departamento'] || '', prio: obj['Prioridade'] || '',
+      prazo: obj['Prazo / Data de vencimento'] || obj['Prazo'] || '',
+      status: obj['Status'] || '', dono: obj['Dono'] || '', origem: obj['Origem'] || '', obs: obj['Observações'] || ''
     });
   }
+  return resultado;
+}
 
-  // donut(el, {labels:[], values:[], colors?}) — donut with center total.
-  function donut(el, cfg) {
-    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
-    var svg = frame(el, W, H);
-    var total = cfg.values.reduce(function (a, b) { return a + b; }, 0) || 1;
-    var palette = cfg.colors || [accent(), "#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4"];
-    var a0 = -Math.PI / 2;
-    cfg.values.forEach(function (v, i) {
-      var a1 = a0 + (v / total) * Math.PI * 2;
-      var large = a1 - a0 > Math.PI ? 1 : 0;
-      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
-        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
-        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
-        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
-      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
-      var t = svgEl("title", {});
-      t.textContent = cfg.labels[i] + ": " + fmt.num(v) + " (" + fmt.pct(v / total) + ")";
-      path.appendChild(t);
-      svg.appendChild(path);
-      a0 = a1;
+/* ===== Tarefas ativas (exclui status "Excluído") ===== */
+function ativas() { return tarefas.filter(function(t){ return t.status !== 'Excluído'; }); }
+
+/* ===== KPIs ===== */
+function calcKPIs() {
+  var atv = ativas();
+  var total = atv.length;
+  var emAndamento = 0, concluidos = 0, excluidos = 0, vencendo7 = 0, vencidas = 0;
+  var h = hoje(), h7 = addDias(7);
+  atv.forEach(function(t){
+    if (t.status === 'Em Andamento') emAndamento++;
+    if (t.status === 'Concluídos') concluidos++;
+    var d = parseDateBR(t.prazo);
+    if (t.status !== 'Concluídos' && d) {
+      if (d < h) vencidas++;
+      else if (d >= h && d <= h7) vencendo7++;
+    }
+  });
+  tarefas.forEach(function(t){ if (t.status === 'Excluído') excluidos++; });
+  var abertos = total - concluidos;
+  var pct = total > 0 ? Math.round(concluidos / total * 100) : 0;
+  return { total: total, emAndamento: emAndamento, concluidos: concluidos, abertos: abertos, pct: pct, vencendo7: vencendo7, vencidas: vencidas, excluidos: excluidos };
+}
+
+function renderKPIs() {
+  var k = calcKPIs();
+  var cards = [
+    { num: k.total, lbl: 'Total de tarefas', dsc: 'Cadastradas no PMO' },
+    { num: k.emAndamento, lbl: 'Em andamento', dsc: 'Execução ativa' },
+    { num: k.concluidos, lbl: 'Concluídos', dsc: 'Entregues' },
+    { num: k.abertos, lbl: 'Abertos', dsc: 'Ideia + Fazer + Andam.' },
+    { num: k.pct + '%', lbl: '% Abertos × Concl.', dsc: 'Taxa de conclusão' },
+    { num: k.vencendo7, lbl: 'Vencendo 7 dias', dsc: 'Atenção ao cronograma' },
+    { num: k.vencidas, lbl: 'Vencidas', dsc: 'Ação corretiva' },
+    { num: k.excluidos, lbl: 'Excluídos', dsc: 'Fora do pipeline' }
+  ];
+  var html = '';
+  cards.forEach(function(c){
+    html += '<div class="kpi"><div class="num">' + c.num + '</div><div class="lbl">' + c.lbl + '</div><div class="dsc">' + c.dsc + '</div></div>';
+  });
+  document.getElementById('kpis').innerHTML = html;
+}
+
+/* ===== Filtros ===== */
+function renderFilters() {
+  var deptSet = {}, donoSet = {};
+  tarefas.forEach(function(t){ if (t.dept) deptSet[t.dept] = 1; if (t.dono) donoSet[t.dono] = 1; });
+  var selDept = document.getElementById('fDept'), selDono = document.getElementById('fDono');
+  var curD = selDept.value, curO = selDono.value;
+  selDept.innerHTML = '<option value="">Todos os departamentos</option>';
+  Object.keys(deptSet).sort().forEach(function(d){ selDept.innerHTML += '<option>' + d + '</option>'; });
+  selDono.innerHTML = '<option value="">Todos os donos</option>';
+  Object.keys(donoSet).sort().forEach(function(d){ selDono.innerHTML += '<option>' + d + '</option>'; });
+  selDept.value = curD; selDono.value = curO;
+}
+
+var STATUS_COLORS = { 'Ideia':'ideia', 'A Fazer':'afazer', 'Em Andamento':'andamento', 'Concluídos':'concluidos', 'Excluído':'excluido' };
+
+function statusChip(st) { return '<span class="chip ' + (STATUS_COLORS[st]||'ideia') + '">' + st + '</span>'; }
+function prioChip(p) { return '<span class="chip ' + (p==='Alta'?'A':p==='Média'?'M':'B') + '">' + p + '</span>'; }
+
+/* ===== Lista ===== */
+function filtered() {
+  var fd = document.getElementById('fDept').value;
+  var fp = document.getElementById('fPrio').value;
+  var fo = document.getElementById('fDono').value;
+  var fs = document.getElementById('fStatus').value;
+  return tarefas.filter(function(t){
+    if (fd && t.dept !== fd) return false;
+    if (fp && t.prio !== fp) return false;
+    if (fo && t.dono !== fo) return false;
+    if (fs === 'Excluídos') return t.status === 'Excluído';
+    if (t.status === 'Excluído') return false; // oculto por padrão
+    if (fs === 'Abertos' && t.status === 'Concluídos') return false;
+    if (fs && fs !== 'Abertos' && t.status !== fs) return false;
+    return true;
+  });
+}
+
+function renderList() {
+  var itens = filtered();
+  var html = '';
+  if (!itens.length) html = '<p style="color:#9A9A9A;text-align:center;padding:20px">Nenhuma tarefa encontrada.</p>';
+  itens.forEach(function(t){
+    var cls = (t.status === 'Excluído') ? 'task-card excl' : 'task-card';
+    html += '<div class="' + cls + '" onclick="openTask(\'' + t.id + '\')">'
+      + '<span class="task-id">' + t.id + '</span>'
+      + '<span class="task-title">' + esc(t.tarefa) + '</span>'
+      + '<div class="task-meta"><span class="chip dept">' + esc(t.dept) + '</span>' + prioChip(t.prio) + statusChip(t.status) + '</div>'
+      + '</div>';
+  });
+  document.getElementById('taskList').innerHTML = html;
+}
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+/* ===== Kanban ===== */
+function renderKanban() {
+  var colunas = [ ['Ideia',''], ['A Fazer',''], ['Em Andamento',''], ['Concluídos',''], ['Excluídos','exc'] ];
+  var html = '';
+  colunas.forEach(function(col){
+    var itens = tarefas.filter(function(t){ return t.status === col[0]; });
+    html += '<div class="kcol' + (col[1] ? ' ' + col[1] : '') + '"><h4>' + col[0] + ' <span>' + itens.length + '</span></h4>';
+    itens.forEach(function(t){
+      var exc = (t.status === 'Excluído') ? 'kcard exc' : 'kcard';
+      html += '<div class="' + exc + '" onclick="openTask(\'' + t.id + '\')">'
+        + '<div class="kt">' + esc(t.tarefa) + '</div>'
+        + '<div class="km">' + t.id + ' · ' + esc(t.dept) + ' · ' + (t.prazo ? t.prazo : 'sem prazo') + '</div>'
+        + '<div class="km">' + prioChip(t.prio) + ' ' + statusChip(t.status) + '</div>'
+        + '</div>';
     });
-    var center = svgEl("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 20, "font-weight": 650, fill: "currentColor" });
-    center.textContent = fmt.num(total);
-    svg.appendChild(center);
+    html += '</div>';
+  });
+  document.getElementById('kanban').innerHTML = html;
+}
+
+/* ===== Gráficos ===== */
+function destroyChart(nome) { if (charts[nome]) { charts[nome].destroy(); delete charts[nome]; } }
+
+function mkChart(nome, config) {
+  destroyChart(nome);
+  var ctx = document.getElementById('ch' + nome);
+  if (!ctx) return;
+  config.options = config.options || {};
+  config.options.maintainAspectRatio = false;
+  config.options.responsive = true;
+  config.options.plugins = config.options.plugins || {};
+  config.options.plugins.legend = config.options.plugins.legend || { position: 'bottom' };
+  config.options.plugins.datalabels = config.options.plugins.datalabels || {
+    color: '#3A3A3A', font: { weight: 'bold', size: 13 },
+    anchor: 'center', align: 'center',
+    formatter: function(v){ return v; }
+  };
+  config.options.layout = config.options.layout || { padding: 10 };
+  charts[nome] = new Chart(ctx, config);
+}
+
+function countBy(lista, getter) {
+  var map = {};
+  lista.forEach(function(t){ var k = getter(t) || '(vazio)'; map[k] = (map[k]||0)+1; });
+  return map;
+}
+function toPairs(map) {
+  var keys = Object.keys(map), pares = [];
+  keys.forEach(function(k){ pares.push({ k: k, v: map[k] }); });
+  pares.sort(function(a,b){ return b.v - a.v; });
+  return pares;
+}
+
+var PALETA = ['#C9A86A','#A8C8E8','#F2D8A7','#B8DCC8','#F2C4C4','#CDE8D8','#E5E5E5'];
+
+function renderCharts() {
+  try {
+    var atv = ativas();
+
+    // 1) Status — rosca
+    var porStatus = countBy(atv, function(t){ return t.status; });
+    var statusPairs = toPairs(porStatus);
+    mkChart('Status', { type: 'doughnut',
+      data: { labels: statusPairs.map(function(p){ return p.k; }), datasets: [{ data: statusPairs.map(function(p){ return p.v; }), backgroundColor: PALETA, borderWidth: 2, borderColor: '#FFFFFF' }] } });
+
+    // 2) Departamento — barras horizontais
+    var porDept = countBy(atv, function(t){ return t.dept; });
+    var deptPairs = toPairs(porDept);
+    mkChart('Dept', { type: 'bar',
+      data: { labels: deptPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: deptPairs.map(function(p){ return p.v; }), backgroundColor: '#A8C8E8', borderRadius: 6 }] },
+      options: { indexAxis: 'y', plugins: { datalabels: { anchor: 'end', align: 'right', color: '#3A3A3A', font: { weight: 'bold', size: 12 }, formatter: function(v){ return v; } } } } });
+
+    // 3) Prioridade — pizza
+    var porPrio = countBy(atv, function(t){ return t.prio; });
+    var prioPairs = toPairs(porPrio);
+    mkChart('Prio', { type: 'pie',
+      data: { labels: prioPairs.map(function(p){ return p.k; }), datasets: [{ data: prioPairs.map(function(p){ return p.v; }), backgroundColor: ['#F2C4C4','#F5E3C0','#CDE8D8'], borderWidth: 2, borderColor: '#FFFFFF' }] } });
+
+    // 4) RADAR — EIXOS = DONOS; cada série = métrica (CORRIGIDO)
+    var h = hoje(), h7 = addDias(7);
+    var donoSet = {};
+    atv.forEach(function(t){ if (t.dono) donoSet[t.dono] = 1; });
+    var donos = Object.keys(donoSet);
+    if (!donos.length) donos = ['Renato','Equipe','Terceiro'];
+    var metAtivas = [], metV7 = [], metVenc = [], metConcl = [];
+    donos.forEach(function(dono){
+      var lista = atv.filter(function(t){ return t.dono === dono; });
+      var at = 0, v7 = 0, venc = 0, concl = 0;
+      lista.forEach(function(t){
+        if (t.status === 'Concluídos') { concl++; return; }
+        at++;
+        var d = parseDateBR(t.prazo);
+        if (d && d < h) venc++;
+        else if (d && d >= h && d <= h7) v7++;
+      });
+      metAtivas.push(at); metV7.push(v7); metVenc.push(venc); metConcl.push(concl);
+    });
+    mkChart('Dono', { type: 'radar',
+      data: {
+        labels: donos,
+        datasets: [
+          { label: 'Ativas', data: metAtivas, borderColor: '#C9A86A', backgroundColor: 'rgba(201,168,106,.18)', borderWidth: 2, pointRadius: 3 },
+          { label: 'Vencendo 7d', data: metV7, borderColor: '#F2B84B', backgroundColor: 'rgba(242,184,75,.15)', borderWidth: 2, pointRadius: 3 },
+          { label: 'Vencidas', data: metVenc, borderColor: '#E57373', backgroundColor: 'rgba(229,115,115,.15)', borderWidth: 2, pointRadius: 3 },
+          { label: 'Concluídas', data: metConcl, borderColor: '#7FBFA0', backgroundColor: 'rgba(127,191,160,.18)', borderWidth: 2, pointRadius: 3 }
+        ]
+      },
+      options: { plugins: { datalabels: { color: '#3A3A3A', font: { weight: 'bold', size: 11 }, anchor: 'center', align: 'center', formatter: function(v){ return v; } } } } });
+
+    // 5) Abertos × Concluídos
+    var k = calcKPIs();
+    mkChart('Aberto', { type: 'bar',
+      data: { labels: ['Abertos','Concluídos'], datasets: [{ data: [k.abertos, k.concluidos], backgroundColor: ['#F2D8A7','#B8DCC8'], borderRadius: 8 }] },
+      options: { plugins: { datalabels: { anchor: 'end', align: 'top', color: '#3A3A3A', font: { weight: 'bold', size: 14 }, formatter: function(v){ return v; } } } } });
+
+    // 6) Origem — linha/área
+    var porOrigem = countBy(atv, function(t){ return t.origem; });
+    var origemPairs = toPairs(porOrigem);
+    mkChart('Origem', { type: 'line',
+      data: { labels: origemPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: origemPairs.map(function(p){ return p.v; }), borderColor: '#C9A86A', backgroundColor: 'rgba(201,168,106,.15)', fill: true, tension: .3, pointBackgroundColor: '#C9A86A', pointRadius: 4 }] },
+      options: { plugins: { datalabels: { anchor: 'center', align: 'center', color: '#3A3A3A', font: { weight: 'bold', size: 12 }, formatter: function(v){ return v; } } } } });
+  } catch(e) { /* gráficos não bloqueiam o app */ }
+}
+
+/* ===== Render geral ===== */
+function renderAll() {
+  renderKPIs();
+  renderFilters();
+  renderList();
+  renderKanban();
+  renderCharts();
+}
+
+/* ===== Modal editar ===== */
+function fillDeptSelects() {
+  ['eDept','nDept'].forEach(function(id){
+    var sel = document.getElementById(id);
+    if (!sel || sel.options.length > 1) return;
+    sel.innerHTML = '<option value="">—</option>';
+    DEPTS.forEach(function(d){ sel.innerHTML += '<option>' + d + '</option>'; });
+  });
+}
+
+function openTask(id) {
+  var t = tarefas.find(function(x){ return x.id === id; });
+  if (!t) return;
+  editarId = id;
+  fillDeptSelects();
+  document.getElementById('eId').value = t.id;
+  document.getElementById('eTarefa').value = t.tarefa;
+  document.getElementById('eDept').value = t.dept;
+  document.getElementById('ePrio').value = t.prio;
+  document.getElementById('ePrazo').value = t.prazo;
+  document.getElementById('eStatus').value = t.status;
+  document.getElementById('eDono').value = t.dono;
+  document.getElementById('eOrigem').value = t.origem;
+  document.getElementById('eObs').value = t.obs;
+  var btnIni = document.getElementById('btnIniciar');
+  var btnCon = document.getElementById('btnConcluir');
+  var btnEx = document.getElementById('btnExcluir');
+  if (t.status === 'Excluído') {
+    btnIni.style.display = 'none';
+    btnCon.style.display = 'none';
+    btnEx.textContent = 'Restaurar';
+    btnEx.className = 'btn green';
+    btnEx.setAttribute('onclick', 'restaurarTask()');
+  } else {
+    btnIni.style.display = '';
+    btnCon.style.display = '';
+    btnEx.textContent = 'Excluir';
+    btnEx.className = 'btn danger';
+    btnEx.setAttribute('onclick', 'excluirTask()');
   }
+  document.getElementById('modal-editar').style.display = 'flex';
+}
 
-  window.skipShell = { fmt: fmt };
-  window.skipChart = { bar: bar, line: line, donut: donut };
-})();
+function closeModal() { document.getElementById('modal-editar').style.display = 'none'; editarId = null; }
+function closeNewModal() { document.getElementById('modal-nova').style.display = 'none'; }
 
+function saveTask() {
+  var t = tarefas.find(function(x){ return x.id === editarId; });
+  if (!t) return;
+  var prazo = formatDate(document.getElementById('ePrazo').value);
+  var dados = {
+    id: t.id,
+    tarefa: document.getElementById('eTarefa').value,
+    dept: document.getElementById('eDept').value,
+    prio: document.getElementById('ePrio').value,
+    prazo: prazo,
+    status: document.getElementById('eStatus').value,
+    dono: document.getElementById('eDono').value,
+    origem: document.getElementById('eOrigem').value,
+    obs: document.getElementById('eObs').value
+  };
+  t.tarefa = dados.tarefa; t.dept = dados.dept; t.prio = dados.prio; t.prazo = prazo;
+  t.status = dados.status; t.dono = dados.dono; t.origem = dados.origem; t.obs = dados.obs;
+  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
+  writeToSheet({ action: 'update', id: dados.id, tarefa: dados.tarefa, dept: dados.dept, prio: dados.prio, prazo: prazo, status: dados.status, dono: dados.dono, origem: dados.origem, obs: dados.obs })
+    .then(function(r){ if (r.success && r.data && r.data.success) { toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: ' + (r.data && r.data.error ? r.data.error : 'sem resposta')); setConn(false); } });
+}
+
+function changeStatus(novoStatus) {
+  var t = tarefas.find(function(x){ return x.id === editarId; });
+  if (!t) return;
+  t.status = novoStatus;
+  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
+  writeToSheet({ action: 'update', id: t.id, tarefa: t.tarefa, dept: t.dept, prio: t.prio, prazo: t.prazo, status: novoStatus, dono: t.dono, origem: t.origem, obs: t.obs })
+    .then(function(r){ if (r.success && r.data && r.data.success) { toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: ' + (r.data && r.data.error ? r.data.error : 'sem resposta')); setConn(false); } });
+}
+
+/* ===== Exclusão lógica (status Excluído — sem apagar linha) ===== */
+function excluirTask() {
+  var t = tarefas.find(function(x){ return x.id === editarId; });
+  if (!t) return;
+  if (!confirm('Excluir a tarefa ' + t.id + ' (' + t.tarefa + ')?\n\nEla receberá o status "Excluído": sai dos indicadores, dos gráficos e do Kanban, mas permanece na planilha (sem buracos nos IDs) e pode ser restaurada a qualquer momento.')) return;
+  setStatusAndSave(t, 'Excluído');
+}
+function restaurarTask() {
+  var t = tarefas.find(function(x){ return x.id === editarId; });
+  if (!t) return;
+  setStatusAndSave(t, 'A Fazer');
+}
+function setStatusAndSave(t, novoStatus) {
+  t.status = novoStatus;
+  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
+  writeToSheet({ action: 'update', id: t.id, tarefa: t.tarefa, dept: t.dept, prio: t.prio, prazo: t.prazo, status: novoStatus, dono: t.dono, origem: t.origem, obs: t.obs })
+    .then(function(r){ if (r.success && r.data && r.data.success) { toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: ' + (r.data && r.data.error ? r.data.error : 'sem resposta')); setConn(false); } });
+}
+
+/* ===== Nova tarefa ===== */
+function nextId() {
+  var max = 0;
+  tarefas.forEach(function(t){
+    var m = String(t.id || '').match(/^TAR-(\d+)$/);
+    if (m) { var n = parseInt(m[1],10); if (n > max) max = n; }
+  });
+  return 'TAR-' + ('000' + (max + 1)).slice(-3);
+}
+
+function openNewTask() {
+  fillDeptSelects();
+  document.getElementById('nTarefa').value = '';
+  document.getElementById('nDept').value = '';
+  document.getElementById('nPrio').value = 'Média';
+  document.getElementById('nPrazo').value = '';
+  document.getElementById('nStatus').value = 'A Fazer';
+  document.getElementById('nDono').value = 'Renato';
+  document.getElementById('nOrigem').value = 'Reunião';
+  document.getElementById('nObs').value = '';
+  document.getElementById('modal-nova').style.display = 'flex';
+}
+
+function addTask() {
+  var nome = document.getElementById('nTarefa').value.trim();
+  if (!nome) { toast('Informe a tarefa'); return; }
+  var prazo = formatDate(document.getElementById('nPrazo').value);
+  var nova = {
+    id: nextId(),
+    tarefa: nome,
+    dept: document.getElementById('nDept').value,
+    prio: document.getElementById('nPrio').value,
+    prazo: prazo,
+    status: document.getElementById('nStatus').value,
+    dono: document.getElementById('nDono').value,
+    origem: document.getElementById('nOrigem').value,
+    obs: document.getElementById('nObs').value
+  };
+  tarefas.push(nova);
+  saveLocal(); renderAll(); closeNewModal(); toast('Salvando...');
+  writeToSheet({ action: 'add', tarefa: nova.tarefa, dept: nova.dept, prio: nova.prio, prazo: prazo, status: nova.status, dono: nova.dono, origem: nova.origem, obs: nova.obs })
+    .then(function(r){
+      if (r.success && r.data && r.data.success) {
+        if (r.data.id && r.data.id !== nova.id) { nova.id = r.data.id; saveLocal(); renderAll(); }
+        toast('Salvo na planilha ✓'); setConn(true); loadFromSheet();
+      } else { toast('Salvo localmente (falha na gravação: ' + (r.data && r.data.error ? r.data.error : 'sem resposta') + ')'); setConn(false); }
+    });
+}
+
+/* ===== Inicialização ===== */
+window.addEventListener('DOMContentLoaded', function(){
+  Chart.register(ChartDataLabels);
+  if (!loadLocal()) { tarefas = JSON.parse(JSON.stringify(tarefasFallback)); }
+  renderAll();
+  showScreen('inicio');
+  loadFromSheet();
+  setInterval(loadFromSheet, 60000);
+});
 </script>
 </body>
 </html>
