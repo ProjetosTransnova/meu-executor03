@@ -8,87 +8,91 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","SF Compact","Helvetica Neue",Arial,sans-serif;background:#F7F4F0;color:#2F2F33;padding-bottom:90px;-webkit-font-smoothing:antialiased}
-header{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #EFEAE3;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:20}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","SF Compact","Helvetica Neue",Arial,sans-serif;background:#F5F7FA;color:#2F2F33;padding-bottom:90px;-webkit-font-smoothing:antialiased}
+header{background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid #E6EAF0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:20}
 .brand{display:flex;align-items:center;gap:11px}
-.logo{color:#C9A86A;font-size:24px;line-height:1}
-.brand h1{font-size:17px;font-weight:600;letter-spacing:.3px;color:#2F2F33}
-.brand .sub{display:block;font-size:11px;color:#C9A86A;font-weight:600;letter-spacing:1.6px}
-.conn{font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;background:#E4F2E8;color:#4C8A66;letter-spacing:.2px}
-.conn.off{background:#F2E8D8;color:#A5823A}
-.btn-add{background:linear-gradient(135deg,#C9A86A,#B8965C);color:#FFF;border:none;border-radius:22px;padding:9px 17px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(201,168,106,.28)}
+.logo{color:#1B2A4A;font-size:24px;line-height:1}
+.brand h1{font-size:17px;font-weight:700;letter-spacing:.3px;color:#1B2A4A}
+.brand .sub{display:block;font-size:11px;color:#2E5FA3;font-weight:700;letter-spacing:1.6px}
+.conn{font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;background:#E4F2E8;color:#2E8B57;letter-spacing:.2px}
+.conn.off{background:#FBEAD2;color:#B07A2A}
+.btn-add{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF;border:none;border-radius:22px;padding:9px 17px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(27,42,74,.28)}
 .btn-add:hover{opacity:.92}
-nav{display:flex;gap:4px;background:#F1EDE6;border-radius:22px;padding:4px}
-nav button{border:none;background:transparent;padding:7px 15px;border-radius:18px;font-size:12.5px;font-weight:500;color:#8A847A;cursor:pointer;transition:all .18s}
-nav button.active{background:#FFFFFF;color:#B8965C;font-weight:600;box-shadow:0 1px 5px rgba(0,0,0,.07)}
+nav{display:flex;gap:4px;background:#EDF1F6;border-radius:22px;padding:4px}
+nav button{border:none;background:transparent;padding:7px 15px;border-radius:18px;font-size:12.5px;font-weight:500;color:#7A8494;cursor:pointer;transition:all .18s}
+nav button.active{background:#FFFFFF;color:#1B2A4A;font-weight:700;box-shadow:0 1px 5px rgba(0,0,0,.07)}
 main{max-width:1120px;margin:0 auto;padding:20px}
 section{display:none}
 section.active{display:block}
-/* KPIs em UMA ÚNICA LINHA (rolável no mobile) */
-.kpis{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
-.kpi{flex:1 1 0;min-width:116px;background:#FFFFFF;border:1px solid #EFEAE3;border-radius:16px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:transform .15s}
+/* KPIs em UMA LINHA */
+.kpis{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.kpi{flex:1 1 0;min-width:118px;background:#FFFFFF;border:1px solid #E6EAF0;border-radius:16px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:transform .15s}
 .kpi:hover{transform:translateY(-2px)}
 .kpi-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .kpi-icon{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 30px}
-.kpi .num{font-size:22px;font-weight:700;color:#2F2F33;letter-spacing:.2px;line-height:1.1}
-.kpi .lbl{font-size:9.5px;color:#9C968C;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-top:5px;line-height:1.25}
-.kpi .dsc{font-size:9px;color:#C9A86A;margin-top:3px;font-weight:500;line-height:1.2}
-/* Filtros de análise do dashboard */
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-.filters select{border:1px solid #EFEAE3;border-radius:12px;padding:9px 12px;font-size:12.5px;background:#FFF;color:#2F2F33;font-weight:500;cursor:pointer;transition:border .15s}
-.filters select:hover{border-color:#D8CFC2}
+.kpi .num{font-size:22px;font-weight:700;color:#1B2A4A;letter-spacing:.2px;line-height:1.1}
+.kpi .lbl{font-size:9.5px;color:#7A8494;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:5px;line-height:1.25}
+.kpi .dsc{font-size:9px;color:#2E5FA3;margin-top:3px;font-weight:600;line-height:1.2}
+/* Filtros: 2 blocos de 2 */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.fblock{display:flex;gap:8px;background:#FFFFFF;border:1px solid #E6EAF0;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.fblock select{border:1px solid #E6EAF0;border-radius:10px;padding:8px 12px;font-size:12.5px;background:#FFF;color:#2F2F33;font-weight:500;cursor:pointer;transition:border .15s}
+.fblock select:hover{border-color:#2E5FA3}
 .grid-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.chart-card{background:#FFFFFF;border:1px solid #EFEAE3;border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.chart-card h3{font-size:13.5px;font-weight:600;margin-bottom:3px;color:#2F2F33;letter-spacing:.2px}
-.chart-card p{font-size:10.5px;color:#B1AAA0;margin-bottom:12px;font-weight:500}
+.chart-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.chart-card h3{font-size:13.5px;font-weight:700;margin-bottom:3px;color:#1B2A4A;letter-spacing:.2px}
+.chart-card p{font-size:10.5px;color:#9AA3B2;margin-bottom:12px;font-weight:500}
 .chart-wrap{position:relative;height:290px}
-.task-card{background:#FFFFFF;border:1px solid #EFEAE3;border-radius:14px;padding:13px 16px;margin-bottom:9px;cursor:pointer;display:flex;align-items:center;gap:13px;transition:box-shadow .15s}
+.task-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:14px;padding:13px 16px;margin-bottom:9px;cursor:pointer;display:flex;align-items:center;gap:13px;transition:box-shadow .15s}
 .task-card:hover{box-shadow:0 3px 10px rgba(0,0,0,.06)}
 .task-card.excl{opacity:.5}
-.task-id{font-size:10.5px;font-weight:700;color:#C9A86A;min-width:58px;letter-spacing:.4px}
+.task-id{font-size:10.5px;font-weight:700;color:#2E5FA3;min-width:58px;letter-spacing:.4px}
 .task-title{font-size:13.5px;font-weight:500;flex:1}
-.task-meta{display:flex;gap:6px;flex-wrap:wrap}
+.task-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .chip{font-size:10px;font-weight:600;padding:3px 10px;border-radius:12px;letter-spacing:.2px}
-.chip.dept{background:#F3EFE8;color:#7A7368}
-.chip.A{background:#F6D6D6;color:#A05A5A}
-.chip.M{background:#F6E8C8;color:#9A7B33}
-.chip.B{background:#D3EADF;color:#4F8A6A}
+.chip.dept{background:#EDF1F6;color:#4A5568}
+.chip.A{background:#FBD9E0;color:#C23A5A}
+.chip.M{background:#FBEED0;color:#B07A2A}
+.chip.B{background:#D3EADF;color:#2E8B57}
 .chip.ideia{background:#ECEAE5;color:#7A756B}
-.chip.afazer{background:#D6E4F2;color:#3E668A}
-.chip.andamento{background:#F6E3C4;color:#96703A}
-.chip.concluidos{background:#CDE8D8;color:#3C7A5A}
+.chip.afazer{background:#D6E4F2;color:#2E5FA3}
+.chip.andamento{background:#FBEED0;color:#B07A2A}
+.chip.concluidos{background:#CDE8D8;color:#2E8B57}
 .chip.excluido{background:#EEDDD8;color:#965B50}
-/* Kanban: colunas e cards MAIORES */
+.badge{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.2px}
+.badge.atrasada{background:#FBD9E0;color:#C23A5A}
+.badge.hoje{background:#FBEED0;color:#B07A2A}
+.badge.prox{background:#D6E4F2;color:#2E5FA3}
 .kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.kcol{background:#F2EEE7;border-radius:16px;padding:14px;min-height:220px}
+.kcol{background:#EDF1F6;border-radius:16px;padding:14px;min-height:220px}
 .kcol.exc{background:#F4EFEA;opacity:.85}
-.kcol h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#6E685E;margin-bottom:12px;display:flex;justify-content:space-between}
-.kcol h4 span{background:#FFF;border-radius:10px;padding:1px 9px;font-size:10.5px;font-weight:700;color:#B8965C}
-.kcard{background:#FFF;border:1px solid #EFEAE3;border-left:3px solid #C9A86A;border-radius:13px;padding:15px;margin-bottom:11px;cursor:pointer;transition:box-shadow .15s}
+.kcol h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#4A5568;margin-bottom:12px;display:flex;justify-content:space-between}
+.kcol h4 span{background:#FFF;border-radius:10px;padding:1px 9px;font-size:10.5px;font-weight:700;color:#2E5FA3}
+.kcard{background:#FFF;border:1px solid #E6EAF0;border-left:3px solid #2E5FA3;border-radius:13px;padding:15px;margin-bottom:11px;cursor:pointer;transition:box-shadow .15s}
 .kcard:hover{box-shadow:0 3px 10px rgba(0,0,0,.06)}
 .kcard.exc{opacity:.6;border-left-color:#CBAAA4}
 .kcard .kt{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.3;color:#2F2F33}
 .kcard .km{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
-.kcard .kdept{font-size:11.5px;font-weight:600;color:#7A7368;background:#F3EFE8;display:inline-block;padding:3px 9px;border-radius:10px}
-.modal-overlay{position:fixed;inset:0;background:rgba(47,47,51,.42);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.kcard .kdept{font-size:11.5px;font-weight:600;color:#4A5568;background:#EDF1F6;display:inline-block;padding:3px 9px;border-radius:10px}
+.modal-overlay{position:fixed;inset:0;background:rgba(27,42,74,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal{background:#FFF;border-radius:20px;max-width:540px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.16)}
-.modal h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#2F2F33}
+.modal h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1B2A4A}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .form-grid .full{grid-column:1/-1}
-label{font-size:10px;font-weight:600;color:#9C968C;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
-input,select,textarea{width:100%;border:1px solid #EFEAE3;border-radius:12px;padding:9px 12px;font-size:13px;color:#2F2F33;background:#FFF;font-family:inherit;font-weight:500}
+label{font-size:10px;font-weight:600;color:#7A8494;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
+input,select,textarea{width:100%;border:1px solid #E6EAF0;border-radius:12px;padding:9px 12px;font-size:13px;color:#2F2F33;background:#FFF;font-family:inherit;font-weight:500}
 textarea{resize:vertical;min-height:60px}
 .modal-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
 .btn{border:none;border-radius:22px;padding:9px 17px;font-size:12.5px;font-weight:600;cursor:pointer;transition:opacity .15s}
-.btn.primary{background:linear-gradient(135deg,#C9A86A,#B8965C);color:#FFF}
-.btn.green{background:#D3EADF;color:#3C7A5A}
-.btn.danger{background:#F3D9D5;color:#965B50}
-.btn.ghost{background:#F1EDE6;color:#6E685E}
+.btn.primary{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF}
+.btn.green{background:#D3EADF;color:#2E8B57}
+.btn.danger{background:#FBD9E0;color:#C23A5A}
+.btn.ghost{background:#EDF1F6;color:#4A5568}
 .btn:hover{opacity:.9}
-#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#2F2F33;color:#FFF;padding:12px 22px;border-radius:26px;font-size:13px;font-weight:500;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1B2A4A;color:#FFF;padding:12px 22px;border-radius:26px;font-size:13px;font-weight:500;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 #toast.show{opacity:1}
-footer{text-align:center;color:#BDB6AB;font-size:11px;padding:20px}
-@media(max-width:640px){.brand h1{font-size:15px}nav button{padding:6px 10px;font-size:12px}}
+footer{text-align:center;color:#B5BCC8;font-size:11px;padding:20px}
+@media(max-width:640px){.brand h1{font-size:15px}nav button{padding:6px 10px;font-size:12px}.fblock{flex:1 1 100%}}
 </style>
 </head>
 <body>
@@ -113,18 +117,21 @@ footer{text-align:center;color:#BDB6AB;font-size:11px;padding:20px}
 <main>
   <section id="screen-inicio">
     <div class="kpis" id="kpis"></div>
-    <!-- Filtros de análise do dashboard (5 filtros) -->
-    <div class="filters" id="filtrosDash">
-      <select id="ditStatus" onchange="applyGlobalFilters()">
-        <option value="">Status: Todos</option>
-        <option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option>
-      </select>
-      <select id="ditDept" onchange="applyGlobalFilters()"><option value="">Departamento: Todos</option></select>
-      <select id="ditPrio" onchange="applyGlobalFilters()">
-        <option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option>
-      </select>
-      <select id="ditDono" onchange="applyGlobalFilters()"><option value="">Dono: Todos</option></select>
-      <select id="ditData" onchange="applyGlobalFilters()"><option value="">Data de Conclusão: Todas</option></select>
+    <!-- Filtros: 2 blocos de 2 -->
+    <div class="filters">
+      <div class="fblock">
+        <select id="ditStatus" onchange="applyGlobalFilters()">
+          <option value="">Status: Todos</option>
+          <option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option>
+        </select>
+        <select id="ditDept" onchange="applyGlobalFilters()"><option value="">Departamento: Todos</option></select>
+      </div>
+      <div class="fblock">
+        <select id="ditPrio" onchange="applyGlobalFilters()">
+          <option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option>
+        </select>
+        <select id="ditDono" onchange="applyGlobalFilters()"><option value="">Dono: Todos</option></select>
+      </div>
     </div>
     <div class="grid-charts">
       <div class="chart-card"><h3>Distribuição por Status</h3><p>Panorama do fluxo de trabalho</p><div class="chart-wrap"><canvas id="chStatus"></canvas></div></div>
@@ -138,10 +145,14 @@ footer{text-align:center;color:#BDB6AB;font-size:11px;padding:20px}
 
   <section id="screen-tarefas">
     <div class="filters">
-      <select id="fDept" onchange="renderList()"><option value="">Todos os departamentos</option></select>
-      <select id="fPrio" onchange="renderList()"><option value="">Todas as prioridades</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
-      <select id="fDono" onchange="renderList()"><option value="">Todos os donos</option></select>
-      <select id="fStatus" onchange="renderList()"><option value="">Todos (sem excluídos)</option><option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option><option>Abertos</option><option>Excluídos</option></select>
+      <div class="fblock">
+        <select id="fDept" onchange="renderList()"><option value="">Departamento: Todos</option></select>
+        <select id="fPrio" onchange="renderList()"><option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+      </div>
+      <div class="fblock">
+        <select id="fDono" onchange="renderList()"><option value="">Dono: Todos</option></select>
+        <select id="fStatus" onchange="renderList()"><option value="">Status: Todos</option><option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option><option>Abertos</option><option>Excluídos</option></select>
+      </div>
     </div>
     <div id="taskList"></div>
   </section>
@@ -241,7 +252,6 @@ function parseDateBR(s) {
 }
 function hoje() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 function addDias(offset) { var d = hoje(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()+offset); }
-function periodoKey(prazo) { var d = parseDateBR(prazo); if (!d) return ''; return ('0'+(d.getMonth()+1)).slice(-2) + '/' + d.getFullYear(); }
 
 /* ===== Status de conexão ===== */
 function setConn(ok) {
@@ -377,19 +387,17 @@ function parseCSV(texto) {
 /* ===== Tarefas ativas (exclui status "Excluído") ===== */
 function ativas() { return tarefas.filter(function(t){ return t.status !== 'Excluído'; }); }
 
-/* ===== Filtros globais do dashboard (5 filtros) ===== */
+/* ===== Filtros globais do dashboard (4 filtros) ===== */
 function globalFiltered() {
   var s = document.getElementById('ditStatus').value;
   var d = document.getElementById('ditDept').value;
   var p = document.getElementById('ditPrio').value;
   var o = document.getElementById('ditDono').value;
-  var dt = document.getElementById('ditData').value;
   return ativas().filter(function(t){
     if (s && t.status !== s) return false;
     if (d && t.dept !== d) return false;
     if (p && t.prio !== p) return false;
     if (o && t.dono !== o) return false;
-    if (dt) { var k = periodoKey(t.prazo); if (k !== dt) return false; }
     return true;
   });
 }
@@ -398,26 +406,21 @@ function applyGlobalFilters() { renderKPIs(); renderCharts(); }
 function renderGlobalFilters() {
   var selD = document.getElementById('ditDept');
   var selO = document.getElementById('ditDono');
-  var selDt = document.getElementById('ditData');
-  if (!selD || !selO || !selDt) return;
-  var vD = selD.value, vO = selO.value, vDt = selDt.value;
-  var depts = {}, donos = {}, periodos = {};
+  if (!selD || !selO) return;
+  var vD = selD.value, vO = selO.value;
+  var depts = {}, donos = {};
   ativas().forEach(function(t){
     if (t.dept) depts[t.dept] = 1;
     if (t.dono) donos[t.dono] = 1;
-    var k = periodoKey(t.prazo);
-    if (k) periodos[k] = 1;
   });
   selD.innerHTML = '<option value="">Departamento: Todos</option>';
   Object.keys(depts).sort().forEach(function(x){ selD.innerHTML += '<option>' + x + '</option>'; });
   selO.innerHTML = '<option value="">Dono: Todos</option>';
   Object.keys(donos).sort().forEach(function(x){ selO.innerHTML += '<option>' + x + '</option>'; });
-  selDt.innerHTML = '<option value="">Data de Conclusão: Todas</option>';
-  Object.keys(periodos).sort().forEach(function(x){ selDt.innerHTML += '<option>' + x + '</option>'; });
-  selD.value = vD; selO.value = vO; selDt.value = vDt;
+  selD.value = vD; selO.value = vO;
 }
 
-/* ===== KPIs ===== */
+/* ===== KPIs (sequência: Conclusão, Em Aberto, Em Andamento, Vence 7D, Vencidas, Concluídos, Total, Excluídos) ===== */
 function calcKPIs() {
   var atv = globalFiltered();
   var total = atv.length;
@@ -441,14 +444,14 @@ function calcKPIs() {
 function renderKPIs() {
   var k = calcKPIs();
   var cards = [
-    { num: k.total, lbl: 'Total', dsc: 'Cadastradas', icon: '📋', bg: '#F2EEE7' },
-    { num: k.emAndamento, lbl: 'Em andamento', dsc: 'Execução ativa', icon: '🔄', bg: '#FBEEDC' },
-    { num: k.concluidos, lbl: 'Concluídos', dsc: 'Entregues', icon: '✅', bg: '#E4F2E8' },
-    { num: k.abertos, lbl: 'Abertos', dsc: 'Ideia+Fazer+Andam.', icon: '📌', bg: '#E8F0F8' },
-    { num: k.pct + '%', lbl: 'Conclusão', dsc: '% Abertos × Concl.', icon: '🎯', bg: '#F7EFE0' },
-    { num: k.vencendo7, lbl: 'Vencem 7d', dsc: 'Atenção cronograma', icon: '⏳', bg: '#FBEAD2' },
-    { num: k.vencidas, lbl: 'Vencidas', dsc: 'Ação corretiva', icon: '⚠️', bg: '#F9E3E3' },
-    { num: k.excluidos, lbl: 'Excluídos', dsc: 'Fora do pipeline', icon: '🗑️', bg: '#EFE9E5' }
+    { num: k.pct + '%', lbl: 'Conclusão', dsc: 'Taxa de conclusão', icon: '🎯', bg: '#E8F0F8' },
+    { num: k.abertos, lbl: 'Em aberto', dsc: 'Ideia+Fazer+Andam.', icon: '📌', bg: '#FBEED0' },
+    { num: k.emAndamento, lbl: 'Em andamento', dsc: 'Execução ativa', icon: '🔄', bg: '#E8F0F8' },
+    { num: k.vencendo7, lbl: 'Vence em 7D', dsc: 'Atenção cronograma', icon: '⏳', bg: '#FBEED0' },
+    { num: k.vencidas, lbl: 'Vencidas', dsc: 'Ação corretiva', icon: '⚠️', bg: '#FBD9E0' },
+    { num: k.concluidos, lbl: 'Concluídos', dsc: 'Entregues', icon: '✅', bg: '#D3EADF' },
+    { num: k.total, lbl: 'Total', dsc: 'Cadastradas no PMO', icon: '📋', bg: '#EDF1F6' },
+    { num: k.excluidos, lbl: 'Excluídos', dsc: 'Fora do pipeline', icon: '🗑️', bg: '#ECEAE5' }
   ];
   var html = '';
   cards.forEach(function(c){
@@ -467,27 +470,40 @@ function renderFilters() {
   tarefas.forEach(function(t){ if (t.dept) deptSet[t.dept] = 1; if (t.dono) donoSet[t.dono] = 1; });
   var selDept = document.getElementById('fDept'), selDono = document.getElementById('fDono');
   var curD = selDept.value, curO = selDono.value;
-  selDept.innerHTML = '<option value="">Todos os departamentos</option>';
+  selDept.innerHTML = '<option value="">Departamento: Todos</option>';
   Object.keys(deptSet).sort().forEach(function(d){ selDept.innerHTML += '<option>' + d + '</option>'; });
-  selDono.innerHTML = '<option value="">Todos os donos</option>';
+  selDono.innerHTML = '<option value="">Dono: Todos</option>';
   Object.keys(donoSet).sort().forEach(function(d){ selDono.innerHTML += '<option>' + d + '</option>'; });
   selDept.value = curD; selDono.value = curO;
 }
 
 var STATUS_COLORS = { 'Ideia':'ideia', 'A Fazer':'afazer', 'Em Andamento':'andamento', 'Concluídos':'concluidos', 'Excluído':'excluido' };
-var STATUS_HEX = { 'Ideia':'#ECEAE5', 'A Fazer':'#D6E4F2', 'Em Andamento':'#F6E3C4', 'Concluídos':'#A9D6BC' };
+var STATUS_HEX = { 'Ideia':'#ECEAE5', 'A Fazer':'#D6E4F2', 'Em Andamento':'#FBEED0', 'Concluídos':'#A9D6BC' };
 var PRIO_HEX = { 'Alta':'#F0B8B8', 'Média':'#F2DFB0', 'Baixa':'#C9E4D8' };
 
 function statusChip(st) { return '<span class="chip ' + (STATUS_COLORS[st]||'ideia') + '">' + st + '</span>'; }
 function prioChip(p) { return '<span class="chip ' + (p==='Alta'?'A':p==='Média'?'M':'B') + '">' + p + '</span>'; }
 
-/* ===== Lista ===== */
+/* ===== Badge de vencimento ===== */
+function badgeVenc(t) {
+  if (t.status === 'Concluídos' || t.status === 'Excluído') return '';
+  var d = parseDateBR(t.prazo);
+  if (!d) return '';
+  var h = hoje();
+  if (d < h) return '<span class="badge atrasada">Atrasada</span>';
+  if (d.getTime() === h.getTime()) return '<span class="badge hoje">Vence hoje</span>';
+  var diff = Math.round((d - h) / 86400000);
+  if (diff <= 7) return '<span class="badge prox">Vence em ' + diff + 'd</span>';
+  return '';
+}
+
+/* ===== Lista (concluídas para baixo, abertas para cima por data) ===== */
 function filtered() {
   var fd = document.getElementById('fDept').value;
   var fp = document.getElementById('fPrio').value;
   var fo = document.getElementById('fDono').value;
   var fs = document.getElementById('fStatus').value;
-  return tarefas.filter(function(t){
+  var lista = tarefas.filter(function(t){
     if (fd && t.dept !== fd) return false;
     if (fp && t.prio !== fp) return false;
     if (fo && t.dono !== fo) return false;
@@ -497,18 +513,30 @@ function filtered() {
     if (fs && fs !== 'Abertos' && t.status !== fs) return false;
     return true;
   });
+  // Ordena: abertas primeiro (por prazo crescente), concluídas por último
+  lista.sort(function(a,b){
+    var aConcl = (a.status === 'Concluídos') ? 1 : 0;
+    var bConcl = (b.status === 'Concluídos') ? 1 : 0;
+    if (aConcl !== bConcl) return aConcl - bConcl;
+    var da = parseDateBR(a.prazo), db = parseDateBR(b.prazo);
+    if (!da && !db) return 0;
+    if (!da) return 1;
+    if (!db) return -1;
+    return da - db;
+  });
+  return lista;
 }
 
 function renderList() {
   var itens = filtered();
   var html = '';
-  if (!itens.length) html = '<p style="color:#9C968C;text-align:center;padding:20px">Nenhuma tarefa encontrada.</p>';
+  if (!itens.length) html = '<p style="color:#9AA3B2;text-align:center;padding:20px">Nenhuma tarefa encontrada.</p>';
   itens.forEach(function(t){
     var cls = (t.status === 'Excluído') ? 'task-card excl' : 'task-card';
     html += '<div class="' + cls + '" onclick="openTask(\'' + t.id + '\')">'
       + '<span class="task-id">' + t.id + '</span>'
       + '<span class="task-title">' + esc(t.tarefa) + '</span>'
-      + '<div class="task-meta"><span class="chip dept">' + esc(t.dept) + '</span>' + prioChip(t.prio) + statusChip(t.status) + '</div>'
+      + '<div class="task-meta"><span class="chip dept">' + esc(t.dept) + '</span>' + prioChip(t.prio) + statusChip(t.status) + badgeVenc(t) + '</div>'
       + '</div>';
   });
   document.getElementById('taskList').innerHTML = html;
@@ -520,7 +548,7 @@ function esc(s) {
   return d.innerHTML;
 }
 
-/* ===== Kanban (cards maiores: Nome, Departamento, Prioridade, Status) ===== */
+/* ===== Kanban ===== */
 function renderKanban() {
   var colunas = [ ['Ideia',''], ['A Fazer',''], ['Em Andamento',''], ['Concluídos',''], ['Excluídos','exc'] ];
   var html = '';
@@ -551,7 +579,7 @@ function mkChart(nome, config) {
   config.options.maintainAspectRatio = false;
   config.options.responsive = true;
   config.options.plugins = config.options.plugins || {};
-  config.options.plugins.legend = config.options.plugins.legend || { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 16, font: { size: 11, weight: '500' }, color: '#8A847A' } };
+  config.options.plugins.legend = config.options.plugins.legend || { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 16, font: { size: 11, weight: '500' }, color: '#7A8494' } };
   config.options.plugins.datalabels = config.options.plugins.datalabels || {
     color: '#3A3A3A', font: { weight: '600', size: 12 },
     anchor: 'center', align: 'center',
@@ -573,8 +601,6 @@ function toPairs(map) {
   return pares;
 }
 
-var PALETA = ['#C9A86A','#A8C8E8','#F2D8A7','#B8DCC8','#F2C4C4','#CDE8D8','#E5E5E5'];
-
 function renderCharts() {
   try {
     var atv = globalFiltered();
@@ -592,9 +618,9 @@ function renderCharts() {
     var porDept = countBy(atv, function(t){ return t.dept; });
     var deptPairs = toPairs(porDept);
     mkChart('Dept', { type: 'bar',
-      data: { labels: deptPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: deptPairs.map(function(p){ return p.v; }), backgroundColor: '#CFDFEE', borderRadius: 5, borderSkipped: false, barThickness: 14 }] },
-      options: { indexAxis: 'y', plugins: { datalabels: { anchor: 'end', align: 'right', color: '#5E6B76', font: { weight: '600', size: 12 }, formatter: function(v){ return v; } } },
-        scales: { x: { beginAtZero: true, ticks: { precision: 0, color: '#A49D92', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }, y: { ticks: { color: '#8A847A', font: { size: 11 } }, grid: { display: false } } } } });
+      data: { labels: deptPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: deptPairs.map(function(p){ return p.v; }), backgroundColor: '#2E5FA3', borderRadius: 5, borderSkipped: false, barThickness: 14 }] },
+      options: { indexAxis: 'y', plugins: { datalabels: { anchor: 'end', align: 'right', color: '#2E5FA3', font: { weight: '600', size: 12 }, formatter: function(v){ return v; } } },
+        scales: { x: { beginAtZero: true, ticks: { precision: 0, color: '#9AA3B2', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }, y: { ticks: { color: '#7A8494', font: { size: 11 } }, grid: { display: false } } } } });
 
     // 3) Prioridade — pizza (cores fixas por rótulo)
     var porPrio = countBy(atv, function(t){ return t.prio; });
@@ -628,31 +654,31 @@ function renderCharts() {
       data: {
         labels: donos,
         datasets: [
-          { label: 'Ativas', data: metAtivas, borderColor: '#C9A86A', backgroundColor: 'rgba(201,168,106,.12)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#C9A86A' },
-          { label: 'Vencendo 7d', data: metV7, borderColor: '#E0B46A', backgroundColor: 'rgba(224,180,106,.10)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#E0B46A' },
-          { label: 'Vencidas', data: metVenc, borderColor: '#E29A9A', backgroundColor: 'rgba(226,154,154,.10)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#E29A9A' },
-          { label: 'Concluídas', data: metConcl, borderColor: '#8FBF9F', backgroundColor: 'rgba(143,191,159,.12)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#8FBF9F' }
+          { label: 'Ativas', data: metAtivas, borderColor: '#1B2A4A', backgroundColor: 'rgba(27,42,74,.12)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#1B2A4A' },
+          { label: 'Vencendo 7d', data: metV7, borderColor: '#E8A33D', backgroundColor: 'rgba(232,163,61,.10)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#E8A33D' },
+          { label: 'Vencidas', data: metVenc, borderColor: '#D9534F', backgroundColor: 'rgba(217,83,79,.10)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#D9534F' },
+          { label: 'Concluídas', data: metConcl, borderColor: '#2E8B57', backgroundColor: 'rgba(46,139,87,.12)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#2E8B57' }
         ]
       },
       options: {
-        plugins: { datalabels: { color: '#6E685E', font: { weight: '600', size: 11 }, anchor: 'center', align: 'center', formatter: function(v){ return v; } } },
-        scales: { r: { beginAtZero: true, suggestedMax: 4, angleLines: { color: 'rgba(0,0,0,.06)' }, grid: { color: 'rgba(0,0,0,.06)' }, pointLabels: { color: '#6E685E', font: { size: 12, weight: '600' } }, ticks: { display: false, stepSize: 1 } } }
+        plugins: { datalabels: { color: '#4A5568', font: { weight: '600', size: 11 }, anchor: 'center', align: 'center', formatter: function(v){ return v; } } },
+        scales: { r: { beginAtZero: true, suggestedMax: 4, angleLines: { color: 'rgba(0,0,0,.06)' }, grid: { color: 'rgba(0,0,0,.06)' }, pointLabels: { color: '#4A5568', font: { size: 12, weight: '600' } }, ticks: { display: false, stepSize: 1 } } }
       } });
 
-    // 5) Abertos × Concluídos — SEM legenda (só valores)
+    // 5) Abertos × Concluídos — SEM legenda
     var k = calcKPIs();
     mkChart('Aberto', { type: 'bar',
-      data: { labels: ['Abertos','Concluídos'], datasets: [{ data: [k.abertos, k.concluidos], backgroundColor: ['#F2DFB0','#A9D6BC'], borderRadius: 7, borderSkipped: false, barThickness: 34 }] },
+      data: { labels: ['Abertos','Concluídos'], datasets: [{ data: [k.abertos, k.concluidos], backgroundColor: ['#E8A33D','#2E8B57'], borderRadius: 7, borderSkipped: false, barThickness: 34 }] },
       options: { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#4A4A4A', font: { weight: '700', size: 14 }, formatter: function(v){ return v; } } },
-        scales: { y: { beginAtZero: true, ticks: { precision: 0, color: '#A49D92', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }, x: { ticks: { color: '#8A847A', font: { size: 12, weight: '600' } }, grid: { display: false } } } } });
+        scales: { y: { beginAtZero: true, ticks: { precision: 0, color: '#9AA3B2', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }, x: { ticks: { color: '#7A8494', font: { size: 12, weight: '600' } }, grid: { display: false } } } } });
 
     // 6) Origem — linha/área (eixo Y só números inteiros)
     var porOrigem = countBy(atv, function(t){ return t.origem; });
     var origemPairs = toPairs(porOrigem);
     mkChart('Origem', { type: 'line',
-      data: { labels: origemPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: origemPairs.map(function(p){ return p.v; }), borderColor: '#C9A86A', backgroundColor: 'rgba(201,168,106,.10)', fill: true, tension: .35, pointBackgroundColor: '#C9A86A', pointRadius: 4, pointBorderColor: '#FFF', pointBorderWidth: 1.5, borderWidth: 1.5 }] },
-      options: { plugins: { datalabels: { anchor: 'center', align: 'center', color: '#5E5A52', font: { weight: '600', size: 12 }, formatter: function(v){ return v; } } },
-        scales: { y: { beginAtZero: true, ticks: { precision: 0, stepSize: 1, color: '#A49D92', font: { size: 11 }, callback: function(v){ return Number.isInteger(v) ? v : ''; } }, grid: { color: 'rgba(0,0,0,.05)' } }, x: { ticks: { color: '#8A847A', font: { size: 11 } }, grid: { display: false } } } } });
+      data: { labels: origemPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: origemPairs.map(function(p){ return p.v; }), borderColor: '#2E5FA3', backgroundColor: 'rgba(46,95,163,.10)', fill: true, tension: .35, pointBackgroundColor: '#2E5FA3', pointRadius: 4, pointBorderColor: '#FFF', pointBorderWidth: 1.5, borderWidth: 1.5 }] },
+      options: { plugins: { datalabels: { anchor: 'center', align: 'center', color: '#4A5568', font: { weight: '600', size: 12 }, formatter: function(v){ return v; } } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0, stepSize: 1, color: '#9AA3B2', font: { size: 11 }, callback: function(v){ return Number.isInteger(v) ? v : ''; } }, grid: { color: 'rgba(0,0,0,.05)' } }, x: { ticks: { color: '#7A8494', font: { size: 11 } }, grid: { display: false } } } } });
   } catch(e) { /* gráficos não bloqueiam o app */ }
 }
 
