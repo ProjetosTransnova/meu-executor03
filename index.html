@@ -3,48 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Executor — Transnova Transportes</title>
+<title>ROTA — Transnova Transportes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","SF Compact","Helvetica Neue",Arial,sans-serif;background:#F5F7FA;color:#2F2F33;padding-bottom:90px;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;background:#F0F2F5;color:#2F2F33;padding-bottom:90px;-webkit-font-smoothing:antialiased}
 header{background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid #E6EAF0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:20}
 .brand{display:flex;align-items:center;gap:11px}
-.logo{color:#1B2A4A;font-size:24px;line-height:1}
-.brand h1{font-size:17px;font-weight:700;letter-spacing:.3px;color:#1B2A4A}
-.brand .sub{display:block;font-size:11px;color:#2E5FA3;font-weight:700;letter-spacing:1.6px}
+.logo{font-size:26px;line-height:1}
+.brand h1{font-size:18px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#1B2A4A,#2E5FA3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand .sub{display:block;font-size:9.5px;color:#2E5FA3;font-weight:700;letter-spacing:1px}
 .conn{font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;background:#E4F2E8;color:#2E8B57;letter-spacing:.2px}
 .conn.off{background:#FBEAD2;color:#B07A2A}
-.btn-add{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF;border:none;border-radius:22px;padding:9px 17px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(27,42,74,.28)}
-.btn-add:hover{opacity:.92}
-nav{display:flex;gap:4px;background:#EDF1F6;border-radius:22px;padding:4px}
-nav button{border:none;background:transparent;padding:7px 15px;border-radius:18px;font-size:12.5px;font-weight:500;color:#7A8494;cursor:pointer;transition:all .18s}
-nav button.active{background:#FFFFFF;color:#1B2A4A;font-weight:700;box-shadow:0 1px 5px rgba(0,0,0,.07)}
+.btn-add{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF;border:none;border-radius:22px;padding:9px 17px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(27,42,74,.25)}
+.btn-add:hover{opacity:.92;transform:translateY(-1px)}
+nav{display:flex;gap:4px;background:#EDF1F6;border-radius:22px;padding:4px;flex-wrap:wrap}
+nav button{border:none;background:transparent;padding:7px 14px;border-radius:18px;font-size:12.5px;font-weight:500;color:#7A8494;cursor:pointer;transition:all .18s}
+nav button.active{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF;font-weight:600;box-shadow:0 3px 8px rgba(27,42,74,.2)}
 main{max-width:1120px;margin:0 auto;padding:20px}
 section{display:none}
 section.active{display:block}
-/* KPIs em UMA LINHA */
 .kpis{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
-.kpi{flex:1 1 0;min-width:118px;background:#FFFFFF;border:1px solid #E6EAF0;border-radius:16px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:transform .15s}
+.kpi{flex:1 1 0;min-width:118px;background:#FFFFFF;border:1px solid #E6EAF0;border-radius:16px;padding:12px;box-shadow:0 4px 14px rgba(0,0,0,.05);transition:transform .15s}
 .kpi:hover{transform:translateY(-2px)}
 .kpi-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .kpi-icon{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 30px}
-.kpi .num{font-size:22px;font-weight:700;color:#1B2A4A;letter-spacing:.2px;line-height:1.1}
+.kpi .num{font-size:22px;font-weight:800;color:#1B2A4A;letter-spacing:.2px;line-height:1.1}
 .kpi .lbl{font-size:9.5px;color:#7A8494;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:5px;line-height:1.25}
 .kpi .dsc{font-size:9px;color:#2E5FA3;margin-top:3px;font-weight:600;line-height:1.2}
-/* Filtros: 2 blocos de 2 */
-.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
-.fblock{display:flex;gap:8px;background:#FFFFFF;border:1px solid #E6EAF0;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.fblock select{border:1px solid #E6EAF0;border-radius:10px;padding:8px 12px;font-size:12.5px;background:#FFF;color:#2F2F33;font-weight:500;cursor:pointer;transition:border .15s}
-.fblock select:hover{border-color:#2E5FA3}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;align-items:center}
+.filters select{border:1px solid #E6EAF0;border-radius:12px;padding:9px 14px;font-size:12.5px;background:#FFF;color:#2F2F33;font-weight:500;cursor:pointer;transition:border .15s,box-shadow .15s;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.filters select:hover{border-color:#2E5FA3;box-shadow:0 3px 10px rgba(46,95,163,.12)}
 .grid-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.chart-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.chart-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:18px;padding:20px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
 .chart-card h3{font-size:13.5px;font-weight:700;margin-bottom:3px;color:#1B2A4A;letter-spacing:.2px}
 .chart-card p{font-size:10.5px;color:#9AA3B2;margin-bottom:12px;font-weight:500}
 .chart-wrap{position:relative;height:290px}
-.task-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:14px;padding:13px 16px;margin-bottom:9px;cursor:pointer;display:flex;align-items:center;gap:13px;transition:box-shadow .15s}
-.task-card:hover{box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.task-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:14px;padding:13px 16px;margin-bottom:9px;cursor:pointer;display:flex;align-items:center;gap:13px;transition:box-shadow .15s;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.task-card:hover{box-shadow:0 5px 16px rgba(0,0,0,.08)}
 .task-card.excl{opacity:.5}
 .task-id{font-size:10.5px;font-weight:700;color:#2E5FA3;min-width:58px;letter-spacing:.4px}
 .task-title{font-size:13.5px;font-weight:500;flex:1}
@@ -68,41 +68,60 @@ section.active{display:block}
 .kcol.exc{background:#F4EFEA;opacity:.85}
 .kcol h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#4A5568;margin-bottom:12px;display:flex;justify-content:space-between}
 .kcol h4 span{background:#FFF;border-radius:10px;padding:1px 9px;font-size:10.5px;font-weight:700;color:#2E5FA3}
-.kcard{background:#FFF;border:1px solid #E6EAF0;border-left:3px solid #2E5FA3;border-radius:13px;padding:15px;margin-bottom:11px;cursor:pointer;transition:box-shadow .15s}
-.kcard:hover{box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.kcard{background:#FFF;border:1px solid #E6EAF0;border-left:3px solid #2E5FA3;border-radius:13px;padding:15px;margin-bottom:11px;cursor:pointer;transition:box-shadow .15s;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.kcard:hover{box-shadow:0 5px 16px rgba(0,0,0,.08)}
 .kcard.exc{opacity:.6;border-left-color:#CBAAA4}
 .kcard .kt{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.3;color:#2F2F33}
 .kcard .km{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
 .kcard .kdept{font-size:11.5px;font-weight:600;color:#4A5568;background:#EDF1F6;display:inline-block;padding:3px 9px;border-radius:10px}
+.reuniao-card{background:#FFFFFF;border:1px solid #E6EAF0;border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 4px 14px rgba(0,0,0,.05);cursor:pointer;transition:box-shadow .15s}
+.reuniao-card:hover{box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.reuniao-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.reuniao-titulo{font-size:15px;font-weight:700;color:#1B2A4A}
+.reuniao-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.reuniao-tipo{font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.3px;text-transform:uppercase}
+.tipo-diretoria{background:#1B2A4A;color:#FFF}
+.tipo-lideranca{background:#2E5FA3;color:#FFF}
+.tipo-projeto{background:#E8A33D;color:#FFF}
+.reuniao-data{font-size:11px;color:#7A8494;font-weight:600}
+.reuniao-resumo{font-size:13px;color:#4A5568;line-height:1.5;margin-bottom:10px}
+.reuniao-acoes{background:#F7F9FC;border-radius:12px;padding:12px}
+.reuniao-acoes h5{font-size:11px;font-weight:700;color:#2E5FA3;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.reuniao-acoes ul{list-style:none}
+.reuniao-acoes li{font-size:12.5px;color:#4A5568;padding:5px 0;border-bottom:1px solid #EDF1F6;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.reuniao-acoes li:last-child{border-bottom:none}
+.reuniao-acoes li .pend{color:#E8A33D;font-weight:700}
+.reuniao-acoes li .dono{font-size:10.5px;color:#7A8494;font-weight:600;margin-left:auto;white-space:nowrap}
+.reuniao-acoes li .prazo{font-size:10.5px;color:#2E5FA3;font-weight:600;white-space:nowrap}
 .modal-overlay{position:fixed;inset:0;background:rgba(27,42,74,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
-.modal{background:#FFF;border-radius:20px;max-width:540px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.16)}
-.modal h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1B2A4A}
+.modal{background:#FFF;border-radius:20px;max-width:620px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.18)}
+.modal h2{font-size:16px;font-weight:800;margin-bottom:16px;color:#1B2A4A}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .form-grid .full{grid-column:1/-1}
 label{font-size:10px;font-weight:600;color:#7A8494;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
 input,select,textarea{width:100%;border:1px solid #E6EAF0;border-radius:12px;padding:9px 12px;font-size:13px;color:#2F2F33;background:#FFF;font-family:inherit;font-weight:500}
 textarea{resize:vertical;min-height:60px}
 .modal-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
-.btn{border:none;border-radius:22px;padding:9px 17px;font-size:12.5px;font-weight:600;cursor:pointer;transition:opacity .15s}
-.btn.primary{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF}
+.btn{border:none;border-radius:22px;padding:9px 17px;font-size:12.5px;font-weight:600;cursor:pointer;transition:opacity .15s,transform .15s}
+.btn.primary{background:linear-gradient(135deg,#1B2A4A,#2E5FA3);color:#FFF;box-shadow:0 4px 12px rgba(27,42,74,.25)}
 .btn.green{background:#D3EADF;color:#2E8B57}
 .btn.danger{background:#FBD9E0;color:#C23A5A}
 .btn.ghost{background:#EDF1F6;color:#4A5568}
-.btn:hover{opacity:.9}
+.btn:hover{opacity:.92;transform:translateY(-1px)}
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1B2A4A;color:#FFF;padding:12px 22px;border-radius:26px;font-size:13px;font-weight:500;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 #toast.show{opacity:1}
 footer{text-align:center;color:#B5BCC8;font-size:11px;padding:20px}
-@media(max-width:640px){.brand h1{font-size:15px}nav button{padding:6px 10px;font-size:12px}.fblock{flex:1 1 100%}}
+@media(max-width:640px){.brand h1{font-size:15px}nav button{padding:6px 10px;font-size:12px}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <div class="logo">💡</div>
+    <div class="logo">🎯</div>
     <div>
-      <h1>Meu Executor</h1>
-      <span class="sub">TRANSNOVA TRANSPORTES</span>
+      <h1>ROTA</h1>
+      <span class="sub">RESULTADOS · OBJETIVOS · TECNOLOGIA · ACOMPANHAMENTO</span>
     </div>
   </div>
   <span id="connStatus" class="conn off">Salvo localmente (offline)</span>
@@ -110,6 +129,7 @@ footer{text-align:center;color:#B5BCC8;font-size:11px;padding:20px}
     <button id="tab-inicio" class="active" onclick="showScreen('inicio')">Início</button>
     <button id="tab-tarefas" onclick="showScreen('tarefas')">Tarefas</button>
     <button id="tab-kanban" onclick="showScreen('kanban')">Kanban</button>
+    <button id="tab-reunioes" onclick="showScreen('reunioes')">Reuniões</button>
   </nav>
   <button class="btn-add" onclick="openNewTask()">+ Nova Tarefa</button>
 </header>
@@ -117,21 +137,16 @@ footer{text-align:center;color:#B5BCC8;font-size:11px;padding:20px}
 <main>
   <section id="screen-inicio">
     <div class="kpis" id="kpis"></div>
-    <!-- Filtros: 2 blocos de 2 -->
     <div class="filters">
-      <div class="fblock">
-        <select id="ditStatus" onchange="applyGlobalFilters()">
-          <option value="">Status: Todos</option>
-          <option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option>
-        </select>
-        <select id="ditDept" onchange="applyGlobalFilters()"><option value="">Departamento: Todos</option></select>
-      </div>
-      <div class="fblock">
-        <select id="ditPrio" onchange="applyGlobalFilters()">
-          <option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option>
-        </select>
-        <select id="ditDono" onchange="applyGlobalFilters()"><option value="">Dono: Todos</option></select>
-      </div>
+      <select id="ditStatus" onchange="applyGlobalFilters()">
+        <option value="">Status: Todos</option>
+        <option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option>
+      </select>
+      <select id="ditDept" onchange="applyGlobalFilters()"><option value="">Departamento: Todos</option></select>
+      <select id="ditPrio" onchange="applyGlobalFilters()">
+        <option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option>
+      </select>
+      <select id="ditDono" onchange="applyGlobalFilters()"><option value="">Dono: Todos</option></select>
     </div>
     <div class="grid-charts">
       <div class="chart-card"><h3>Distribuição por Status</h3><p>Panorama do fluxo de trabalho</p><div class="chart-wrap"><canvas id="chStatus"></canvas></div></div>
@@ -145,20 +160,25 @@ footer{text-align:center;color:#B5BCC8;font-size:11px;padding:20px}
 
   <section id="screen-tarefas">
     <div class="filters">
-      <div class="fblock">
-        <select id="fDept" onchange="renderList()"><option value="">Departamento: Todos</option></select>
-        <select id="fPrio" onchange="renderList()"><option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
-      </div>
-      <div class="fblock">
-        <select id="fDono" onchange="renderList()"><option value="">Dono: Todos</option></select>
-        <select id="fStatus" onchange="renderList()"><option value="">Status: Todos</option><option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option><option>Abertos</option><option>Excluídos</option></select>
-      </div>
+      <select id="fDept" onchange="renderList()"><option value="">Departamento: Todos</option></select>
+      <select id="fPrio" onchange="renderList()"><option value="">Prioridade: Todas</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+      <select id="fDono" onchange="renderList()"><option value="">Dono: Todos</option></select>
+      <select id="fStatus" onchange="renderList()"><option value="">Status: Todos</option><option>Ideia</option><option>A Fazer</option><option>Em Andamento</option><option>Concluídos</option><option>Abertos</option><option>Excluídos</option></select>
     </div>
     <div id="taskList"></div>
   </section>
 
   <section id="screen-kanban">
     <div class="kanban" id="kanban"></div>
+  </section>
+
+  <section id="screen-reunioes">
+    <div class="filters">
+      <select id="rTipo" onchange="renderReunioes()"><option value="">Tipo: Todos</option><option>Diretoria</option><option>Liderança</option><option>Projeto</option></select>
+      <select id="rMes" onchange="renderReunioes()"><option value="">Mês: Todos</option></select>
+      <button class="btn primary" onclick="openNovaReuniao()">+ Nova Reunião</button>
+    </div>
+    <div id="reunioesList"></div>
   </section>
 </main>
 
@@ -208,21 +228,40 @@ footer{text-align:center;color:#B5BCC8;font-size:11px;padding:20px}
   </div>
 </div>
 
+<div id="modal-reuniao" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h2 id="reuniaoModalTitle">Nova Reunião</h2>
+    <div class="form-grid">
+      <div><label>Data</label><input type="date" id="rData"></div>
+      <div><label>Título *</label><input id="rTitulo" placeholder="Título da reunião"></div>
+      <div><label>Tipo</label><select id="rTipoSel"><option>Diretoria</option><option>Liderança</option><option>Projeto</option></select></div>
+      <div><label>Participantes</label><input id="rParticipantes" placeholder="Quem participou"></div>
+      <div class="full"><label>Resumo Executivo (decisões)</label><textarea id="rResumo" placeholder="O que foi decidido..."></textarea></div>
+      <div class="full"><label>Plano de Ação (uma ação por linha: "Ação | Dono | Prazo")</label><textarea id="rPlano" placeholder="Ex.:&#10;Implantar ERP Rodopar | Renato | 30/10/2026&#10;Treinar equipe no novo portal | Equipe | 15/11/2026"></textarea></div>
+      <div class="full"><label>Transcrição completa</label><textarea id="rTranscricao" placeholder="Cole a transcrição completa aqui..."></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="saveReuniao()">Salvar Reunião</button>
+      <button class="btn green" onclick="gerarTarefasDaReuniao()">Gerar Tarefas do Plano</button>
+      <button class="btn ghost" onclick="closeReuniaoModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 Chart.register(ChartDataLabels);
 
-var APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
-var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ubl_ofQtSCVVVldp-ixQbaruWuPW5i-R5nfHfOKX1ftkEQz5YEtoLOMM38yEWa7cF4wnupKryVG/pub?gid=0&single=true&output=csv';
-var STORAGE_KEY = 'meuExecutor_tarefas';
-var DEPTS = ['Dpto Atendimento','Dpto Comercial','Dpto Compras','Dpto Diretoria','Dpto Faturamento','Dpto Financeiro','Dpto Frota','Dpto GGC','Dpto Operacional','Dpto Projetos','Dpto Qualidade','Dpto Transportes','Pessoal'];
+var APP_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
+var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ubl_ofQtSCVVVldp-ixQbaruWuPW5i-R5nfHfOKX1ftkEQz5YEtoLOMM38yEWa7cF4wnupKryVG/pub?gid=0&single=true&output=csv';
+var STORAGE_KEY='meuExecutor_tarefas';
+var REUNIOES_KEY='rota_reunioes';
+var DEPTS=['Dpto Atendimento','Dpto Comercial','Dpto Compras','Dpto Diretoria','Dpto Faturamento','Dpto Financeiro','Dpto Frota','Dpto GGC','Dpto Operacional','Dpto Projetos','Dpto Qualidade','Dpto Transportes','Pessoal'];
 
-var tarefas = [];
-var charts = {};
-var editarId = null;
+var tarefas=[], reunioes=[], charts={}, editarId=null, editarReuniaoId=null;
 
-var tarefasFallback = [
+var tarefasFallback=[
  {id:'TAR-001',tarefa:'Cronograma Mestre PMO',dept:'Dpto Projetos',prio:'Alta',prazo:'22/10/2026',status:'Em Andamento',dono:'Renato',origem:'Projeto',obs:''},
  {id:'TAR-002',tarefa:'Auditoria de Frota GGC',dept:'Dpto GGC',prio:'Alta',prazo:'25/10/2026',status:'A Fazer',dono:'Equipe',origem:'Reunião',obs:''},
  {id:'TAR-003',tarefa:'Revisão Procedimento ISO',dept:'Dpto Qualidade',prio:'Média',prazo:'29/10/2026',status:'Em Andamento',dono:'Renato',origem:'Projeto',obs:''},
@@ -235,616 +274,476 @@ var tarefasFallback = [
  {id:'TAR-010',tarefa:'Endomarketing campanha',dept:'Dpto GGC',prio:'Baixa',prazo:'30/11/2026',status:'Concluídos',dono:'Equipe',origem:'Reunião',obs:''}
 ];
 
-/* ===== FORMATO DE DATA — DD/MM/AAAA (sem bug de fuso) ===== */
-function formatDate(val) {
-  if (!val) return '';
-  var s = String(val);
-  var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m) return m[3] + '/' + m[2] + '/' + m[1];
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
-  return s;
-}
-function parseDateBR(s) {
-  if (!s) return null;
-  var m = String(s).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!m) return null;
-  return new Date(parseInt(m[3],10), parseInt(m[2],10)-1, parseInt(m[1],10));
-}
-function hoje() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-function addDias(offset) { var d = hoje(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()+offset); }
+/* ===== DATA — DD/MM/AAAA ===== */
+function formatDate(val){ if(!val) return ''; var s=String(val); var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m) return m[3]+'/'+m[2]+'/'+m[1]; if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s; return s; }
+function parseDateBR(s){ if(!s) return null; var m=String(s).match(/^(\d{2})\/(\d{2})\/(\d{4})$/); if(!m) return null; return new Date(parseInt(m[3],10),parseInt(m[2],10)-1,parseInt(m[1],10)); }
+function hoje(){ var d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+function addDias(offset){ var d=hoje(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()+offset); }
 
-/* ===== Status de conexão ===== */
-function setConn(ok) {
-  var el = document.getElementById('connStatus');
-  if (ok) { el.textContent = 'Sincronizado ✓'; el.className = 'conn'; }
-  else { el.textContent = 'Salvo localmente (offline)'; el.className = 'conn off'; }
-}
+/* ===== CONEXÃO ===== */
+function setConn(ok){ var el=document.getElementById('connStatus'); if(ok){ el.textContent='Sincronizado ✓'; el.className='conn'; } else { el.textContent='Salvo localmente (offline)'; el.className='conn off'; } }
 
-/* ===== Navegação ===== */
-function showScreen(nome) {
+/* ===== NAVEGAÇÃO ===== */
+function showScreen(nome){
   document.querySelectorAll('main section').forEach(function(s){ s.classList.remove('active'); });
-  document.getElementById('screen-' + nome).classList.add('active');
+  document.getElementById('screen-'+nome).classList.add('active');
   document.querySelectorAll('nav button').forEach(function(b){ b.classList.remove('active'); });
-  var tab = document.getElementById('tab-' + nome);
-  if (tab) tab.classList.add('active');
+  var tab=document.getElementById('tab-'+nome); if(tab) tab.classList.add('active');
+  if(nome==='reunioes'){ renderReunioes(); renderReuniaoMesFilter(); }
 }
 
-/* ===== Toast ===== */
-var toastTimer = null;
-function toast(msg) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+/* ===== TOAST ===== */
+var toastTimer=null;
+function toast(msg){ var el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); if(toastTimer) clearTimeout(toastTimer); toastTimer=setTimeout(function(){ el.classList.remove('show'); },2600); }
+
+/* ===== NORMALIZAÇÃO ===== */
+function normalizeTask(t){ return { id:t.id||'', tarefa:t.tarefa||'Sem título', dept:t.dept||'', prio:t.prio||'Média', prazo:formatDate(t.prazo), status:t.status||'A Fazer', dono:t.dono||'Renato', origem:t.origem||'', obs:t.obs||'' }; }
+
+/* ===== LOCALSTORAGE ===== */
+function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(tarefas)); }catch(e){} }
+function loadLocal(){ try{ var raw=localStorage.getItem(STORAGE_KEY); if(raw){ var arr=JSON.parse(raw); if(Array.isArray(arr)&&arr.length){ tarefas=arr.map(normalizeTask); return true; } } }catch(e){} return false; }
+function saveReunioesLocal(){ try{ localStorage.setItem(REUNIOES_KEY,JSON.stringify(reunioes)); }catch(e){} }
+function loadReunioesLocal(){ try{ var raw=localStorage.getItem(REUNIOES_KEY); if(raw){ var arr=JSON.parse(raw); if(Array.isArray(arr)){ reunioes=arr; return true; } } }catch(e){} return false; }
+
+/* ===== ESCRITA NA PLANILHA ===== */
+function writeToSheet(payload){
+  return fetch(APP_SCRIPT_URL,{ method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'text/plain'}, redirect:'follow' })
+    .then(function(res){ if(res.status>=300&&res.status<400) return fetch(res.url||APP_SCRIPT_URL,{ method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'text/plain'} }); return res; })
+    .then(function(res){ return res.json(); })
+    .then(function(data){ return { success:true, data:data }; })
+    .catch(function(err){ return { success:false, error:String(err) }; });
 }
 
-/* ===== Normalização ===== */
-function normalizeTask(t) {
-  return {
-    id: t.id || '',
-    tarefa: t.tarefa || 'Sem título',
-    dept: t.dept || '',
-    prio: t.prio || 'Média',
-    prazo: formatDate(t.prazo),
-    status: t.status || 'A Fazer',
-    dono: t.dono || 'Renato',
-    origem: t.origem || '',
-    obs: t.obs || ''
-  };
-}
-
-/* ===== LocalStorage ===== */
-function saveLocal() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tarefas)); } catch(e){} }
-function loadLocal() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var arr = JSON.parse(raw);
-      if (Array.isArray(arr) && arr.length) { tarefas = arr.map(normalizeTask); return true; }
-    }
-  } catch(e){}
-  return false;
-}
-
-/* ===== Escrita na planilha (POST Apps Script) ===== */
-function writeToSheet(payload) {
-  return fetch(APP_SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'text/plain' },
-    redirect: 'follow'
-  }).then(function(res){
-    if (res.status >= 300 && res.status < 400) {
-      return fetch(res.url || APP_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain' } });
-    }
-    return res;
-  }).then(function(res){ return res.json(); })
-  .then(function(data){ return { success: true, data: data }; })
-  .catch(function(err){ return { success: false, error: String(err) }; });
-}
-
-/* ===== Leitura (planilha -> app): Apps Script GET, fallback CSV ===== */
-function loadFromSheet() {
-  fetch(APP_SCRIPT_URL, { method: 'GET', redirect: 'follow' })
-    .then(function(res){
-      if (res.status >= 300 && res.status < 400) return fetch(res.url || APP_SCRIPT_URL, { method: 'GET' });
-      return res;
-    })
+/* ===== LEITURA (planilha -> app) ===== */
+function loadFromSheet(){
+  fetch(APP_SCRIPT_URL,{ method:'GET', redirect:'follow' })
+    .then(function(res){ if(res.status>=300&&res.status<400) return fetch(res.url||APP_SCRIPT_URL,{ method:'GET' }); return res; })
     .then(function(res){ return res.json(); })
     .then(function(data){
-      if (data && data.success && data.tasks && data.tasks.length) {
-        tarefas = data.tasks.map(normalizeTask);
-        saveLocal(); setConn(true); renderAll(); toast('Dados sincronizados com a planilha ✓');
-      } else { throw new Error('vazio'); }
+      if(data&&data.success&&data.tasks&&data.tasks.length){ tarefas=data.tasks.map(normalizeTask); saveLocal(); setConn(true); renderAll(); toast('Dados sincronizados com a planilha ✓'); }
+      else { throw new Error('vazio'); }
     })
     .catch(function(){
-      fetch(CSV_URL, { cache: 'no-store' })
+      fetch(CSV_URL,{ cache:'no-store' })
         .then(function(res){ return res.text(); })
-        .then(function(txt){
-          var arr = parseCSV(txt);
-          if (arr && arr.length) {
-            tarefas = arr.map(normalizeTask);
-            saveLocal(); setConn(true); renderAll(); toast('Dados sincronizados (via CSV) ✓');
-          } else { throw new Error('csv'); }
-        })
+        .then(function(txt){ var arr=parseCSV(txt); if(arr&&arr.length){ tarefas=arr.map(normalizeTask); saveLocal(); setConn(true); renderAll(); toast('Dados sincronizados (via CSV) ✓'); } else { throw new Error('csv'); } })
         .catch(function(){ setConn(false); });
     });
 }
-
-function parseCSV(texto) {
-  var linhas = [], atual = '', entreAspas = false, i;
-  for (i = 0; i < texto.length; i++) {
-    var c = texto[i];
-    if (entreAspas) {
-      if (c === '"') {
-        if (texto[i+1] === '"') { atual += '"'; i++; } else { entreAspas = false; }
-      } else { atual += c; }
-    } else if (c === '"') { entreAspas = true; }
-    else if (c === ',') { linhas.push(atual); atual = ''; }
-    else if (c === '\n' || c === '\r') {
-      if (c === '\r' && texto[i+1] === '\n') i++;
-      linhas.push(atual); atual = '';
-    } else { atual += c; }
+function parseCSV(texto){
+  var linhas=[],atual='',entreAspas=false,i;
+  for(i=0;i<texto.length;i++){ var c=texto[i];
+    if(entreAspas){ if(c==='"'){ if(texto[i+1]==='"'){ atual+='"'; i++; } else { entreAspas=false; } } else { atual+=c; } }
+    else if(c==='"'){ entreAspas=true; }
+    else if(c===','){ linhas.push(atual); atual=''; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&texto[i+1]==='\n') i++; linhas.push(atual); atual=''; }
+    else { atual+=c; }
   }
   linhas.push(atual);
-  var resultado = [], cabecalho = null;
-  for (var r = 0; r < linhas.length; r++) {
-    var cel = linhas[r].split(',');
-    if (r === 0) { cabecalho = cel; continue; }
-    var obj = {};
-    for (var c2 = 0; c2 < cabecalho.length; c2++) obj[cabecalho[c2]] = (cel[c2] !== undefined ? cel[c2] : '');
-    if (obj['ID']) resultado.push({
-      id: obj['ID'], tarefa: obj['Tarefa / Descrição'] || obj['Tarefa'] || '',
-      dept: obj['Departamento'] || '', prio: obj['Prioridade'] || '',
-      prazo: obj['Prazo / Data de vencimento'] || obj['Prazo'] || '',
-      status: obj['Status'] || '', dono: obj['Dono'] || '', origem: obj['Origem'] || '', obs: obj['Observações'] || ''
-    });
+  var resultado=[],cabecalho=null;
+  for(var r=0;r<linhas.length;r++){ var cel=linhas[r].split(','); if(r===0){ cabecalho=cel; continue; }
+    var obj={}; for(var c2=0;c2<cabecalho.length;c2++) obj[cabecalho[c2]]=(cel[c2]!==undefined?cel[c2]:'');
+    if(obj['ID']) resultado.push({ id:obj['ID'], tarefa:obj['Tarefa / Descrição']||obj['Tarefa']||'', dept:obj['Departamento']||'', prio:obj['Prioridade']||'', prazo:obj['Prazo / Data de vencimento']||obj['Prazo']||'', status:obj['Status']||'', dono:obj['Dono']||'', origem:obj['Origem']||'', obs:obj['Observações']||'' });
   }
   return resultado;
 }
 
-/* ===== Tarefas ativas (exclui status "Excluído") ===== */
-function ativas() { return tarefas.filter(function(t){ return t.status !== 'Excluído'; }); }
+/* ===== ATIVAS ===== */
+function ativas(){ return tarefas.filter(function(t){ return t.status!=='Excluído'; }); }
 
-/* ===== Filtros globais do dashboard (4 filtros) ===== */
-function globalFiltered() {
-  var s = document.getElementById('ditStatus').value;
-  var d = document.getElementById('ditDept').value;
-  var p = document.getElementById('ditPrio').value;
-  var o = document.getElementById('ditDono').value;
-  return ativas().filter(function(t){
-    if (s && t.status !== s) return false;
-    if (d && t.dept !== d) return false;
-    if (p && t.prio !== p) return false;
-    if (o && t.dono !== o) return false;
-    return true;
-  });
+/* ===== FILTROS GLOBAIS ===== */
+function globalFiltered(){
+  var s=document.getElementById('ditStatus').value, d=document.getElementById('ditDept').value, p=document.getElementById('ditPrio').value, o=document.getElementById('ditDono').value;
+  return ativas().filter(function(t){ if(s&&t.status!==s) return false; if(d&&t.dept!==d) return false; if(p&&t.prio!==p) return false; if(o&&t.dono!==o) return false; return true; });
 }
-function applyGlobalFilters() { renderKPIs(); renderCharts(); }
-
-function renderGlobalFilters() {
-  var selD = document.getElementById('ditDept');
-  var selO = document.getElementById('ditDono');
-  if (!selD || !selO) return;
-  var vD = selD.value, vO = selO.value;
-  var depts = {}, donos = {};
-  ativas().forEach(function(t){
-    if (t.dept) depts[t.dept] = 1;
-    if (t.dono) donos[t.dono] = 1;
-  });
-  selD.innerHTML = '<option value="">Departamento: Todos</option>';
-  Object.keys(depts).sort().forEach(function(x){ selD.innerHTML += '<option>' + x + '</option>'; });
-  selO.innerHTML = '<option value="">Dono: Todos</option>';
-  Object.keys(donos).sort().forEach(function(x){ selO.innerHTML += '<option>' + x + '</option>'; });
-  selD.value = vD; selO.value = vO;
+function applyGlobalFilters(){ renderKPIs(); renderCharts(); }
+function renderGlobalFilters(){
+  var selD=document.getElementById('ditDept'), selO=document.getElementById('ditDono'); if(!selD||!selO) return;
+  var vD=selD.value, vO=selO.value, depts={}, donos={};
+  ativas().forEach(function(t){ if(t.dept) depts[t.dept]=1; if(t.dono) donos[t.dono]=1; });
+  selD.innerHTML='<option value="">Departamento: Todos</option>';
+  Object.keys(depts).sort().forEach(function(x){ selD.innerHTML+='<option>'+x+'</option>'; });
+  selO.innerHTML='<option value="">Dono: Todos</option>';
+  Object.keys(donos).sort().forEach(function(x){ selO.innerHTML+='<option>'+x+'</option>'; });
+  selD.value=vD; selO.value=vO;
 }
 
-/* ===== KPIs (sequência: Conclusão, Em Aberto, Em Andamento, Vence 7D, Vencidas, Concluídos, Total, Excluídos) ===== */
-function calcKPIs() {
-  var atv = globalFiltered();
-  var total = atv.length;
-  var emAndamento = 0, concluidos = 0, excluidos = 0, vencendo7 = 0, vencidas = 0;
-  var h = hoje(), h7 = addDias(7);
+/* ===== KPIs ===== */
+function calcKPIs(){
+  var atv=globalFiltered(), total=atv.length, emAndamento=0, concluidos=0, excluidos=0, vencendo7=0, vencidas=0, h=hoje(), h7=addDias(7);
   atv.forEach(function(t){
-    if (t.status === 'Em Andamento') emAndamento++;
-    if (t.status === 'Concluídos') concluidos++;
-    var d = parseDateBR(t.prazo);
-    if (t.status !== 'Concluídos' && d) {
-      if (d < h) vencidas++;
-      else if (d >= h && d <= h7) vencendo7++;
-    }
+    if(t.status==='Em Andamento') emAndamento++;
+    if(t.status==='Concluídos') concluidos++;
+    var d=parseDateBR(t.prazo);
+    if(t.status!=='Concluídos'&&d){ if(d<h) vencidas++; else if(d>=h&&d<=h7) vencendo7++; }
   });
-  tarefas.forEach(function(t){ if (t.status === 'Excluído') excluidos++; });
-  var abertos = total - concluidos;
-  var pct = total > 0 ? Math.round(concluidos / total * 100) : 0;
-  return { total: total, emAndamento: emAndamento, concluidos: concluidos, abertos: abertos, pct: pct, vencendo7: vencendo7, vencidas: vencidas, excluidos: excluidos };
+  tarefas.forEach(function(t){ if(t.status==='Excluído') excluidos++; });
+  var abertos=total-concluidos, pct=total>0?Math.round(concluidos/total*100):0;
+  return { total:total, emAndamento:emAndamento, concluidos:concluidos, abertos:abertos, pct:pct, vencendo7:vencendo7, vencidas:vencidas, excluidos:excluidos };
 }
-
-function renderKPIs() {
-  var k = calcKPIs();
-  var cards = [
-    { num: k.pct + '%', lbl: 'Conclusão', dsc: 'Taxa de conclusão', icon: '🎯', bg: '#E8F0F8' },
-    { num: k.abertos, lbl: 'Em aberto', dsc: 'Ideia+Fazer+Andam.', icon: '📌', bg: '#FBEED0' },
-    { num: k.emAndamento, lbl: 'Em andamento', dsc: 'Execução ativa', icon: '🔄', bg: '#E8F0F8' },
-    { num: k.vencendo7, lbl: 'Vence em 7D', dsc: 'Atenção cronograma', icon: '⏳', bg: '#FBEED0' },
-    { num: k.vencidas, lbl: 'Vencidas', dsc: 'Ação corretiva', icon: '⚠️', bg: '#FBD9E0' },
-    { num: k.concluidos, lbl: 'Concluídos', dsc: 'Entregues', icon: '✅', bg: '#D3EADF' },
-    { num: k.total, lbl: 'Total', dsc: 'Cadastradas no PMO', icon: '📋', bg: '#EDF1F6' },
-    { num: k.excluidos, lbl: 'Excluídos', dsc: 'Fora do pipeline', icon: '🗑️', bg: '#ECEAE5' }
+function renderKPIs(){
+  var k=calcKPIs();
+  var cards=[
+    { num:k.pct+'%', lbl:'Conclusão', dsc:'Taxa de conclusão', icon:'🎯', bg:'#E8F0F8' },
+    { num:k.abertos, lbl:'Em aberto', dsc:'Ideia+Fazer+Andam.', icon:'📌', bg:'#FBEED0' },
+    { num:k.emAndamento, lbl:'Em andamento', dsc:'Execução ativa', icon:'🔄', bg:'#E8F0F8' },
+    { num:k.vencendo7, lbl:'Vence em 7D', dsc:'Atenção cronograma', icon:'⏳', bg:'#FBEED0' },
+    { num:k.vencidas, lbl:'Vencidas', dsc:'Ação corretiva', icon:'⚠️', bg:'#FBD9E0' },
+    { num:k.concluidos, lbl:'Concluídos', dsc:'Entregues', icon:'✅', bg:'#D3EADF' },
+    { num:k.total, lbl:'Total', dsc:'Cadastradas no PMO', icon:'📋', bg:'#EDF1F6' },
+    { num:k.excluidos, lbl:'Excluídos', dsc:'Fora do pipeline', icon:'🗑️', bg:'#ECEAE5' }
   ];
-  var html = '';
-  cards.forEach(function(c){
-    html += '<div class="kpi">'
-      + '<div class="kpi-top"><div class="kpi-icon" style="background:' + c.bg + '">' + c.icon + '</div><div class="num">' + c.num + '</div></div>'
-      + '<div class="lbl">' + c.lbl + '</div>'
-      + '<div class="dsc">' + c.dsc + '</div>'
-      + '</div>';
-  });
-  document.getElementById('kpis').innerHTML = html;
+  var html='';
+  cards.forEach(function(c){ html+='<div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:'+c.bg+'">'+c.icon+'</div><div class="num">'+c.num+'</div></div><div class="lbl">'+c.lbl+'</div><div class="dsc">'+c.dsc+'</div></div>'; });
+  document.getElementById('kpis').innerHTML=html;
 }
 
-/* ===== Filtros da tela Tarefas ===== */
-function renderFilters() {
-  var deptSet = {}, donoSet = {};
-  tarefas.forEach(function(t){ if (t.dept) deptSet[t.dept] = 1; if (t.dono) donoSet[t.dono] = 1; });
-  var selDept = document.getElementById('fDept'), selDono = document.getElementById('fDono');
-  var curD = selDept.value, curO = selDono.value;
-  selDept.innerHTML = '<option value="">Departamento: Todos</option>';
-  Object.keys(deptSet).sort().forEach(function(d){ selDept.innerHTML += '<option>' + d + '</option>'; });
-  selDono.innerHTML = '<option value="">Dono: Todos</option>';
-  Object.keys(donoSet).sort().forEach(function(d){ selDono.innerHTML += '<option>' + d + '</option>'; });
-  selDept.value = curD; selDono.value = curO;
+/* ===== FILTROS TELA TAREFAS ===== */
+function renderFilters(){
+  var deptSet={}, donoSet={};
+  tarefas.forEach(function(t){ if(t.dept) deptSet[t.dept]=1; if(t.dono) donoSet[t.dono]=1; });
+  var selDept=document.getElementById('fDept'), selDono=document.getElementById('fDono'), curD=selDept.value, curO=selDono.value;
+  selDept.innerHTML='<option value="">Departamento: Todos</option>';
+  Object.keys(deptSet).sort().forEach(function(d){ selDept.innerHTML+='<option>'+d+'</option>'; });
+  selDono.innerHTML='<option value="">Dono: Todos</option>';
+  Object.keys(donoSet).sort().forEach(function(d){ selDono.innerHTML+='<option>'+d+'</option>'; });
+  selDept.value=curD; selDono.value=curO;
 }
 
-var STATUS_COLORS = { 'Ideia':'ideia', 'A Fazer':'afazer', 'Em Andamento':'andamento', 'Concluídos':'concluidos', 'Excluído':'excluido' };
-var STATUS_HEX = { 'Ideia':'#ECEAE5', 'A Fazer':'#D6E4F2', 'Em Andamento':'#FBEED0', 'Concluídos':'#A9D6BC' };
-var PRIO_HEX = { 'Alta':'#F0B8B8', 'Média':'#F2DFB0', 'Baixa':'#C9E4D8' };
+var STATUS_COLORS={ 'Ideia':'ideia','A Fazer':'afazer','Em Andamento':'andamento','Concluídos':'concluidos','Excluído':'excluido' };
+var STATUS_HEX={ 'Ideia':'#ECEAE5','A Fazer':'#D6E4F2','Em Andamento':'#FBEED0','Concluídos':'#A9D6BC' };
+var PRIO_HEX={ 'Alta':'#F0B8B8','Média':'#F2DFB0','Baixa':'#C9E4D8' };
+function statusChip(st){ return '<span class="chip '+(STATUS_COLORS[st]||'ideia')+'">'+st+'</span>'; }
+function prioChip(p){ return '<span class="chip '+(p==='Alta'?'A':p==='Média'?'M':'B')+'">'+p+'</span>'; }
 
-function statusChip(st) { return '<span class="chip ' + (STATUS_COLORS[st]||'ideia') + '">' + st + '</span>'; }
-function prioChip(p) { return '<span class="chip ' + (p==='Alta'?'A':p==='Média'?'M':'B') + '">' + p + '</span>'; }
-
-/* ===== Badge de vencimento ===== */
-function badgeVenc(t) {
-  if (t.status === 'Concluídos' || t.status === 'Excluído') return '';
-  var d = parseDateBR(t.prazo);
-  if (!d) return '';
-  var h = hoje();
-  if (d < h) return '<span class="badge atrasada">Atrasada</span>';
-  if (d.getTime() === h.getTime()) return '<span class="badge hoje">Vence hoje</span>';
-  var diff = Math.round((d - h) / 86400000);
-  if (diff <= 7) return '<span class="badge prox">Vence em ' + diff + 'd</span>';
+function badgeVenc(t){
+  if(t.status==='Concluídos'||t.status==='Excluído') return '';
+  var d=parseDateBR(t.prazo); if(!d) return '';
+  var h=hoje();
+  if(d<h) return '<span class="badge atrasada">Atrasada</span>';
+  if(d.getTime()===h.getTime()) return '<span class="badge hoje">Vence hoje</span>';
+  var diff=Math.round((d-h)/86400000);
+  if(diff<=7) return '<span class="badge prox">Vence em '+diff+'d</span>';
   return '';
 }
 
-/* ===== Lista (concluídas para baixo, abertas para cima por data) ===== */
-function filtered() {
-  var fd = document.getElementById('fDept').value;
-  var fp = document.getElementById('fPrio').value;
-  var fo = document.getElementById('fDono').value;
-  var fs = document.getElementById('fStatus').value;
-  var lista = tarefas.filter(function(t){
-    if (fd && t.dept !== fd) return false;
-    if (fp && t.prio !== fp) return false;
-    if (fo && t.dono !== fo) return false;
-    if (fs === 'Excluídos') return t.status === 'Excluído';
-    if (t.status === 'Excluído') return false;
-    if (fs === 'Abertos' && t.status === 'Concluídos') return false;
-    if (fs && fs !== 'Abertos' && t.status !== fs) return false;
+function filtered(){
+  var fd=document.getElementById('fDept').value, fp=document.getElementById('fPrio').value, fo=document.getElementById('fDono').value, fs=document.getElementById('fStatus').value;
+  var lista=tarefas.filter(function(t){
+    if(fd&&t.dept!==fd) return false;
+    if(fp&&t.prio!==fp) return false;
+    if(fo&&t.dono!==fo) return false;
+    if(fs==='Excluídos') return t.status==='Excluído';
+    if(t.status==='Excluído') return false;
+    if(fs==='Abertos'&&t.status==='Concluídos') return false;
+    if(fs&&fs!=='Abertos'&&t.status!==fs) return false;
     return true;
   });
-  // Ordena: abertas primeiro (por prazo crescente), concluídas por último
   lista.sort(function(a,b){
-    var aConcl = (a.status === 'Concluídos') ? 1 : 0;
-    var bConcl = (b.status === 'Concluídos') ? 1 : 0;
-    if (aConcl !== bConcl) return aConcl - bConcl;
-    var da = parseDateBR(a.prazo), db = parseDateBR(b.prazo);
-    if (!da && !db) return 0;
-    if (!da) return 1;
-    if (!db) return -1;
-    return da - db;
+    var aC=(a.status==='Concluídos')?1:0, bC=(b.status==='Concluídos')?1:0;
+    if(aC!==bC) return aC-bC;
+    var da=parseDateBR(a.prazo), db=parseDateBR(b.prazo);
+    if(!da&&!db) return 0; if(!da) return 1; if(!db) return -1;
+    return da-db;
   });
   return lista;
 }
-
-function renderList() {
-  var itens = filtered();
-  var html = '';
-  if (!itens.length) html = '<p style="color:#9AA3B2;text-align:center;padding:20px">Nenhuma tarefa encontrada.</p>';
+function renderList(){
+  var itens=filtered(), html='';
+  if(!itens.length) html='<p style="color:#9AA3B2;text-align:center;padding:20px">Nenhuma tarefa encontrada.</p>';
   itens.forEach(function(t){
-    var cls = (t.status === 'Excluído') ? 'task-card excl' : 'task-card';
-    html += '<div class="' + cls + '" onclick="openTask(\'' + t.id + '\')">'
-      + '<span class="task-id">' + t.id + '</span>'
-      + '<span class="task-title">' + esc(t.tarefa) + '</span>'
-      + '<div class="task-meta"><span class="chip dept">' + esc(t.dept) + '</span>' + prioChip(t.prio) + statusChip(t.status) + badgeVenc(t) + '</div>'
-      + '</div>';
+    var cls=(t.status==='Excluído')?'task-card excl':'task-card';
+    html+='<div class="'+cls+'" onclick="openTask(\''+t.id+'\')"><span class="task-id">'+t.id+'</span><span class="task-title">'+esc(t.tarefa)+'</span><div class="task-meta"><span class="chip dept">'+esc(t.dept)+'</span>'+prioChip(t.prio)+statusChip(t.status)+badgeVenc(t)+'</div></div>';
   });
-  document.getElementById('taskList').innerHTML = html;
+  document.getElementById('taskList').innerHTML=html;
 }
+function esc(s){ var d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
 
-function esc(s) {
-  var d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
-
-/* ===== Kanban ===== */
-function renderKanban() {
-  var colunas = [ ['Ideia',''], ['A Fazer',''], ['Em Andamento',''], ['Concluídos',''], ['Excluídos','exc'] ];
-  var html = '';
+/* ===== KANBAN ===== */
+function renderKanban(){
+  var colunas=[['Ideia',''],['A Fazer',''],['Em Andamento',''],['Concluídos',''],['Excluídos','exc']], html='';
   colunas.forEach(function(col){
-    var itens = tarefas.filter(function(t){ return t.status === col[0]; });
-    html += '<div class="kcol' + (col[1] ? ' ' + col[1] : '') + '"><h4>' + col[0] + ' <span>' + itens.length + '</span></h4>';
+    var itens=tarefas.filter(function(t){ return t.status===col[0]; });
+    html+='<div class="kcol'+(col[1]?' '+col[1]:'')+'"><h4>'+col[0]+' <span>'+itens.length+'</span></h4>';
     itens.forEach(function(t){
-      var exc = (t.status === 'Excluído') ? 'kcard exc' : 'kcard';
-      html += '<div class="' + exc + '" onclick="openTask(\'' + t.id + '\')">'
-        + '<div class="kt">' + esc(t.tarefa) + '</div>'
-        + '<div class="kdept">' + esc(t.dept) + '</div>'
-        + '<div class="km">' + prioChip(t.prio) + ' ' + statusChip(t.status) + '</div>'
-        + '</div>';
+      var exc=(t.status==='Excluído')?'kcard exc':'kcard';
+      html+='<div class="'+exc+'" onclick="openTask(\''+t.id+'\')"><div class="kt">'+esc(t.tarefa)+'</div><div class="kdept">'+esc(t.dept)+'</div><div class="km">'+prioChip(t.prio)+' '+statusChip(t.status)+'</div></div>';
     });
-    html += '</div>';
+    html+='</div>';
   });
-  document.getElementById('kanban').innerHTML = html;
+  document.getElementById('kanban').innerHTML=html;
 }
 
-/* ===== Gráficos ===== */
-function destroyChart(nome) { if (charts[nome]) { charts[nome].destroy(); delete charts[nome]; } }
+/* ===== REUNIÕES ===== */
+function parsePlano(plano){
+  var linhas=(plano||'').split('\n').map(function(l){ return l.trim(); }).filter(function(l){ return l; });
+  return linhas.map(function(l){
+    var partes=l.split('|').map(function(p){ return p.trim(); });
+    return { acao:partes[0]||'', dono:partes[1]||'', prazo:formatDate(partes[2]||'') };
+  });
+}
+function renderReunioes(){
+  var tipo=document.getElementById('rTipo').value, mes=document.getElementById('rMes').value;
+  var lista=reunioes.filter(function(r){
+    if(tipo&&r.tipo!==tipo) return false;
+    if(mes&&(r.data||'').slice(0,7)!==mes) return false;
+    return true;
+  });
+  lista.sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
+  var html='';
+  if(!lista.length) html='<p style="color:#9AA3B2;text-align:center;padding:30px">Nenhuma reunião registrada ainda. Clique em "+ Nova Reunião" para começar.</p>';
+  lista.forEach(function(r){
+    var tipoCls=r.tipo==='Diretoria'?'tipo-diretoria':r.tipo==='Liderança'?'tipo-lideranca':'tipo-projeto';
+    var acoes=parsePlano(r.plano);
+    html+='<div class="reuniao-card" onclick="openEditarReuniao(\''+r.id+'\')">'
+      +'<div class="reuniao-top"><span class="reuniao-titulo">'+esc(r.titulo)+'</span><div class="reuniao-meta"><span class="reuniao-tipo '+tipoCls+'">'+esc(r.tipo)+'</span><span class="reuniao-data">'+formatDate(r.data)+'</span></div></div>'
+      +(r.participantes?'<div class="reuniao-meta" style="margin-bottom:8px"><span class="chip dept">👥 '+esc(r.participantes)+'</span></div>':'')
+      +(r.resumo?'<div class="reuniao-resumo">'+esc(r.resumo)+'</div>':'')
+      +(acoes.length?'<div class="reuniao-acoes"><h5>Plano de Ação</h5><ul>'+acoes.map(function(a){ return '<li><span class="pend">▸</span> '+esc(a.acao)+(a.dono?'<span class="dono">'+esc(a.dono)+'</span>':'')+(a.prazo?'<span class="prazo">'+a.prazo+'</span>':'')+'</li>'; }).join('')+'</ul></div>':'')
+      +'</div>';
+  });
+  document.getElementById('reunioesList').innerHTML=html;
+}
+function renderReuniaoMesFilter(){
+  var sel=document.getElementById('rMes'), v=sel.value, meses={};
+  reunioes.forEach(function(r){ var k=(r.data||'').slice(0,7); if(k) meses[k]=1; });
+  sel.innerHTML='<option value="">Mês: Todos</option>';
+  Object.keys(meses).sort().reverse().forEach(function(m){ sel.innerHTML+='<option value="'+m+'">'+m+'</option>'; });
+  sel.value=v;
+}
+function openNovaReuniao(){
+  editarReuniaoId=null;
+  document.getElementById('reuniaoModalTitle').textContent='Nova Reunião';
+  document.getElementById('rData').value=new Date().toISOString().slice(0,10);
+  document.getElementById('rTitulo').value='';
+  document.getElementById('rTipoSel').value='Diretoria';
+  document.getElementById('rParticipantes').value='';
+  document.getElementById('rResumo').value='';
+  document.getElementById('rPlano').value='';
+  document.getElementById('rTranscricao').value='';
+  document.getElementById('modal-reuniao').style.display='flex';
+}
+function openEditarReuniao(id){
+  var r=reunioes.find(function(x){ return x.id===id; }); if(!r) return;
+  editarReuniaoId=id;
+  document.getElementById('reuniaoModalTitle').textContent='Editar Reunião';
+  document.getElementById('rData').value=r.data||'';
+  document.getElementById('rTitulo').value=r.titulo||'';
+  document.getElementById('rTipoSel').value=r.tipo||'Diretoria';
+  document.getElementById('rParticipantes').value=r.participantes||'';
+  document.getElementById('rResumo').value=r.resumo||'';
+  document.getElementById('rPlano').value=r.plano||'';
+  document.getElementById('rTranscricao').value=r.transcricao||'';
+  document.getElementById('modal-reuniao').style.display='flex';
+}
+function closeReuniaoModal(){ document.getElementById('modal-reuniao').style.display='none'; editarReuniaoId=null; }
+function saveReuniao(){
+  var titulo=document.getElementById('rTitulo').value.trim();
+  if(!titulo){ toast('Informe o título da reunião'); return; }
+  var dados={
+    id: editarReuniaoId||('REU-'+('000'+(reunioes.length+1)).slice(-3)),
+    data: document.getElementById('rData').value,
+    titulo: titulo,
+    tipo: document.getElementById('rTipoSel').value,
+    participantes: document.getElementById('rParticipantes').value,
+    resumo: document.getElementById('rResumo').value,
+    plano: document.getElementById('rPlano').value,
+    transcricao: document.getElementById('rTranscricao').value
+  };
+  if(editarReuniaoId){ var idx=reunioes.findIndex(function(x){ return x.id===editarReuniaoId; }); if(idx>=0) reunioes[idx]=dados; }
+  else { reunioes.push(dados); }
+  saveReunioesLocal();
+  closeReuniaoModal();
+  renderReunioes();
+  renderReuniaoMesFilter();
+  toast('Reunião salva ✓');
+}
+function gerarTarefasDaReuniao(){
+  var titulo=document.getElementById('rTitulo').value.trim();
+  if(!titulo){ toast('Informe o título da reunião primeiro'); return; }
+  var acoes=parsePlano(document.getElementById('rPlano').value);
+  if(!acoes.length){ toast('Adicione ações no Plano de Ação (Ação | Dono | Prazo)'); return; }
+  if(!confirm('Criar '+acoes.length+' tarefa(s) no ROTA a partir do plano de ação de "'+titulo+'"?')) return;
+  acoes.forEach(function(a){
+    if(!a.acao) return;
+    var prazo=a.prazo;
+    var nova={ id:nextId(), tarefa:a.acao, dept:'', prio:'Média', prazo:prazo, status:'A Fazer', dono:a.dono||'Renato', origem:'Reunião', obs:'Gerada do plano de ação — Reunião: '+titulo };
+    tarefas.push(nova);
+    saveLocal();
+    writeToSheet({ action:'add', tarefa:nova.tarefa, dept:'', prio:'Média', prazo:prazo, status:'A Fazer', dono:nova.dono, origem:'Reunião', obs:nova.obs })
+      .then(function(res){ if(res&&res.success&&res.data&&res.data.id&&res.data.id!==nova.id){ nova.id=res.data.id; saveLocal(); renderAll(); } });
+  });
+  renderAll();
+  toast(acoes.length+' tarefa(s) criada(s) a partir da reunião ✓');
+}
 
-function mkChart(nome, config) {
+/* ===== GRÁFICOS ===== */
+function destroyChart(nome){ if(charts[nome]){ charts[nome].destroy(); delete charts[nome]; } }
+function mkChart(nome,config){
   destroyChart(nome);
-  var ctx = document.getElementById('ch' + nome);
-  if (!ctx) return;
-  config.options = config.options || {};
-  config.options.maintainAspectRatio = false;
-  config.options.responsive = true;
-  config.options.plugins = config.options.plugins || {};
-  config.options.plugins.legend = config.options.plugins.legend || { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 16, font: { size: 11, weight: '500' }, color: '#7A8494' } };
-  config.options.plugins.datalabels = config.options.plugins.datalabels || {
-    color: '#3A3A3A', font: { weight: '600', size: 12 },
-    anchor: 'center', align: 'center',
-    formatter: function(v){ return v; }
-  };
-  config.options.layout = config.options.layout || { padding: 8 };
-  charts[nome] = new Chart(ctx, config);
+  var ctx=document.getElementById('ch'+nome); if(!ctx) return;
+  config.options=config.options||{};
+  config.options.maintainAspectRatio=false; config.options.responsive=true;
+  config.options.plugins=config.options.plugins||{};
+  config.options.plugins.legend=config.options.plugins.legend||{ position:'bottom', labels:{ usePointStyle:true, pointStyle:'circle', boxWidth:8, boxHeight:8, padding:16, font:{ size:11, weight:'500' }, color:'#7A8494' } };
+  config.options.plugins.datalabels=config.options.plugins.datalabels||{ color:'#3A3A3A', font:{ weight:'600', size:12 }, anchor:'center', align:'center', formatter:function(v){ return v; } };
+  config.options.layout=config.options.layout||{ padding:8 };
+  charts[nome]=new Chart(ctx,config);
 }
-
-function countBy(lista, getter) {
-  var map = {};
-  lista.forEach(function(t){ var k = getter(t) || '(vazio)'; map[k] = (map[k]||0)+1; });
-  return map;
-}
-function toPairs(map) {
-  var keys = Object.keys(map), pares = [];
-  keys.forEach(function(k){ pares.push({ k: k, v: map[k] }); });
-  pares.sort(function(a,b){ return b.v - a.v; });
-  return pares;
-}
-
-function renderCharts() {
-  try {
-    var atv = globalFiltered();
-
-    // 1) Status — rosca (verde para Concluídos)
-    var porStatus = countBy(atv, function(t){ return t.status; });
-    var statusPairs = toPairs(porStatus);
-    mkChart('Status', { type: 'doughnut',
-      data: { labels: statusPairs.map(function(p){ return p.k; }),
-        datasets: [{ data: statusPairs.map(function(p){ return p.v; }),
-          backgroundColor: statusPairs.map(function(p){ return STATUS_HEX[p.k] || '#E4E1DB'; }),
-          borderWidth: 2, borderColor: '#FFFFFF', hoverOffset: 4 }] } });
-
-    // 2) Departamento — barras horizontais
-    var porDept = countBy(atv, function(t){ return t.dept; });
-    var deptPairs = toPairs(porDept);
-    mkChart('Dept', { type: 'bar',
-      data: { labels: deptPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: deptPairs.map(function(p){ return p.v; }), backgroundColor: '#2E5FA3', borderRadius: 5, borderSkipped: false, barThickness: 14 }] },
-      options: { indexAxis: 'y', plugins: { datalabels: { anchor: 'end', align: 'right', color: '#2E5FA3', font: { weight: '600', size: 12 }, formatter: function(v){ return v; } } },
-        scales: { x: { beginAtZero: true, ticks: { precision: 0, color: '#9AA3B2', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }, y: { ticks: { color: '#7A8494', font: { size: 11 } }, grid: { display: false } } } } });
-
-    // 3) Prioridade — pizza (cores fixas por rótulo)
-    var porPrio = countBy(atv, function(t){ return t.prio; });
-    var prioPairs = toPairs(porPrio);
-    mkChart('Prio', { type: 'pie',
-      data: { labels: prioPairs.map(function(p){ return p.k; }),
-        datasets: [{ data: prioPairs.map(function(p){ return p.v; }),
-          backgroundColor: prioPairs.map(function(p){ return PRIO_HEX[p.k] || '#E4E1DB'; }),
-          borderWidth: 2, borderColor: '#FFFFFF', hoverOffset: 4 }] } });
-
-    // 4) RADAR — eixos = DONOS; séries = métricas
-    var h = hoje(), h7 = addDias(7);
-    var donoSet = {};
-    atv.forEach(function(t){ if (t.dono) donoSet[t.dono] = 1; });
-    var donos = Object.keys(donoSet);
-    if (!donos.length) donos = ['Renato','Equipe','Terceiro'];
-    var metAtivas = [], metV7 = [], metVenc = [], metConcl = [];
+function countBy(lista,getter){ var map={}; lista.forEach(function(t){ var k=getter(t)||'(vazio)'; map[k]=(map[k]||0)+1; }); return map; }
+function toPairs(map){ var keys=Object.keys(map), pares=[]; keys.forEach(function(k){ pares.push({ k:k, v:map[k] }); }); pares.sort(function(a,b){ return b.v-a.v; }); return pares; }
+function renderCharts(){
+  try{
+    var atv=globalFiltered();
+    /* 1) Status — rosca (verde para Concluídos) */
+    var porStatus=countBy(atv,function(t){ return t.status; }), statusPairs=toPairs(porStatus);
+    mkChart('Status',{ type:'doughnut', data:{ labels:statusPairs.map(function(p){ return p.k; }), datasets:[{ data:statusPairs.map(function(p){ return p.v; }), backgroundColor:statusPairs.map(function(p){ return STATUS_HEX[p.k]||'#E4E1DB'; }), borderWidth:2, borderColor:'#FFFFFF', hoverOffset:4 }] } });
+    /* 2) Departamento — barras horizontais */
+    var porDept=countBy(atv,function(t){ return t.dept; }), deptPairs=toPairs(porDept);
+    mkChart('Dept',{ type:'bar', data:{ labels:deptPairs.map(function(p){ return p.k; }), datasets:[{ label:'Tarefas', data:deptPairs.map(function(p){ return p.v; }), backgroundColor:'#2E5FA3', borderRadius:5, borderSkipped:false, barThickness:14 }] }, options:{ indexAxis:'y', plugins:{ datalabels:{ anchor:'end', align:'right', color:'#2E5FA3', font:{ weight:'600', size:12 }, formatter:function(v){ return v; } } }, scales:{ x:{ beginAtZero:true, ticks:{ precision:0, color:'#9AA3B2', font:{ size:11 } }, grid:{ color:'rgba(0,0,0,.05)' } }, y:{ ticks:{ color:'#7A8494', font:{ size:11 } }, grid:{ display:false } } } } });
+    /* 3) Prioridade — pizza (cores fixas) */
+    var porPrio=countBy(atv,function(t){ return t.prio; }), prioPairs=toPairs(porPrio);
+    mkChart('Prio',{ type:'pie', data:{ labels:prioPairs.map(function(p){ return p.k; }), datasets:[{ data:prioPairs.map(function(p){ return p.v; }), backgroundColor:prioPairs.map(function(p){ return PRIO_HEX[p.k]||'#E4E1DB'; }), borderWidth:2, borderColor:'#FFFFFF', hoverOffset:4 }] } });
+    /* 4) Carga por Dono — BARRAS EMPILHADAS HORIZONTAIS (substitui o radar) */
+    var h=hoje(), h7=addDias(7), donoSet={};
+    atv.forEach(function(t){ if(t.dono) donoSet[t.dono]=1; });
+    var donos=Object.keys(donoSet); if(!donos.length) donos=['Renato','Equipe','Terceiro'];
+    var sAt=[], sV7=[], sVenc=[], sConcl=[];
     donos.forEach(function(dono){
-      var lista = atv.filter(function(t){ return t.dono === dono; });
-      var at = 0, v7 = 0, venc = 0, concl = 0;
+      var lista=atv.filter(function(t){ return t.dono===dono; }), at=0, v7=0, venc=0, concl=0;
       lista.forEach(function(t){
-        if (t.status === 'Concluídos') { concl++; return; }
+        if(t.status==='Concluídos'){ concl++; return; }
         at++;
-        var d = parseDateBR(t.prazo);
-        if (d && d < h) venc++;
-        else if (d && d >= h && d <= h7) v7++;
+        var d=parseDateBR(t.prazo);
+        if(d&&d<h) venc++; else if(d&&d>=h&&d<=h7) v7++;
       });
-      metAtivas.push(at); metV7.push(v7); metVenc.push(venc); metConcl.push(concl);
+      sAt.push(at); sV7.push(v7); sVenc.push(venc); sConcl.push(concl);
     });
-    mkChart('Dono', { type: 'radar',
-      data: {
-        labels: donos,
-        datasets: [
-          { label: 'Ativas', data: metAtivas, borderColor: '#1B2A4A', backgroundColor: 'rgba(27,42,74,.12)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#1B2A4A' },
-          { label: 'Vencendo 7d', data: metV7, borderColor: '#E8A33D', backgroundColor: 'rgba(232,163,61,.10)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#E8A33D' },
-          { label: 'Vencidas', data: metVenc, borderColor: '#D9534F', backgroundColor: 'rgba(217,83,79,.10)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#D9534F' },
-          { label: 'Concluídas', data: metConcl, borderColor: '#2E8B57', backgroundColor: 'rgba(46,139,87,.12)', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#2E8B57' }
-        ]
-      },
-      options: {
-        plugins: { datalabels: { color: '#4A5568', font: { weight: '600', size: 11 }, anchor: 'center', align: 'center', formatter: function(v){ return v; } } },
-        scales: { r: { beginAtZero: true, suggestedMax: 4, angleLines: { color: 'rgba(0,0,0,.06)' }, grid: { color: 'rgba(0,0,0,.06)' }, pointLabels: { color: '#4A5568', font: { size: 12, weight: '600' } }, ticks: { display: false, stepSize: 1 } } }
-      } });
-
-    // 5) Abertos × Concluídos — SEM legenda
-    var k = calcKPIs();
-    mkChart('Aberto', { type: 'bar',
-      data: { labels: ['Abertos','Concluídos'], datasets: [{ data: [k.abertos, k.concluidos], backgroundColor: ['#E8A33D','#2E8B57'], borderRadius: 7, borderSkipped: false, barThickness: 34 }] },
-      options: { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#4A4A4A', font: { weight: '700', size: 14 }, formatter: function(v){ return v; } } },
-        scales: { y: { beginAtZero: true, ticks: { precision: 0, color: '#9AA3B2', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }, x: { ticks: { color: '#7A8494', font: { size: 12, weight: '600' } }, grid: { display: false } } } } });
-
-    // 6) Origem — linha/área (eixo Y só números inteiros)
-    var porOrigem = countBy(atv, function(t){ return t.origem; });
-    var origemPairs = toPairs(porOrigem);
-    mkChart('Origem', { type: 'line',
-      data: { labels: origemPairs.map(function(p){ return p.k; }), datasets: [{ label: 'Tarefas', data: origemPairs.map(function(p){ return p.v; }), borderColor: '#2E5FA3', backgroundColor: 'rgba(46,95,163,.10)', fill: true, tension: .35, pointBackgroundColor: '#2E5FA3', pointRadius: 4, pointBorderColor: '#FFF', pointBorderWidth: 1.5, borderWidth: 1.5 }] },
-      options: { plugins: { datalabels: { anchor: 'center', align: 'center', color: '#4A5568', font: { weight: '600', size: 12 }, formatter: function(v){ return v; } } },
-        scales: { y: { beginAtZero: true, ticks: { precision: 0, stepSize: 1, color: '#9AA3B2', font: { size: 11 }, callback: function(v){ return Number.isInteger(v) ? v : ''; } }, grid: { color: 'rgba(0,0,0,.05)' } }, x: { ticks: { color: '#7A8494', font: { size: 11 } }, grid: { display: false } } } } });
-  } catch(e) { /* gráficos não bloqueiam o app */ }
+    mkChart('Dono',{
+      type:'bar',
+      data:{ labels:donos, datasets:[
+        { label:'Ativas', data:sAt, backgroundColor:'#1B2A4A', borderRadius:4, borderSkipped:false },
+        { label:'Vencendo 7d', data:sV7, backgroundColor:'#E8A33D', borderRadius:4, borderSkipped:false },
+        { label:'Vencidas', data:sVenc, backgroundColor:'#D9534F', borderRadius:4, borderSkipped:false },
+        { label:'Concluídas', data:sConcl, backgroundColor:'#2E8B57', borderRadius:4, borderSkipped:false }
+      ] },
+      options:{ indexAxis:'y',
+        plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, pointStyle:'circle', boxWidth:8, boxHeight:8, padding:12, font:{ size:10.5, weight:'500' }, color:'#7A8494' } },
+          datalabels:{ color:'#FFFFFF', font:{ weight:'700', size:11 }, anchor:'center', align:'center', formatter:function(v){ return v>0?v:''; } } },
+        scales:{ x:{ stacked:true, beginAtZero:true, ticks:{ precision:0, color:'#9AA3B2', font:{ size:11 } }, grid:{ color:'rgba(0,0,0,.05)' } },
+          y:{ stacked:true, ticks:{ color:'#7A8494', font:{ size:12, weight:'600' } }, grid:{ display:false } } } } });
+    /* 5) Abertos × Concluídos — sem legenda */
+    var k=calcKPIs();
+    mkChart('Aberto',{ type:'bar', data:{ labels:['Abertos','Concluídos'], datasets:[{ data:[k.abertos,k.concluidos], backgroundColor:['#E8A33D','#2E8B57'], borderRadius:7, borderSkipped:false, barThickness:34 }] }, options:{ plugins:{ legend:{ display:false }, datalabels:{ anchor:'end', align:'top', color:'#4A4A4A', font:{ weight:'700', size:14 }, formatter:function(v){ return v; } } }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0, color:'#9AA3B2', font:{ size:11 } }, grid:{ color:'rgba(0,0,0,.05)' } }, x:{ ticks:{ color:'#7A8494', font:{ size:12, weight:'600' } }, grid:{ display:false } } } } });
+    /* 6) Origem — linha/área (eixo Y inteiros) */
+    var porOrigem=countBy(atv,function(t){ return t.origem; }), origemPairs=toPairs(porOrigem);
+    mkChart('Origem',{ type:'line', data:{ labels:origemPairs.map(function(p){ return p.k; }), datasets:[{ label:'Tarefas', data:origemPairs.map(function(p){ return p.v; }), borderColor:'#2E5FA3', backgroundColor:'rgba(46,95,163,.10)', fill:true, tension:.35, pointBackgroundColor:'#2E5FA3', pointRadius:4, pointBorderColor:'#FFF', pointBorderWidth:1.5, borderWidth:1.5 }] }, options:{ plugins:{ datalabels:{ anchor:'center', align:'center', color:'#4A5568', font:{ weight:'600', size:12 }, formatter:function(v){ return v; } } }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0, stepSize:1, color:'#9AA3B2', font:{ size:11 }, callback:function(v){ return Number.isInteger(v)?v:''; } }, grid:{ color:'rgba(0,0,0,.05)' } }, x:{ ticks:{ color:'#7A8494', font:{ size:11 } }, grid:{ display:false } } } } });
+  }catch(e){}
 }
 
-/* ===== Render geral ===== */
-function renderAll() {
-  renderGlobalFilters();
-  renderKPIs();
-  renderFilters();
-  renderList();
-  renderKanban();
-  renderCharts();
-}
+/* ===== RENDER GERAL ===== */
+function renderAll(){ renderGlobalFilters(); renderKPIs(); renderFilters(); renderList(); renderKanban(); renderCharts(); }
 
-/* ===== Modal editar ===== */
-function fillDeptSelects() {
+/* ===== MODAL TAREFA ===== */
+function fillDeptSelects(){
   ['eDept','nDept'].forEach(function(id){
-    var sel = document.getElementById(id);
-    if (!sel || sel.options.length > 1) return;
-    sel.innerHTML = '<option value="">—</option>';
-    DEPTS.forEach(function(d){ sel.innerHTML += '<option>' + d + '</option>'; });
+    var sel=document.getElementById(id);
+    if(!sel||sel.options.length>1) return;
+    sel.innerHTML='<option value="">—</option>';
+    DEPTS.forEach(function(d){ sel.innerHTML+='<option>'+d+'</option>'; });
   });
 }
+function openTask(id){
+  var t=tarefas.find(function(x){ return x.id===id; }); if(!t) return;
+  editarId=id; fillDeptSelects();
+  document.getElementById('eId').value=t.id;
+  document.getElementById('eTarefa').value=t.tarefa;
+  document.getElementById('eDept').value=t.dept;
+  document.getElementById('ePrio').value=t.prio;
+  document.getElementById('ePrazo').value=t.prazo;
+  document.getElementById('eStatus').value=t.status;
+  document.getElementById('eDono').value=t.dono;
+  document.getElementById('eOrigem').value=t.origem;
+  document.getElementById('eObs').value=t.obs;
+  var btnIni=document.getElementById('btnIniciar'), btnCon=document.getElementById('btnConcluir'), btnEx=document.getElementById('btnExcluir');
+  if(t.status==='Excluído'){ btnIni.style.display='none'; btnCon.style.display='none'; btnEx.textContent='Restaurar'; btnEx.className='btn green'; btnEx.setAttribute('onclick','restaurarTask()'); }
+  else { btnIni.style.display=''; btnCon.style.display=''; btnEx.textContent='Excluir'; btnEx.className='btn danger'; btnEx.setAttribute('onclick','excluirTask()'); }
+  document.getElementById('modal-editar').style.display='flex';
+}
+function closeModal(){ document.getElementById('modal-editar').style.display='none'; editarId=null; }
+function closeNewModal(){ document.getElementById('modal-nova').style.display='none'; }
+function saveTask(){
+  var t=tarefas.find(function(x){ return x.id===editarId; }); if(!t) return;
+  var prazo=formatDate(document.getElementById('ePrazo').value);
+  var dados={ id:t.id, tarefa:document.getElementById('eTarefa').value, dept:document.getElementById('eDept').value, prio:document.getElementById('ePrio').value, prazo:prazo, status:document.getElementById('eStatus').value, dono:document.getElementById('eDono').value, origem:document.getElementById('eOrigem').value, obs:document.getElementById('eObs').value };
+  t.tarefa=dados.tarefa; t.dept=dados.dept; t.prio=dados.prio; t.prazo=prazo; t.status=dados.status; t.dono=dados.dono; t.origem=dados.origem; t.obs=dados.obs;
+  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
+  writeToSheet({ action:'update', id:dados.id, tarefa:dados.tarefa, dept:dados.dept, prio:dados.prio, prazo:prazo, status:dados.status, dono:dados.dono, origem:dados.origem, obs:dados.obs })
+    .then(function(r){ if(r.success&&r.data&&r.data.success){ toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: '+(r.data&&r.data.error?r.data.error:'sem resposta')); setConn(false); } });
+}
+function changeStatus(novoStatus){
+  var t=tarefas.find(function(x){ return x.id===editarId; }); if(!t) return;
+  t.status=novoStatus;
+  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
+  writeToSheet({ action:'update', id:t.id, tarefa:t.tarefa, dept:t.dept, prio:t.prio, prazo:t.prazo, status:novoStatus, dono:t.dono, origem:t.origem, obs:t.obs })
+    .then(function(r){ if(r.success&&r.data&&r.data.success){ toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: '+(r.data&&r.data.error?r.data.error:'sem resposta')); setConn(false); } });
+}
+function excluirTask(){
+  var t=tarefas.find(function(x){ return x.id===editarId; }); if(!t) return;
+  if(!confirm('Excluir a tarefa '+t.id+' ('+t.tarefa+')?\n\nEla receberá o status "Excluído": sai dos indicadores, dos gráficos e do Kanban, mas permanece na planilha (sem buracos nos IDs) e pode ser restaurada a qualquer momento.')) return;
+  setStatusAndSave(t,'Excluído');
+}
+function restaurarTask(){ var t=tarefas.find(function(x){ return x.id===editarId; }); if(!t) return; setStatusAndSave(t,'A Fazer'); }
+function setStatusAndSave(t,novoStatus){
+  t.status=novoStatus;
+  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
+  writeToSheet({ action:'update', id:t.id, tarefa:t.tarefa, dept:t.dept, prio:t.prio, prazo:t.prazo, status:novoStatus, dono:t.dono, origem:t.origem, obs:t.obs })
+    .then(function(r){ if(r.success&&r.data&&r.data.success){ toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: '+(r.data&&r.data.error?r.data.error:'sem resposta')); setConn(false); } });
+}
 
-function openTask(id) {
-  var t = tarefas.find(function(x){ return x.id === id; });
-  if (!t) return;
-  editarId = id;
+/* ===== NOVA TAREFA ===== */
+function nextId(){
+  var max=0;
+  tarefas.forEach(function(t){ var m=String(t.id||'').match(/^TAR-(\d+)$/); if(m){ var n=parseInt(m[1],10); if(n>max) max=n; } });
+  return 'TAR-'+('000'+(max+1)).slice(-3);
+}
+function openNewTask(){
   fillDeptSelects();
-  document.getElementById('eId').value = t.id;
-  document.getElementById('eTarefa').value = t.tarefa;
-  document.getElementById('eDept').value = t.dept;
-  document.getElementById('ePrio').value = t.prio;
-  document.getElementById('ePrazo').value = t.prazo;
-  document.getElementById('eStatus').value = t.status;
-  document.getElementById('eDono').value = t.dono;
-  document.getElementById('eOrigem').value = t.origem;
-  document.getElementById('eObs').value = t.obs;
-  var btnIni = document.getElementById('btnIniciar');
-  var btnCon = document.getElementById('btnConcluir');
-  var btnEx = document.getElementById('btnExcluir');
-  if (t.status === 'Excluído') {
-    btnIni.style.display = 'none';
-    btnCon.style.display = 'none';
-    btnEx.textContent = 'Restaurar';
-    btnEx.className = 'btn green';
-    btnEx.setAttribute('onclick', 'restaurarTask()');
-  } else {
-    btnIni.style.display = '';
-    btnCon.style.display = '';
-    btnEx.textContent = 'Excluir';
-    btnEx.className = 'btn danger';
-    btnEx.setAttribute('onclick', 'excluirTask()');
-  }
-  document.getElementById('modal-editar').style.display = 'flex';
+  document.getElementById('nTarefa').value='';
+  document.getElementById('nDept').value='';
+  document.getElementById('nPrio').value='Média';
+  document.getElementById('nPrazo').value='';
+  document.getElementById('nStatus').value='A Fazer';
+  document.getElementById('nDono').value='Renato';
+  document.getElementById('nOrigem').value='Reunião';
+  document.getElementById('nObs').value='';
+  document.getElementById('modal-nova').style.display='flex';
 }
-
-function closeModal() { document.getElementById('modal-editar').style.display = 'none'; editarId = null; }
-function closeNewModal() { document.getElementById('modal-nova').style.display = 'none'; }
-
-function saveTask() {
-  var t = tarefas.find(function(x){ return x.id === editarId; });
-  if (!t) return;
-  var prazo = formatDate(document.getElementById('ePrazo').value);
-  var dados = {
-    id: t.id,
-    tarefa: document.getElementById('eTarefa').value,
-    dept: document.getElementById('eDept').value,
-    prio: document.getElementById('ePrio').value,
-    prazo: prazo,
-    status: document.getElementById('eStatus').value,
-    dono: document.getElementById('eDono').value,
-    origem: document.getElementById('eOrigem').value,
-    obs: document.getElementById('eObs').value
-  };
-  t.tarefa = dados.tarefa; t.dept = dados.dept; t.prio = dados.prio; t.prazo = prazo;
-  t.status = dados.status; t.dono = dados.dono; t.origem = dados.origem; t.obs = dados.obs;
-  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
-  writeToSheet({ action: 'update', id: dados.id, tarefa: dados.tarefa, dept: dados.dept, prio: dados.prio, prazo: prazo, status: dados.status, dono: dados.dono, origem: dados.origem, obs: dados.obs })
-    .then(function(r){ if (r.success && r.data && r.data.success) { toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: ' + (r.data && r.data.error ? r.data.error : 'sem resposta')); setConn(false); } });
-}
-
-function changeStatus(novoStatus) {
-  var t = tarefas.find(function(x){ return x.id === editarId; });
-  if (!t) return;
-  t.status = novoStatus;
-  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
-  writeToSheet({ action: 'update', id: t.id, tarefa: t.tarefa, dept: t.dept, prio: t.prio, prazo: t.prazo, status: novoStatus, dono: t.dono, origem: t.origem, obs: t.obs })
-    .then(function(r){ if (r.success && r.data && r.data.success) { toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: ' + (r.data && r.data.error ? r.data.error : 'sem resposta')); setConn(false); } });
-}
-
-/* ===== Exclusão lógica (status Excluído — sem apagar linha) ===== */
-function excluirTask() {
-  var t = tarefas.find(function(x){ return x.id === editarId; });
-  if (!t) return;
-  if (!confirm('Excluir a tarefa ' + t.id + ' (' + t.tarefa + ')?\n\nEla receberá o status "Excluído": sai dos indicadores, dos gráficos e do Kanban, mas permanece na planilha (sem buracos nos IDs) e pode ser restaurada a qualquer momento.')) return;
-  setStatusAndSave(t, 'Excluído');
-}
-function restaurarTask() {
-  var t = tarefas.find(function(x){ return x.id === editarId; });
-  if (!t) return;
-  setStatusAndSave(t, 'A Fazer');
-}
-function setStatusAndSave(t, novoStatus) {
-  t.status = novoStatus;
-  saveLocal(); renderAll(); closeModal(); toast('Salvando...');
-  writeToSheet({ action: 'update', id: t.id, tarefa: t.tarefa, dept: t.dept, prio: t.prio, prazo: t.prazo, status: novoStatus, dono: t.dono, origem: t.origem, obs: t.obs })
-    .then(function(r){ if (r.success && r.data && r.data.success) { toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); } else { toast('Erro ao salvar: ' + (r.data && r.data.error ? r.data.error : 'sem resposta')); setConn(false); } });
-}
-
-/* ===== Nova tarefa ===== */
-function nextId() {
-  var max = 0;
-  tarefas.forEach(function(t){
-    var m = String(t.id || '').match(/^TAR-(\d+)$/);
-    if (m) { var n = parseInt(m[1],10); if (n > max) max = n; }
-  });
-  return 'TAR-' + ('000' + (max + 1)).slice(-3);
-}
-
-function openNewTask() {
-  fillDeptSelects();
-  document.getElementById('nTarefa').value = '';
-  document.getElementById('nDept').value = '';
-  document.getElementById('nPrio').value = 'Média';
-  document.getElementById('nPrazo').value = '';
-  document.getElementById('nStatus').value = 'A Fazer';
-  document.getElementById('nDono').value = 'Renato';
-  document.getElementById('nOrigem').value = 'Reunião';
-  document.getElementById('nObs').value = '';
-  document.getElementById('modal-nova').style.display = 'flex';
-}
-
-function addTask() {
-  var nome = document.getElementById('nTarefa').value.trim();
-  if (!nome) { toast('Informe a tarefa'); return; }
-  var prazo = formatDate(document.getElementById('nPrazo').value);
-  var nova = {
-    id: nextId(),
-    tarefa: nome,
-    dept: document.getElementById('nDept').value,
-    prio: document.getElementById('nPrio').value,
-    prazo: prazo,
-    status: document.getElementById('nStatus').value,
-    dono: document.getElementById('nDono').value,
-    origem: document.getElementById('nOrigem').value,
-    obs: document.getElementById('nObs').value
-  };
+function addTask(){
+  var nome=document.getElementById('nTarefa').value.trim();
+  if(!nome){ toast('Informe a tarefa'); return; }
+  var prazo=formatDate(document.getElementById('nPrazo').value);
+  var nova={ id:nextId(), tarefa:nome, dept:document.getElementById('nDept').value, prio:document.getElementById('nPrio').value, prazo:prazo, status:document.getElementById('nStatus').value, dono:document.getElementById('nDono').value, origem:document.getElementById('nOrigem').value, obs:document.getElementById('nObs').value };
   tarefas.push(nova);
   saveLocal(); renderAll(); closeNewModal(); toast('Salvando...');
-  writeToSheet({ action: 'add', tarefa: nova.tarefa, dept: nova.dept, prio: nova.prio, prazo: prazo, status: nova.status, dono: nova.dono, origem: nova.origem, obs: nova.obs })
+  writeToSheet({ action:'add', tarefa:nova.tarefa, dept:nova.dept, prio:nova.prio, prazo:prazo, status:nova.status, dono:nova.dono, origem:nova.origem, obs:nova.obs })
     .then(function(r){
-      if (r.success && r.data && r.data.success) {
-        if (r.data.id && r.data.id !== nova.id) { nova.id = r.data.id; saveLocal(); renderAll(); }
-        toast('Salvo na planilha ✓'); setConn(true); loadFromSheet();
-      } else { toast('Salvo localmente (falha na gravação: ' + (r.data && r.data.error ? r.data.error : 'sem resposta') + ')'); setConn(false); }
+      if(r.success&&r.data&&r.data.success){ if(r.data.id&&r.data.id!==nova.id){ nova.id=r.data.id; saveLocal(); renderAll(); } toast('Salvo na planilha ✓'); setConn(true); loadFromSheet(); }
+      else { toast('Salvo localmente (falha na gravação: '+(r.data&&r.data.error?r.data.error:'sem resposta')+')'); setConn(false); }
     });
 }
 
-/* ===== Inicialização ===== */
-window.addEventListener('DOMContentLoaded', function(){
+/* ===== INICIALIZAÇÃO ===== */
+window.addEventListener('DOMContentLoaded',function(){
   Chart.register(ChartDataLabels);
-  if (!loadLocal()) { tarefas = JSON.parse(JSON.stringify(tarefasFallback)); }
+  if(!loadLocal()){ tarefas=JSON.parse(JSON.stringify(tarefasFallback)); }
+  loadReunioesLocal();
   renderAll();
+  renderReunioes();
+  renderReuniaoMesFilter();
   showScreen('inicio');
   loadFromSheet();
-  setInterval(loadFromSheet, 60000);
+  setInterval(loadFromSheet,60000);
 });
 </script>
 </body>
