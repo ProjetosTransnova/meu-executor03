@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Master Mind — Transnova</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
+  <title>Master Mind — Transnova (Júpiter)</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
   <style>
 /* Skip artifact shell — fixed styles served beside every artifact.
    Complements basecoat; artifacts override --accent for their own identity. */
@@ -118,919 +118,927 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
   
   <style>
     :root {
+      --accent: #E87D48;
+      --accent-hover: #D67448;
+      --accent-text: #F0A57C;
+      --accent-contrast: #FFFFFF;
       --bg: #08080C;
       --surface: #151624;
       --surface-elevated: #1C2541;
-      --surface-hover: #222b4a;
       --text: #F0E5D5;
-      --text-muted: #A8A096;
-      --border: #25283E;
-      --accent: #D67448;
-      --accent-contrast: #FFFFFF;
-      --accent-text: #FFA57D;
-      --blue: #3D7CA6;
-      --blue-light: #5ba3d3;
-      --green: #2EA043;
-      --red: #DA3633;
-      --yellow: #D29922;
+      --text-muted: #9BAEC0;
+      --border: rgba(90, 125, 154, 0.4);
+      --border-strong: #5A7D9A;
+      --glow: #3D7CA6;
+      --amber: #D9A066;
+      --cream: #DBC9B5;
+      --success: #7FBF8F;
+      --danger: #E5695F;
       --radius: 10px;
     }
 
     body {
       background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 80% 10%, rgba(61, 124, 166, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(232, 125, 72, 0.08) 0%, transparent 40%),
+        linear-gradient(180deg, #08080C 0%, #0B132B 100%);
+      background-attachment: fixed;
       color: var(--text);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      margin: 0;
-      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding-bottom: 3rem;
     }
 
-    /* Top Header */
-    .mm-header {
-      background: linear-gradient(180deg, #12131F 0%, #0A0B10 100%);
+    /* Header styling */
+    .app-header {
+      background: rgba(21, 22, 36, 0.85);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      padding: 1rem 1.25rem 0.5rem;
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 90;
+      padding: 0.75rem 0;
     }
-
-    .mm-header-top {
+    .header-inner {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
       flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
-
-    .mm-brand {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .mm-brand-title-row {
+    .brand-group {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.85rem;
     }
-
-    .mm-logo-icon {
-      font-size: 1.85rem;
-      filter: drop-shadow(0 2px 8px rgba(214, 116, 72, 0.4));
+    .brand-icon {
+      font-size: 2rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 10px rgba(232, 125, 72, 0.5));
     }
-
-    .mm-title {
-      font-size: 1.6rem;
+    .brand-title {
+      font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.02em;
       margin: 0;
-      color: #F0E5D5;
-      background: linear-gradient(90deg, #F0E5D5 0%, #E6C594 60%, #D67448 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #F8F8F8;
     }
-
-    .mm-badge-company {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+    .brand-sub {
+      color: var(--amber);
+      font-size: 0.82rem;
+      font-weight: 600;
       text-transform: uppercase;
-      padding: 0.15rem 0.45rem;
-      background: rgba(61, 124, 166, 0.2);
-      border: 1px solid rgba(61, 124, 166, 0.4);
-      color: var(--blue-light);
-      border-radius: 4px;
-      margin-left: 0.35rem;
+      letter-spacing: 0.08em;
     }
-
-    .mm-slogan {
-      font-size: 0.8rem;
+    .brand-slogan {
+      margin: 0;
+      font-size: 0.78rem;
       color: var(--text-muted);
-      margin: 0.15rem 0 0 0;
-      font-weight: 400;
     }
-
-    .mm-header-actions {
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
 
+    /* Sync badge */
     .sync-status {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      font-size: 0.78rem;
-      font-weight: 500;
       padding: 0.35rem 0.75rem;
-      border-radius: 9999px;
-      background: rgba(21, 22, 36, 0.9);
-      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(127, 191, 143, 0.15);
+      border: 1px solid rgba(127, 191, 143, 0.4);
+      color: var(--success);
+      cursor: pointer;
       transition: all 0.2s ease;
-      cursor: pointer;
     }
-
-    .sync-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-muted);
-    }
-
-    .sync-status.synced {
-      color: #7ee787;
-      border-color: rgba(46, 160, 67, 0.4);
-      background: rgba(46, 160, 67, 0.12);
-    }
-    .sync-status.synced .sync-dot {
-      background: #3fb950;
-      box-shadow: 0 0 8px rgba(63, 185, 80, 0.7);
-    }
-
     .sync-status.offline {
-      color: #ffaa80;
-      border-color: rgba(214, 116, 72, 0.4);
-      background: rgba(214, 116, 72, 0.15);
+      background: rgba(217, 160, 102, 0.15);
+      border-color: rgba(217, 160, 102, 0.4);
+      color: var(--amber);
     }
-    .sync-status.offline .sync-dot {
-      background: #D67448;
-      box-shadow: 0 0 8px rgba(214, 116, 72, 0.7);
-    }
-
-    .sync-status.syncing .sync-dot {
-      background: var(--blue-light);
-      animation: pulse 1s infinite alternate;
+    .sync-status.loading {
+      background: rgba(61, 124, 166, 0.2);
+      border-color: rgba(61, 124, 166, 0.5);
+      color: #6EB2DD;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(0.8); opacity: 0.5; }
-      100% { transform: scale(1.3); opacity: 1; }
-    }
-
-    .btn-new-task {
-      background-color: var(--accent);
-      color: #FFFFFF;
-      font-weight: 600;
-      font-size: 0.88rem;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      box-shadow: 0 2px 10px rgba(214, 116, 72, 0.35);
-      transition: transform 0.15s ease, background-color 0.15s ease;
-    }
-    .btn-new-task:hover {
-      background-color: #e58254;
-      transform: translateY(-1px);
-    }
-
-    /* Tab Navigation */
-    .mm-tabs-nav {
+    /* Navigation Tabs */
+    .nav-tabs {
       display: flex;
-      width: 100%;
-      gap: 0.35rem;
-      margin-top: 0.85rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      margin: 1.5rem 0 1rem;
       overflow-x: auto;
+      scrollbar-width: none;
     }
-
-    .tab-btn {
-      flex: 1;
-      text-align: center;
-      padding: 0.65rem 0.5rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-muted);
+    .nav-tab-btn {
       background: transparent;
       border: none;
       border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.65rem 1.1rem;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
       transition: all 0.2s ease;
       white-space: nowrap;
     }
-
-    .tab-btn:hover {
+    .nav-tab-btn:hover {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.02);
     }
-
-    .tab-btn.active {
-      color: var(--accent-text);
+    .nav-tab-btn.active {
+      color: var(--accent);
       border-bottom-color: var(--accent);
-      background: rgba(214, 116, 72, 0.06);
+      background: rgba(232, 125, 72, 0.08);
+      border-radius: 6px 6px 0 0;
     }
 
-    /* Content Area */
-    .tab-content {
-      display: none;
-      padding: 1.25rem;
-      max-width: 1400px;
-      margin: 0 auto;
+    /* Buttons */
+    .btn-jupiter {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(232, 125, 72, 0.25);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s;
     }
-    .tab-content.active {
-      display: block;
+    .btn-jupiter:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(232, 125, 72, 0.4);
+      filter: brightness(1.08);
+    }
+    .btn-jupiter-outline {
+      background: rgba(28, 37, 65, 0.6);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-jupiter-outline:hover {
+      background: var(--surface-elevated);
+      border-color: var(--accent);
+      color: #FFF;
     }
 
     /* Filter Bar */
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
+    .filter-panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 0.85rem 1rem;
       border-radius: var(--radius);
-      margin-bottom: 1.25rem;
-      align-items: center;
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0.85rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
-
     .filter-item {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.3rem;
       min-width: 140px;
-      flex: 1;
+      flex: 1 1 auto;
     }
-
     .filter-item label {
       font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--amber);
     }
-
-    .form-control {
-      background: #0E0F17;
-      border: 1px solid var(--border);
+    .filter-item select, .filter-item input {
+      background: var(--surface-elevated);
       color: var(--text);
-      padding: 0.45rem 0.65rem;
+      border: 1px solid var(--border);
       border-radius: 6px;
-      font-size: 0.85rem;
-      width: 100%;
+      padding: 0.45rem 0.65rem;
+      font-size: 0.82rem;
       outline: none;
-      box-sizing: border-box;
+      transition: border-color 0.2s;
     }
-    .form-control:focus {
+    .filter-item select:focus, .filter-item input:focus {
       border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.2);
     }
 
-    /* KPI Row */
+    /* KPI Grid */
     .kpi-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
       gap: 0.75rem;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
-
-    .kpi-card {
+    .jupiter-kpi {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 0.85rem 1rem;
-      display: flex;
-      flex-direction: column;
+      padding: 0.85rem 0.95rem;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
       transition: transform 0.15s ease, border-color 0.15s ease;
     }
-    .kpi-card:hover {
+    .jupiter-kpi:hover {
       transform: translateY(-2px);
-      border-color: rgba(214, 116, 72, 0.4);
+      border-color: var(--border-strong);
     }
-    .kpi-card::before {
-      content: '';
+    .jupiter-kpi::before {
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
+      width: 100%;
       height: 3px;
-      background: var(--accent);
-      opacity: 0.7;
+      background: var(--glow);
     }
-    .kpi-card.blue::before { background: var(--blue); }
-    .kpi-card.green::before { background: var(--green); }
-    .kpi-card.red::before { background: var(--red); }
-    .kpi-card.yellow::before { background: var(--yellow); }
+    .jupiter-kpi.accent::before { background: var(--accent); }
+    .jupiter-kpi.success::before { background: var(--success); }
+    .jupiter-kpi.danger::before { background: var(--danger); }
+    .jupiter-kpi.amber::before { background: var(--amber); }
 
-    .kpi-title {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .kpi-value {
-      font-size: 1.6rem;
+    .jupiter-kpi .val {
+      font-size: 1.45rem;
       font-weight: 700;
-      color: #FFFFFF;
-      margin: 0.35rem 0 0;
-      line-height: 1.1;
+      color: #F8F8F8;
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
     }
-
-    .kpi-sub {
-      font-size: 0.7rem;
+    .jupiter-kpi .title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+    .jupiter-kpi .sub {
+      font-size: 0.68rem;
       color: var(--text-muted);
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
-    /* Charts Grid */
+    /* Charts Section */
     .charts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.75rem;
     }
-
     .chart-panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1rem;
+      padding: 1rem 1.15rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
       display: flex;
       flex-direction: column;
-      min-height: 280px;
     }
-
-    .chart-panel-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.75rem;
+    .chart-panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(90, 125, 154, 0.25);
     }
-    .chart-panel-title .badge-count {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 400;
+    .chart-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #F8F8F8;
+      letter-spacing: -0.01em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
-
-    .chart-wrapper {
-      flex: 1;
-      width: 100%;
-      min-height: 200px;
+    .chart-render-area {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       position: relative;
     }
 
-    /* Task list & Cards */
-    .task-list-toolbar {
+    /* Custom SVG Chart Styles */
+    .svg-bar-row {
       display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0.35rem 0;
+      font-size: 0.75rem;
+    }
+    .svg-bar-label {
+      width: 105px;
+      text-align: right;
+      color: var(--cream);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .svg-bar-track {
+      flex: 1;
+      height: 24px;
+      background: rgba(28, 37, 65, 0.8);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(90, 125, 154, 0.25);
+    }
+    .svg-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: #FFFFFF;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+      min-width: 22px;
+    }
+
+    /* Donut container */
+    .donut-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 1rem;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
+      padding: 0.5rem 0;
     }
-
-    .search-box {
-      flex: 1;
-      min-width: 240px;
-      position: relative;
-    }
-
-    .task-cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 0.85rem;
-    }
-
-    .task-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.9rem 1rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
+    .donut-legend {
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
-      position: relative;
+      gap: 0.45rem;
+      font-size: 0.75rem;
     }
-    .task-card:hover {
-      border-color: var(--blue-light);
-      background: var(--surface-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-    }
-
-    .task-card-header {
+    .legend-item {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       gap: 0.5rem;
     }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
 
-    .task-id {
-      font-size: 0.75rem;
+    /* Task Card */
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.95rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      position: relative;
+    }
+    .task-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--glow);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
+    .task-card-title {
+      font-size: 0.96rem;
       font-weight: 700;
-      color: var(--blue-light);
-      letter-spacing: 0.05em;
-    }
-
-    .task-due-chip {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    .task-due-chip.late {
-      background: rgba(218, 54, 51, 0.2);
-      border: 1px solid rgba(218, 54, 51, 0.5);
-      color: #ff7b72;
-    }
-    .task-due-chip.today {
-      background: rgba(210, 153, 34, 0.2);
-      border: 1px solid rgba(210, 153, 34, 0.5);
-      color: #e3b341;
-    }
-    .task-due-chip.soon {
-      background: rgba(61, 124, 166, 0.2);
-      border: 1px solid rgba(61, 124, 166, 0.5);
-      color: #79c0ff;
-    }
-    .task-due-chip.ok {
-      background: rgba(46, 160, 67, 0.15);
-      border: 1px solid rgba(46, 160, 67, 0.35);
-      color: #7ee787;
-    }
-
-    .task-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #FFFFFF;
-      margin: 0;
+      color: #F8F8F8;
       line-height: 1.35;
+      margin: 0;
+      letter-spacing: -0.01em;
     }
-
-    .task-chips-row {
+    .task-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
       align-items: center;
     }
-
-    .badge-chip {
-      font-size: 0.7rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text-muted);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .chip {
       display: inline-flex;
       align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .chip-dept {
+      background: rgba(90, 125, 154, 0.22);
+      color: #B5D2EB;
+      border: 1px solid rgba(90, 125, 154, 0.4);
+    }
+    .chip-prio-alta {
+      background: rgba(229, 105, 95, 0.2);
+      color: #FFA39E;
+      border: 1px solid rgba(229, 105, 95, 0.5);
+    }
+    .chip-prio-media {
+      background: rgba(217, 160, 102, 0.2);
+      color: #F5CE9F;
+      border: 1px solid rgba(217, 160, 102, 0.45);
+    }
+    .chip-prio-baixa {
+      background: rgba(61, 124, 166, 0.2);
+      color: #A3D4F7;
+      border: 1px solid rgba(61, 124, 166, 0.4);
+    }
+    .chip-status {
+      background: rgba(28, 37, 65, 0.8);
+      color: var(--cream);
+      border: 1px solid var(--border);
+    }
+    .chip-dono {
+      background: rgba(166, 107, 73, 0.22);
+      color: #EBC3AB;
+      border: 1px solid rgba(166, 107, 73, 0.4);
+    }
+    .badge-venc-atrasada {
+      background: rgba(229, 105, 95, 0.25);
+      color: #FF7875;
+      border: 1px solid #E5695F;
+      font-weight: 700;
+    }
+    .badge-venc-hoje {
+      background: rgba(232, 125, 72, 0.25);
+      color: #FFA97A;
+      border: 1px solid #E87D48;
+      font-weight: 700;
+    }
+    .badge-venc-breve {
+      background: rgba(217, 160, 102, 0.2);
+      color: #FFD591;
+      border: 1px solid #D9A066;
+    }
+    .badge-venc-ok {
+      background: rgba(127, 191, 143, 0.15);
+      color: #95DE64;
+      border: 1px solid rgba(127, 191, 143, 0.4);
     }
 
-    .badge-prio-alta {
-      background: rgba(218, 54, 51, 0.18);
-      border-color: rgba(218, 54, 51, 0.4);
-      color: #ff8e88;
-      font-weight: 600;
-    }
-    .badge-prio-media {
-      background: rgba(210, 153, 34, 0.18);
-      border-color: rgba(210, 153, 34, 0.4);
-      color: #f1c568;
-      font-weight: 600;
-    }
-    .badge-prio-baixa {
-      background: rgba(61, 124, 166, 0.18);
-      border-color: rgba(61, 124, 166, 0.4);
-      color: #8ed0f8;
-      font-weight: 600;
-    }
-
-    .badge-status-ideia { background: rgba(139, 148, 158, 0.15); border-color: rgba(139, 148, 158, 0.3); color: #c9d1d9; }
-    .badge-status-afazer { background: rgba(56, 139, 253, 0.15); border-color: rgba(56, 139, 253, 0.35); color: #79c0ff; }
-    .badge-status-andamento { background: rgba(210, 153, 34, 0.15); border-color: rgba(210, 153, 34, 0.4); color: #e3b341; }
-    .badge-status-concluido { background: rgba(46, 160, 67, 0.15); border-color: rgba(46, 160, 67, 0.35); color: #7ee787; }
-    .badge-status-excluido { background: rgba(218, 54, 51, 0.12); border-color: rgba(218, 54, 51, 0.3); color: #ff7b72; }
-
-    .task-footer-meta {
+    /* List View Table */
+    .task-list-view {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 0.4rem;
-      margin-top: 0.15rem;
+      flex-direction: column;
+      gap: 0.65rem;
     }
 
-    /* Kanban View */
+    /* Kanban Board */
     .kanban-board {
       display: grid;
-      grid-template-columns: repeat(5, minmax(240px, 1fr));
-      gap: 0.85rem;
+      grid-template-columns: repeat(5, minmax(260px, 1fr));
+      gap: 1rem;
       overflow-x: auto;
       padding-bottom: 1rem;
-      min-height: calc(100vh - 220px);
+      scrollbar-width: thin;
     }
-
-    .kanban-column {
-      background: #11121d;
+    .kanban-col {
+      background: rgba(21, 22, 36, 0.9);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - 220px);
+      max-height: 80vh;
+      min-width: 250px;
     }
-
-    .kanban-column-header {
-      padding: 0.75rem 0.85rem;
+    .kanban-col-header {
+      padding: 0.85rem;
       border-bottom: 1px solid var(--border);
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.02);
-      border-top-left-radius: var(--radius);
-      border-top-right-radius: var(--radius);
-    }
-
-    .kanban-col-title {
-      font-size: 0.85rem;
       font-weight: 700;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      font-size: 0.88rem;
     }
-
-    .kanban-counter {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.1rem 0.45rem;
-      border-radius: 999px;
+    .kanban-col-count {
+      background: var(--surface-elevated);
+      color: var(--amber);
       font-size: 0.72rem;
-      color: var(--text);
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
     }
-
-    .kanban-cards-container {
-      padding: 0.65rem;
-      overflow-y: auto;
+    .kanban-col-body {
+      padding: 0.75rem;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.65rem;
+      overflow-y: auto;
       flex: 1;
     }
 
-    /* Meetings View */
-    .meetings-header {
+    /* Meetings Section */
+    .reunioes-toolbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 1.25rem;
       flex-wrap: wrap;
       gap: 0.75rem;
     }
-
-    .sub-tabs {
-      display: inline-flex;
+    .view-pills {
+      display: flex;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.2rem;
-      gap: 0.2rem;
+      border-radius: 6px;
+      padding: 2px;
     }
-
-    .sub-tab-btn {
+    .view-pill {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: 4px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s;
     }
-    .sub-tab-btn.active {
+    .view-pill.active {
       background: var(--surface-elevated);
-      color: #FFFFFF;
+      color: var(--accent);
     }
-
-    .meeting-cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 1rem;
-    }
-
-    .meeting-card {
+    .reuniao-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      transition: border-color 0.15s ease;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
     }
-    .meeting-card:hover {
-      border-color: var(--blue-light);
-    }
-
-    .meeting-card-header {
+    .reuniao-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-
-    .meeting-title {
-      font-size: 1rem;
+    .reuniao-titulo {
+      font-size: 1.2rem;
       font-weight: 700;
       color: #FFFFFF;
       margin: 0;
     }
-
-    .meeting-meta {
+    .reuniao-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.3rem;
+      font-size: 0.78rem;
+      color: var(--cream);
+    }
+    .reuniao-meta-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .meeting-summary {
-      font-size: 0.85rem;
-      line-height: 1.45;
-      color: #D8D2C8;
-      background: rgba(0,0,0,0.25);
-      border-radius: 6px;
-      padding: 0.6rem;
-      border-left: 3px solid var(--blue);
-    }
-
-    .action-plan-box {
-      background: rgba(28, 37, 65, 0.4);
-      border: 1px dashed rgba(61, 124, 166, 0.4);
-      border-radius: 6px;
-      padding: 0.6rem;
+      gap: 0.6rem 0.85rem;
+      margin-top: 0.5rem;
       font-size: 0.8rem;
     }
-
-    .action-plan-header {
-      font-weight: 600;
-      color: var(--blue-light);
-      margin-bottom: 0.35rem;
-      display: flex;
-      justify-content: space-between;
+    .reuniao-meta-item {
+      display: inline-flex;
       align-items: center;
+      gap: 0.4rem;
+      background: rgba(28, 37, 65, 0.5);
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid rgba(90, 125, 154, 0.3);
+    }
+    .meta-label {
+      color: var(--amber);
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .meta-val {
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+    .reunioes-group-header {
+      color: var(--amber);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 1.25rem 0 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(90, 125, 154, 0.3);
+      padding-bottom: 0.35rem;
+    }
+    .reuniao-resumo {
+      background: rgba(28, 37, 65, 0.5);
+      border-left: 3px solid var(--accent);
+      padding: 0.85rem 1rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text);
+      margin: 0.85rem 0;
+    }
+    .reuniao-plano-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--amber);
+      margin: 1rem 0 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .action-item-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .action-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(90, 125, 154, 0.3);
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    .action-item-desc {
+      font-weight: 600;
+      color: #F8F8F8;
+      flex: 1;
     }
 
     /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(4, 5, 8, 0.8);
-      backdrop-filter: blur(4px);
+      background: rgba(8, 8, 12, 0.82);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 100;
       padding: 1rem;
     }
-    .modal-overlay.active {
+    .modal-overlay.open {
       display: flex;
     }
-
-    .modal-box {
-      background: #141624;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    .modal-dialog {
+      background: #151624;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
       width: 100%;
-      max-width: 580px;
+      max-width: 620px;
       max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
-      box-shadow: 0 16px 36px rgba(0,0,0,0.6);
-      animation: modalIn 0.18s ease-out;
     }
-
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
     .modal-header {
       padding: 1rem 1.25rem;
       border-bottom: 1px solid var(--border);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      background: #1C2541;
     }
-
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #FFFFFF;
+    .modal-header h3 {
       margin: 0;
+      font-size: 1.05rem;
+      color: #FFFFFF;
+      font-weight: 700;
     }
-
-    .btn-close {
+    .modal-close-btn {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       cursor: pointer;
       line-height: 1;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
+      padding: 0.2rem;
     }
-    .btn-close:hover {
-      color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.1);
+    .modal-close-btn:hover {
+      color: #FFF;
     }
-
     .modal-body {
       padding: 1.25rem;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
+      gap: 1rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--cream);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 0.85rem;
     }
-
+    .form-control {
+      background: #0B132B;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.55rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 75px;
+    }
     .modal-footer {
       padding: 1rem 1.25rem;
       border-top: 1px solid var(--border);
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
-      background: rgba(0,0,0,0.2);
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
+      flex-wrap: wrap;
+      background: rgba(28, 37, 65, 0.4);
     }
 
-    .form-group {
+    /* PMO Action Plan Selection Modal */
+    .pmo-select-list {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 0.65rem;
+      max-height: 48vh;
+      overflow-y: auto;
+      padding-right: 0.25rem;
     }
-
-    .form-group label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .pmo-select-item {
+      display: flex;
+      align-items: flex-start;
       gap: 0.75rem;
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.45rem 0.85rem;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(90, 125, 154, 0.35);
       border-radius: 6px;
+      padding: 0.75rem 0.85rem;
+      transition: all 0.2s ease;
       cursor: pointer;
-      font-weight: 500;
-      font-size: 0.85rem;
+      user-select: none;
     }
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.14);
+    .pmo-select-item:hover {
+      border-color: var(--accent);
+      background: rgba(28, 37, 65, 0.85);
     }
-
-    .btn-action-start {
-      background: rgba(61, 124, 166, 0.2);
-      border: 1px solid var(--blue);
-      color: var(--blue-light);
+    .pmo-select-item.is-checked {
+      border-color: var(--accent);
+      background: rgba(232, 125, 72, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(232, 125, 72, 0.3);
     }
-    .btn-action-complete {
-      background: rgba(46, 160, 67, 0.2);
-      border: 1px solid var(--green);
-      color: #7ee787;
+    .pmo-select-cb {
+      margin-top: 0.15rem;
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
     }
-    .btn-action-delete {
-      background: rgba(218, 54, 51, 0.15);
-      border: 1px solid var(--red);
-      color: #ff8e88;
-    }
-
-    /* Toast */
-    .toast-container {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      z-index: 9999;
+    .pmo-item-details {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      pointer-events: none;
+      gap: 0.35rem;
     }
-
-    .toast {
-      background: #1C2541;
-      border: 1px solid var(--border);
-      color: #FFFFFF;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    .pmo-item-text {
       font-size: 0.88rem;
-      font-weight: 500;
+      font-weight: 600;
+      color: #F8F8F8;
+      line-height: 1.35;
+    }
+    .pmo-item-chips {
       display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
       align-items: center;
-      gap: 0.5rem;
-      animation: slideInToast 0.2s ease-out;
-      pointer-events: auto;
-    }
-    .toast.success { border-left: 4px solid var(--green); }
-    .toast.warning { border-left: 4px solid var(--yellow); }
-    .toast.error { border-left: 4px solid var(--red); }
-
-    @keyframes slideInToast {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
     }
 
-    @media (max-width: 768px) {
-      .mm-header-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .mm-header-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .charts-grid {
-        grid-template-columns: 1fr;
-      }
-      .kanban-board {
-        grid-template-columns: repeat(5, 270px);
-      }
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
+    /* Print styles */
     @media print {
-      .mm-header, .filter-bar, .task-list-toolbar, .btn-new-task, .modal-overlay {
-        display: none !important;
-      }
       body {
         background: #fff !important;
         color: #000 !important;
       }
-      .kpi-card, .task-card, .meeting-card {
-        border: 1px solid #ccc !important;
-        background: #fff !important;
-        color: #000 !important;
+      .app-header, .filter-panel, .nav-tabs, .btn-jupiter, .btn-jupiter-outline, .modal-overlay {
+        display: none !important;
       }
+      .task-card, .chart-panel, .reuniao-card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .brand-title { font-size: 1.05rem; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .header-actions { width: 100%; justify-content: space-between; }
     }
   </style>
 </head>
 <body>
 
   <!-- Top Header -->
-  <header class="mm-header">
-    <div class="mm-header-top">
-      <div class="mm-brand">
-        <div class="mm-brand-title-row">
-          <span class="mm-logo-icon" aria-hidden="true">🧠</span>
-          <h1 class="mm-title">Master Mind</h1>
-          <span class="mm-badge-company">Transnova</span>
+  <header class="app-header">
+    <div class="shell-container header-inner">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">🧠</div>
+        <div>
+          <h1 class="brand-title">
+            Master Mind <span class="brand-sub">Transnova</span>
+          </h1>
+          <p class="brand-slogan">Onde as ideias fluem e o trabalho acontece</p>
         </div>
-        <p class="mm-slogan">Onde as ideias fluem e o trabalho acontece</p>
       </div>
-
-      <div class="mm-header-actions">
-        <button id="syncIndicator" class="sync-status synced" title="Clique para sincronizar agora">
-          <span class="sync-dot"></span>
-          <span id="syncText">Sincronizado ✓</span>
+      <div class="header-actions">
+        <div id="syncIndicator" class="sync-status" title="Status da sincronização Google Sheets" onclick="window.masterMind.loadFromSheet()">
+          <span>Sincronizado ✓</span>
+        </div>
+        <button class="btn-jupiter" onclick="window.masterMind.openNewTask()">
+          <span style="font-size: 1.1rem; line-height: 1;">+</span> Nova Tarefa
         </button>
-        <button class="btn-new-task" id="btnOpenNewTask">+ Nova Tarefa</button>
       </div>
     </div>
-
-    <!-- Navigation Tabs -->
-    <nav class="mm-tabs-nav" aria-label="Navegação do PMO">
-      <button class="tab-btn active" data-tab="tab-inicio">Início</button>
-      <button class="tab-btn" data-tab="tab-tarefas">Tarefas</button>
-      <button class="tab-btn" data-tab="tab-kanban">Kanban</button>
-      <button class="tab-btn" data-tab="tab-reunioes">Reuniões</button>
-    </nav>
   </header>
 
-  <!-- TAB 1: INÍCIO -->
-  <section id="tab-inicio" class="tab-content active">
-    <!-- Filtros do Painel -->
-    <div class="filter-bar">
+  <main class="shell-container" style="padding-top: 1rem;">
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" aria-label="Navegação do PMO">
+      <button class="nav-tab-btn active" data-tab="inicio" onclick="window.masterMind.switchTab('inicio')">
+        📊 Início
+      </button>
+      <button class="nav-tab-btn" data-tab="tarefas" onclick="window.masterMind.switchTab('tarefas')">
+        📝 Tarefas
+      </button>
+      <button class="nav-tab-btn" data-tab="kanban" onclick="window.masterMind.switchTab('kanban')">
+        📌 Kanban
+      </button>
+      <button class="nav-tab-btn" data-tab="reunioes" onclick="window.masterMind.switchTab('reunioes')">
+        🤝 Reuniões
+      </button>
+    </nav>
+
+    <!-- Filters Section (Exibido nas abas Início e Tarefas) -->
+    <section id="taskFilterPanel" class="filter-panel" aria-label="Filtros de pesquisa">
       <div class="filter-item">
         <label for="filterStatus">Status</label>
-        <select id="filterStatus" class="form-control">
+        <select id="filterStatus" onchange="window.masterMind.applyFilters()">
           <option value="">Todos</option>
           <option value="Ideia">Ideia</option>
           <option value="A Fazer">A Fazer</option>
@@ -1041,13 +1049,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
       <div class="filter-item">
         <label for="filterDept">Departamento</label>
-        <select id="filterDept" class="form-control">
-          <option value="">Todos os Departamentos</option>
+        <select id="filterDept" onchange="window.masterMind.applyFilters()">
+          <option value="">Todos</option>
+          <!-- Dynamic populated -->
         </select>
       </div>
       <div class="filter-item">
         <label for="filterPrio">Prioridade</label>
-        <select id="filterPrio" class="form-control">
+        <select id="filterPrio" onchange="window.masterMind.applyFilters()">
           <option value="">Todas</option>
           <option value="Alta">Alta</option>
           <option value="Média">Média</option>
@@ -1056,1270 +1065,1555 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
       <div class="filter-item">
         <label for="filterDono">Dono / Responsável</label>
-        <select id="filterDono" class="form-control">
+        <select id="filterDono" onchange="window.masterMind.applyFilters()">
           <option value="">Todos</option>
-          <option value="Renato">Renato</option>
-          <option value="Equipe">Equipe</option>
-          <option value="Terceiro">Terceiro</option>
+          <!-- Dynamic populated -->
         </select>
       </div>
-      <button class="btn-secondary" id="btnResetFilters" style="align-self: flex-end; height: 34px;">Limpar Filtros</button>
-    </div>
+      <div class="filter-item" style="flex: 0 0 auto;">
+        <button class="btn-jupiter-outline" onclick="window.masterMind.limparFiltros()">
+          🧹 Limpar Filtros
+        </button>
+      </div>
+    </section>
 
-    <!-- KPIs -->
-    <div class="kpi-row" id="kpiContainer">
-      <div class="kpi-card green">
-        <span class="kpi-title">Conclusão</span>
-        <span class="kpi-value" id="kpiTaxaConclusao">0%</span>
-        <span class="kpi-sub" id="kpiConclusaoSub">0 de 0 tarefas</span>
+    <!-- KPIs Row (Exibido exclusivamente na aba Início) -->
+    <section id="kpiRow" class="kpi-row" aria-label="Indicadores Chave de Performance">
+      <div class="jupiter-kpi accent">
+        <div class="val" id="kpiConclusao">0%</div>
+        <div class="title">Conclusão</div>
+        <div class="sub" id="kpiConclusaoSub">0 de 0 tarefas</div>
       </div>
-      <div class="kpi-card blue">
-        <span class="kpi-title">Em Aberto</span>
-        <span class="kpi-value" id="kpiAbertos">0</span>
-        <span class="kpi-sub">A Fazer + Ideia</span>
+      <div class="jupiter-kpi amber">
+        <div class="val" id="kpiAberto">0</div>
+        <div class="title">Em Aberto</div>
+        <div class="sub">A Fazer + Ideia</div>
       </div>
-      <div class="kpi-card yellow">
-        <span class="kpi-title">Em Andamento</span>
-        <span class="kpi-value" id="kpiAndamento">0</span>
-        <span class="kpi-sub">Execução ativa</span>
+      <div class="jupiter-kpi glow">
+        <div class="val" id="kpiAndamento">0</div>
+        <div class="title">Em Andamento</div>
+        <div class="sub">Execução ativa</div>
       </div>
-      <div class="kpi-card">
-        <span class="kpi-title">Vence em 7D</span>
-        <span class="kpi-value" id="kpiVence7D">0</span>
-        <span class="kpi-sub">Atenção requerida</span>
+      <div class="jupiter-kpi amber">
+        <div class="val" id="kpi7D">0</div>
+        <div class="title">Vence em 7D</div>
+        <div class="sub">Atenção requerida</div>
       </div>
-      <div class="kpi-card red">
-        <span class="kpi-title">Vencidas</span>
-        <span class="kpi-value" id="kpiVencidas">0</span>
-        <span class="kpi-sub">Prazo expirado</span>
+      <div class="jupiter-kpi danger">
+        <div class="val" id="kpiVencidas">0</div>
+        <div class="title">Vencidas</div>
+        <div class="sub">Prazo expirado</div>
       </div>
-      <div class="kpi-card green">
-        <span class="kpi-title">Concluídos</span>
-        <span class="kpi-value" id="kpiConcluidos">0</span>
-        <span class="kpi-sub">Finalizadas</span>
+      <div class="jupiter-kpi success">
+        <div class="val" id="kpiConcluidos">0</div>
+        <div class="title">Concluídos</div>
+        <div class="sub">Finalizadas</div>
       </div>
-      <div class="kpi-card">
-        <span class="kpi-title">Total</span>
-        <span class="kpi-value" id="kpiTotal">0</span>
-        <span class="kpi-sub">Todas cadastradas</span>
+      <div class="jupiter-kpi">
+        <div class="val" id="kpiTotal">0</div>
+        <div class="title">Total</div>
+        <div class="sub">Todas cadastradas</div>
       </div>
-      <div class="kpi-card" style="opacity: 0.85;">
-        <span class="kpi-title">Excluídos</span>
-        <span class="kpi-value" id="kpiExcluidos">0</span>
-        <span class="kpi-sub">Descartadas</span>
+      <div class="jupiter-kpi">
+        <div class="val" id="kpiExcluidos">0</div>
+        <div class="title">Excluídos</div>
+        <div class="sub">Descartadas</div>
       </div>
-    </div>
+    </section>
 
-    <!-- Gráficos -->
-    <div class="charts-grid">
-      <!-- 1. Distribuição por Status -->
-      <div class="chart-panel">
-        <div class="chart-panel-title">
-          <span>Distribuição por Status</span>
-          <span class="badge-count" id="c1-total"></span>
+    <!-- TAB 1: INÍCIO (Charts + Top Pending Tasks) -->
+    <section id="viewInicio" class="tab-content">
+      <div class="charts-grid">
+        <!-- Chart 1: Distribuição por Status -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <h3 class="chart-title">📊 Distribuição por Status</h3>
+          </div>
+          <div class="chart-render-area" id="chartStatusArea"></div>
         </div>
-        <div class="chart-wrapper chart-box" id="chartStatus"></div>
-      </div>
 
-      <!-- 2. Por Departamento -->
-      <div class="chart-panel">
-        <div class="chart-panel-title">
-          <span>Volume por Departamento</span>
-          <span class="badge-count" id="c2-total"></span>
+        <!-- Chart 2: Volume por Departamento -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <h3 class="chart-title">🏢 Volume por Departamento</h3>
+          </div>
+          <div class="chart-render-area" id="chartDeptArea"></div>
         </div>
-        <div class="chart-wrapper chart-box" id="chartDept"></div>
-      </div>
 
-      <!-- 3. Por Prioridade -->
-      <div class="chart-panel">
-        <div class="chart-panel-title">
-          <span>Distribuição por Prioridade</span>
-          <span class="badge-count" id="c3-total"></span>
+        <!-- Chart 3: Distribuição por Prioridade -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <h3 class="chart-title">⚡ Distribuição por Prioridade</h3>
+          </div>
+          <div class="chart-render-area" id="chartPrioArea"></div>
         </div>
-        <div class="chart-wrapper chart-box" id="chartPrio"></div>
-      </div>
 
-      <!-- 4. Carga por Dono -->
-      <div class="chart-panel">
-        <div class="chart-panel-title">
-          <span>Carga de Trabalho por Dono</span>
-          <span class="badge-count" id="c4-total"></span>
+        <!-- Chart 4: Carga de Trabalho por Dono -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <h3 class="chart-title">👤 Carga de Trabalho por Dono</h3>
+          </div>
+          <div class="chart-render-area" id="chartDonoArea"></div>
         </div>
-        <div class="chart-wrapper chart-box" id="chartDono"></div>
-      </div>
 
-      <!-- 5. Abertos x Concluídos -->
-      <div class="chart-panel">
-        <div class="chart-panel-title">
-          <span>Abertos vs Concluídos</span>
-          <span class="badge-count" id="c5-total"></span>
+        <!-- Chart 5: Abertos vs Concluídos -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <h3 class="chart-title">⚖️ Abertos vs Concluídos</h3>
+          </div>
+          <div class="chart-render-area" id="chartAbertosConcluidosArea"></div>
         </div>
-        <div class="chart-wrapper chart-box" id="chartAbertosConcluidos"></div>
-      </div>
 
-      <!-- 6. Tendência por Origem -->
-      <div class="chart-panel">
-        <div class="chart-panel-title">
-          <span>Origem das Demandas</span>
-          <span class="badge-count" id="c6-total"></span>
+        <!-- Chart 6: Origem das Demandas -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <h3 class="chart-title">📍 Origem das Demandas</h3>
+          </div>
+          <div class="chart-render-area" id="chartOrigemArea"></div>
         </div>
-        <div class="chart-wrapper chart-box" id="chartOrigem"></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TAB 2: TAREFAS -->
-  <section id="tab-tarefas" class="tab-content">
-    <div class="task-list-toolbar">
-      <div class="search-box">
-        <input type="text" id="taskListSearch" class="form-control" placeholder="Buscar por tarefa, código, dono ou observação...">
+    <!-- TAB 2: TAREFAS (Cards List) -->
+    <section id="viewTarefas" class="tab-content" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <span id="counterTarefas" style="font-size: 0.85rem; color: var(--cream); font-weight: 600;">
+          Exibindo 0 tarefas
+        </span>
       </div>
-      <div style="display:flex; gap:0.5rem; align-items:center;">
-        <span id="taskCountSummary" style="font-size:0.85rem; color:var(--text-muted);">Exibindo 0 tarefas</span>
+      <div class="task-list-view" id="taskListContainer">
+        <!-- Rendered by JS -->
       </div>
-    </div>
+    </section>
 
-    <div class="task-cards-grid" id="taskListContainer">
-      <!-- Cards de tarefas injetados via JS -->
-    </div>
-  </section>
-
-  <!-- TAB 3: KANBAN -->
-  <section id="tab-kanban" class="tab-content">
-    <div class="kanban-board">
-      <div class="kanban-column" data-status="Ideia">
-        <div class="kanban-column-header">
-          <div class="kanban-col-title">💡 Ideia</div>
-          <span class="kanban-counter" id="kcnt-ideia">0</span>
+    <!-- TAB 3: KANBAN -->
+    <section id="viewKanban" class="tab-content" style="display: none;">
+      <div class="kanban-board">
+        <!-- Column 1: Ideia -->
+        <div class="kanban-col">
+          <div class="kanban-col-header" style="border-top: 3px solid #D9A066;">
+            <span>💡 Ideia</span>
+            <span class="kanban-col-count" id="countColIdeia">0</span>
+          </div>
+          <div class="kanban-col-body" id="colIdeia"></div>
         </div>
-        <div class="kanban-cards-container" id="kcol-Ideia"></div>
-      </div>
-
-      <div class="kanban-column" data-status="A Fazer">
-        <div class="kanban-column-header">
-          <div class="kanban-col-title">📋 A Fazer</div>
-          <span class="kanban-counter" id="kcnt-afazer">0</span>
+        <!-- Column 2: A Fazer -->
+        <div class="kanban-col">
+          <div class="kanban-col-header" style="border-top: 3px solid #3D7CA6;">
+            <span>📋 A Fazer</span>
+            <span class="kanban-col-count" id="countColAFazer">0</span>
+          </div>
+          <div class="kanban-col-body" id="colAFazer"></div>
         </div>
-        <div class="kanban-cards-container" id="kcol-A Fazer"></div>
-      </div>
-
-      <div class="kanban-column" data-status="Em Andamento">
-        <div class="kanban-column-header">
-          <div class="kanban-col-title">⚡ Em Andamento</div>
-          <span class="kanban-counter" id="kcnt-andamento">0</span>
+        <!-- Column 3: Em Andamento -->
+        <div class="kanban-col">
+          <div class="kanban-col-header" style="border-top: 3px solid #E87D48;">
+            <span>⚡ Em Andamento</span>
+            <span class="kanban-col-count" id="countColAndamento">0</span>
+          </div>
+          <div class="kanban-col-body" id="colAndamento"></div>
         </div>
-        <div class="kanban-cards-container" id="kcol-Em Andamento"></div>
-      </div>
-
-      <div class="kanban-column" data-status="Concluídos">
-        <div class="kanban-column-header">
-          <div class="kanban-col-title">✅ Concluídos</div>
-          <span class="kanban-counter" id="kcnt-concluidos">0</span>
+        <!-- Column 4: Concluídos -->
+        <div class="kanban-col">
+          <div class="kanban-col-header" style="border-top: 3px solid #7FBF8F;">
+            <span>✅ Concluídos</span>
+            <span class="kanban-col-count" id="countColConcluidos">0</span>
+          </div>
+          <div class="kanban-col-body" id="colConcluidos"></div>
         </div>
-        <div class="kanban-cards-container" id="kcol-Concluídos"></div>
-      </div>
-
-      <div class="kanban-column" data-status="Excluídos">
-        <div class="kanban-column-header">
-          <div class="kanban-col-title">🗑️ Excluídos</div>
-          <span class="kanban-counter" id="kcnt-excluidos">0</span>
+        <!-- Column 5: Excluídos -->
+        <div class="kanban-col">
+          <div class="kanban-col-header" style="border-top: 3px solid #6B4B3D;">
+            <span>🗑️ Excluídos</span>
+            <span class="kanban-col-count" id="countColExcluidos">0</span>
+          </div>
+          <div class="kanban-col-body" id="colExcluidos"></div>
         </div>
-        <div class="kanban-cards-container" id="kcol-Excluídos"></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TAB 4: REUNIÕES -->
-  <section id="tab-reunioes" class="tab-content">
-    <div class="meetings-header">
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" data-view="dia">Por Dia</button>
-        <button class="sub-tab-btn" data-view="tema">Por Tema</button>
-        <button class="sub-tab-btn" data-view="principais">Principais</button>
+    <!-- TAB 4: REUNIÕES -->
+    <section id="viewReunioes" class="tab-content" style="display: none;">
+      <div class="reunioes-toolbar">
+        <div class="view-pills" role="tablist" aria-label="Filtros de reuniões">
+          <button class="view-pill active" onclick="window.masterMind.filterReunioesView('todos', this)">Principais</button>
+          <button class="view-pill" onclick="window.masterMind.filterReunioesView('dia', this)">Por Dia</button>
+          <button class="view-pill" onclick="window.masterMind.filterReunioesView('semana', this)">Por Semana</button>
+          <button class="view-pill" onclick="window.masterMind.filterReunioesView('tema', this)">Por Tema</button>
+        </div>
+        <button class="btn-jupiter" onclick="window.masterMind.openNovaReuniao()">
+          <span style="font-size: 1.1rem; line-height: 1;">+</span> Nova Reunião
+        </button>
       </div>
 
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <select id="filterReuniaoTipo" class="form-control" style="width: auto;">
-          <option value="">Todos os Tipos</option>
-          <option value="Diretoria">Diretoria</option>
-          <option value="Operacional">Operacional</option>
-          <option value="Comercial">Comercial</option>
-          <option value="GGC">GGC</option>
-          <option value="Qualidade">Qualidade</option>
-        </select>
-        <button class="btn-new-task" id="btnNovaReuniao">+ Nova Reunião</button>
+      <div id="reunioesContainer">
+        <!-- Rendered by JS -->
       </div>
-    </div>
+    </section>
+  </main>
 
-    <div class="meeting-cards-grid" id="reunioesContainer">
-      <!-- Reuniões renderizadas aqui -->
-    </div>
-  </section>
-
-  <!-- MODAL: TAREFA (Criar / Editar) -->
-  <div class="modal-overlay" id="taskModal">
-    <div class="modal-box">
+  <!-- MODAL: DETALHES / NOVA TAREFA -->
+  <div id="taskModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTaskTitle">
+    <div class="modal-dialog">
       <div class="modal-header">
-        <h3 class="modal-title" id="taskModalTitle">Detalhes da Tarefa</h3>
-        <button class="btn-close" id="btnCloseTaskModal">&times;</button>
+        <h3 id="modalTaskTitle">Detalhes da Tarefa</h3>
+        <button class="modal-close-btn" onclick="window.masterMind.closeTaskModal()" aria-label="Fechar">✕</button>
       </div>
-      <form id="taskForm" class="modal-body">
-        <input type="hidden" id="formTaskId">
+      <form id="taskForm" onsubmit="window.masterMind.saveTask(event)">
+        <div class="modal-body">
+          <input type="hidden" id="taskModalId">
+          <div class="form-group">
+            <label for="taskModalDesc">Descrição da Tarefa *</label>
+            <textarea id="taskModalDesc" class="form-control" rows="2" required placeholder="O que precisa ser feito?"></textarea>
+          </div>
 
-        <div class="form-group">
-          <label for="formTaskDesc">Descrição da Tarefa *</label>
-          <textarea id="formTaskDesc" class="form-control" rows="2" required placeholder="Ex.: Homologação de novo software de telemetria"></textarea>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="taskModalDept">Departamento</label>
+              <select id="taskModalDept" class="form-control">
+                <option value="Dpto Projetos">Dpto Projetos</option>
+                <option value="Dpto GGC">Dpto GGC</option>
+                <option value="Dpto Qualidade">Dpto Qualidade</option>
+                <option value="Dpto Frota">Dpto Frota</option>
+                <option value="Dpto Operacional">Dpto Operacional</option>
+                <option value="Dpto Comercial">Dpto Comercial</option>
+                <option value="Dpto Diretoria">Dpto Diretoria</option>
+                <option value="Dpto Compras">Dpto Compras</option>
+                <option value="Dpto Faturamento">Dpto Faturamento</option>
+                <option value="Dpto Financeiro">Dpto Financeiro</option>
+                <option value="Dpto Atendimento">Dpto Atendimento</option>
+                <option value="Dpto Transportes">Dpto Transportes</option>
+                <option value="Pessoal">Pessoal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="taskModalPrio">Prioridade</label>
+              <select id="taskModalPrio" class="form-control">
+                <option value="Alta">Alta</option>
+                <option value="Média">Média</option>
+                <option value="Baixa">Baixa</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="taskModalStatus">Status</label>
+              <select id="taskModalStatus" class="form-control">
+                <option value="Ideia">Ideia</option>
+                <option value="A Fazer">A Fazer</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Concluídos">Concluídos</option>
+                <option value="Excluídos">Excluídos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="taskModalDono">Dono / Responsável</label>
+              <input type="text" id="taskModalDono" class="form-control" placeholder="Ex: Renato, Juvenal, Kelly">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="taskModalPrazo">Prazo (Vencimento)</label>
+              <input type="date" id="taskModalPrazo" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="taskModalOrigem">Origem</label>
+              <select id="taskModalOrigem" class="form-control">
+                <option value="Reunião">Reunião</option>
+                <option value="E-mail">E-mail</option>
+                <option value="Caderno">Caderno</option>
+                <option value="Decisão">Decisão</option>
+                <option value="Projeto">Projeto</option>
+                <option value="Ideia">Ideia</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="taskModalObs">Observações / Plano de Ação</label>
+            <textarea id="taskModalObs" class="form-control" rows="3" placeholder="Contexto adicional, metas intermediárias ou pendências..."></textarea>
+          </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="formTaskDept">Departamento</label>
-            <select id="formTaskDept" class="form-control" required></select>
+        <div class="modal-footer">
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button type="button" class="btn-jupiter-outline" id="btnQuickStart" onclick="window.masterMind.quickStatus('Em Andamento')" title="Mudar para Em Andamento">⚡ Iniciar</button>
+            <button type="button" class="btn-jupiter-outline" id="btnQuickDone" onclick="window.masterMind.quickStatus('Concluídos')" style="border-color: rgba(127,191,143,0.5); color: #7FBF8F;" title="Marcar como Concluído">✅ Concluir</button>
+            <button type="button" class="btn-jupiter-outline" id="btnQuickDelete" onclick="window.masterMind.quickStatus('Excluídos')" style="border-color: rgba(229,105,95,0.5); color: #E5695F;" title="Mover para Excluídos">🗑️ Excluir</button>
           </div>
-          <div class="form-group">
-            <label for="formTaskPrio">Prioridade</label>
-            <select id="formTaskPrio" class="form-control" required>
-              <option value="Alta">Alta</option>
-              <option value="Média">Média</option>
-              <option value="Baixa">Baixa</option>
-            </select>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closeTaskModal()">Fechar</button>
+            <button type="submit" class="btn-jupiter">Salvar</button>
           </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="formTaskStatus">Status</label>
-            <select id="formTaskStatus" class="form-control" required>
-              <option value="Ideia">Ideia</option>
-              <option value="A Fazer">A Fazer</option>
-              <option value="Em Andamento">Em Andamento</option>
-              <option value="Concluídos">Concluídos</option>
-              <option value="Excluídos">Excluídos</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="formTaskDono">Dono / Responsável</label>
-            <select id="formTaskDono" class="form-control" required>
-              <option value="Renato">Renato</option>
-              <option value="Equipe">Equipe</option>
-              <option value="Terceiro">Terceiro</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="formTaskPrazo">Prazo (Vencimento)</label>
-            <input type="date" id="formTaskPrazo" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="formTaskOrigem">Origem</label>
-            <select id="formTaskOrigem" class="form-control" required>
-              <option value="Reunião">Reunião</option>
-              <option value="E-mail">E-mail</option>
-              <option value="Caderno">Caderno</option>
-              <option value="Decisão">Decisão</option>
-              <option value="Projeto">Projeto</option>
-              <option value="Ideia">Ideia</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="formTaskObs">Observações / Plano de Ação</label>
-          <textarea id="formTaskObs" class="form-control" rows="2" placeholder="Informações adicionais, links ou especificações técnicas"></textarea>
         </div>
       </form>
-
-      <div class="modal-footer">
-        <div style="display:flex; gap:0.4rem;" id="taskModalQuickActions">
-          <button type="button" class="btn-secondary btn-action-start" id="btnQuickStart">Iniciar</button>
-          <button type="button" class="btn-secondary btn-action-complete" id="btnQuickDone">Concluir</button>
-          <button type="button" class="btn-secondary btn-action-delete" id="btnQuickDelete">Excluir</button>
-        </div>
-        <div style="display:flex; gap:0.5rem;">
-          <button type="button" class="btn-secondary" id="btnCancelTask">Fechar</button>
-          <button type="submit" form="taskForm" class="btn-new-task" id="btnSubmitTask">Salvar</button>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- MODAL: REUNIÃO -->
-  <div class="modal-overlay" id="reuniaoModal">
-    <div class="modal-box">
+  <!-- MODAL: NOVA REUNIÃO -->
+  <div id="reuniaoModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalReuniaoTitle">
+    <div class="modal-dialog">
       <div class="modal-header">
-        <h3 class="modal-title" id="reuniaoModalTitle">Nova Reunião Estratégica</h3>
-        <button class="btn-close" id="btnCloseReuniaoModal">&times;</button>
+        <h3 id="modalReuniaoTitle">Nova Reunião Estratégica</h3>
+        <button class="modal-close-btn" onclick="window.masterMind.closeReuniaoModal()" aria-label="Fechar">✕</button>
       </div>
-      <form id="reuniaoForm" class="modal-body">
-        <input type="hidden" id="formReuniaoId">
-
-        <div class="form-group">
-          <label for="formReuniaoTitulo">Título da Reunião *</label>
-          <input type="text" id="formReuniaoTitulo" class="form-control" required placeholder="Ex.: Alinhamento de Metas de Frota e Qualidade">
-        </div>
-
-        <div class="form-row">
+      <form id="reuniaoForm" onsubmit="window.masterMind.saveReuniao(event)">
+        <div class="modal-body">
           <div class="form-group">
-            <label for="formReuniaoTipo">Tipo</label>
-            <select id="formReuniaoTipoInput" class="form-control" required>
-              <option value="Diretoria">Diretoria</option>
-              <option value="Operacional">Operacional</option>
-              <option value="Comercial">Comercial</option>
-              <option value="GGC">GGC</option>
-              <option value="Qualidade">Qualidade</option>
-            </select>
+            <label for="reuniaoTitulo">Título da Reunião *</label>
+            <input type="text" id="reuniaoTitulo" class="form-control" required placeholder="Ex: Alinhamento Operacional Semanal">
           </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reuniaoTipo">Tipo / Tema</label>
+              <select id="reuniaoTipo" class="form-control">
+                <option value="Projetos">Projetos</option>
+                <option value="Estratégica">Estratégica</option>
+                <option value="Operacional">Operacional</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Diretoria">Diretoria</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="reuniaoData">Data</label>
+              <input type="date" id="reuniaoData" class="form-control" required>
+            </div>
+          </div>
+
           <div class="form-group">
-            <label for="formReuniaoData">Data</label>
-            <input type="date" id="formReuniaoData" class="form-control" required>
+            <label for="reuniaoDept">Departamento(s) Participante(s)</label>
+            <input type="text" id="reuniaoDept" class="form-control" placeholder="Ex: Dpto Projetos, Dpto Operacional, Diretoria">
+          </div>
+
+          <div class="form-group">
+            <label for="reuniaoParticipantes">Participantes (Pessoas)</label>
+            <input type="text" id="reuniaoParticipantes" class="form-control" placeholder="Ex: Renato Rodrigues, Kelly, Juvenal">
+          </div>
+
+          <div class="form-group">
+            <label for="reuniaoResumo">Resumo / Pauta</label>
+            <textarea id="reuniaoResumo" class="form-control" rows="3" placeholder="Principais tópicos discutidos, decisões e alinhamentos..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="reuniaoLink">Link da Ata (Google Docs)</label>
+            <input type="url" id="reuniaoLink" class="form-control" placeholder="https://docs.google.com/document/d/...">
+          </div>
+
+          <div class="form-group">
+            <label for="reuniaoPlano">Plano de Ação (1 item por linha: Ação | Dono | Prazo)</label>
+            <textarea id="reuniaoPlano" class="form-control" rows="4" placeholder="Ex: Ajustar portas do galpão | Juvenal | 20/10/2026"></textarea>
+            <small style="color: var(--text-muted); font-size: 0.72rem;">Os itens inseridos poderão gerar tarefas automáticas no PMO.</small>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="formReuniaoParticipantes">Participantes</label>
-          <input type="text" id="formReuniaoParticipantes" class="form-control" placeholder="Renato, Coordenação Frota, Gerente Comercial...">
-        </div>
-
-        <div class="form-group">
-          <label for="formReuniaoResumo">Resumo / Pauta</label>
-          <textarea id="formReuniaoResumo" class="form-control" rows="2" placeholder="Principais deliberações e contexto..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="formReuniaoAta">Link da Ata (Google Docs)</label>
-          <input type="url" id="formReuniaoAta" class="form-control" placeholder="https://docs.google.com/document/d/...">
-        </div>
-
-        <div class="form-group">
-          <label for="formReuniaoPlano">Plano de Ação (1 item por linha para gerar tarefas)</label>
-          <textarea id="formReuniaoPlano" class="form-control" rows="3" placeholder="Revisar escala de motoristas&#10;Implementar checklist de manutenção&#10;Auditar rotas pesadas"></textarea>
+        <div class="modal-footer" style="justify-content: flex-end;">
+          <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closeReuniaoModal()">Cancelar</button>
+          <button type="submit" class="btn-jupiter">Salvar Reunião</button>
         </div>
       </form>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" id="btnCancelReuniao">Cancelar</button>
-        <button type="submit" form="reuniaoForm" class="btn-new-task">Salvar Reunião</button>
-      </div>
     </div>
   </div>
 
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
+  <!-- MODAL: SELEÇÃO SELETIVA DE PMOS DO PLANO DE AÇÃO -->
+  <div id="pmoSelectModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalPmoSelectTitle">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 id="modalPmoSelectTitle">⚡ Selecionar Tarefas do Plano de Ação</h3>
+        <button class="modal-close-btn" onclick="window.masterMind.closePmoSelectModal()" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin: 0; font-size: 0.84rem; color: var(--cream); line-height: 1.45;">
+          Escolha individualmente quais itens serão transformados em tarefa no Kanban. Os itens <strong>não marcados</strong> NÃO viram tarefa ativa e permanecerão registrados como <strong>Excluídos</strong>.
+        </p>
+        <div id="pmoReuniaoContext" style="font-size: 0.8rem; color: var(--amber); font-weight: 600; background: rgba(28, 37, 65, 0.6); padding: 0.5rem 0.8rem; border-radius: 6px; border: 1px solid rgba(90, 125, 154, 0.3);"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; font-size: 0.78rem;">
+          <span id="pmoSelectionCounter" style="color: var(--text-muted); font-weight: 600;">0 de 0 selecionados</span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn-jupiter-outline" style="font-size: 0.72rem; padding: 0.25rem 0.55rem;" onclick="window.masterMind.toggleAllPmo(true)">Marcar Todos</button>
+            <button type="button" class="btn-jupiter-outline" style="font-size: 0.72rem; padding: 0.25rem 0.55rem;" onclick="window.masterMind.toggleAllPmo(false)">Desmarcar Todos</button>
+          </div>
+        </div>
+        <div id="pmoActionList" class="pmo-select-list">
+          <!-- Gerado dinamicamente -->
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: flex-end; gap: 0.65rem;">
+        <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closePmoSelectModal()">Cancelar</button>
+        <button type="button" class="btn-jupiter" onclick="window.masterMind.confirmPmoSelection()">Adicionar selecionados</button>
+      </div>
+    </div>
+  </div>
 
   <!-- SCRIPT -->
   <script>
-    /**
-     * MASTER MIND — TRANSNOVA TRANSPORTES E LOGÍSTICA
-     * Sincronização Google Sheets (Google Apps Script) + Offline Fallback
-     */
+    (function () {
+      const SYNC_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
+      const STORAGE_TASKS_KEY = 'masterMind_tasks_jupiter';
+      const STORAGE_REUNIOES_KEY = 'masterMind_reunioes_jupiter';
 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
+      // Fallback tasks
+      const DEFAULT_TASKS = [
+        { id: "001", tarefa: "Definir novo layout de armazenagem do galpão (contrato Nestlé)", dept: "Dpto Projetos", prio: "Alta", prazo: "2026-10-15", status: "Em Andamento", dono: "Renato", origem: "Reunião", obs: "Capacidade para 60 pallets." },
+        { id: "002", tarefa: "Demolir o muro mole e contratar caçamba de entulho", dept: "Dpto Operacional", prio: "Alta", prazo: "2026-10-30", status: "A Fazer", dono: "Juvenal", origem: "Reunião", obs: "Desocupar área externa do pátio." },
+        { id: "003", tarefa: "Revisão e manutenção preventiva dos semirreboques", dept: "Dpto Frota", prio: "Alta", prazo: "2026-10-18", status: "Em Andamento", dono: "Equipe", origem: "Projeto", obs: "Garantir checklist mecânico." },
+        { id: "004", tarefa: "Auditoria interna dos padrões de segurança de transporte", dept: "Dpto Qualidade", prio: "Média", prazo: "2026-10-25", status: "A Fazer", dono: "Kelly", origem: "Decisão", obs: "Normas ISO e monitoramento." },
+        { id: "005", tarefa: "Proposta comercial de ampliação de rotas BNZ", dept: "Dpto Comercial", prio: "Média", prazo: "2026-11-05", status: "Ideia", dono: "Renato", origem: "E-mail", obs: "Novos fluxos interestaduais." },
+        { id: "006", tarefa: "Fechar buracos da lateral externa e pintura geral", dept: "Dpto Operacional", prio: "Média", prazo: "2026-10-15", status: "A Fazer", dono: "Juvenal", origem: "Reunião", obs: "Insumos já disponíveis no estoque." },
+        { id: "007", tarefa: "Relatório de consolidação do fluxo de caixa e combustíveis", dept: "Dpto Financeiro", prio: "Alta", prazo: "2026-10-12", status: "Concluídos", dono: "Fabiana", origem: "Decisão", obs: "Consolidado e enviado à Diretoria." },
+        { id: "008", tarefa: "Estudo de viabilidade de sistema de telemetria em tempo real", dept: "Dpto GGC", prio: "Baixa", prazo: "", status: "Ideia", dono: "Renato", origem: "Ideia", obs: "Avaliar fornecedores homologados." },
+        { id: "009", tarefa: "Alinhar escala de motoristas para feriado prolongado", dept: "Dpto Transportes", prio: "Média", prazo: "2026-10-09", status: "Concluídos", dono: "Milton", origem: "Caderno", obs: "Todas as escalas confirmadas." },
+        { id: "010", tarefa: "Automatizar faturamento de ordens de frete via planilha", dept: "Dpto Faturamento", prio: "Baixa", prazo: "", status: "A Fazer", dono: "Terceiro", origem: "Projeto", obs: "Integração direta com ERP." }
+      ];
 
-    const DEPARTAMENTOS = [
-      'Dpto Projetos',
-      'Dpto GGC',
-      'Dpto Qualidade',
-      'Dpto Frota',
-      'Dpto Operacional',
-      'Dpto Comercial',
-      'Dpto Diretoria',
-      'Dpto Compras',
-      'Dpto Faturamento',
-      'Dpto Financeiro',
-      'Dpto Atendimento',
-      'Dpto Transportes',
-      'Pessoal'
-    ];
-
-    const DEFAULT_TASKS = [
-      { id: 'TAR-001', tarefa: 'Auditoria dos tacógrafos da frota pesada', dept: 'Dpto Frota', prio: 'Alta', prazo: getRelativeDate(-2), status: 'Em Andamento', dono: 'Renato', origem: 'Reunião', obs: 'Verificar veículos da linha SP-Curitiba' },
-      { id: 'TAR-002', tarefa: 'Implantação dos novos indicadores de GGC', dept: 'Dpto GGC', prio: 'Alta', prazo: getRelativeDate(1), status: 'A Fazer', dono: 'Equipe', origem: 'Projeto', obs: 'Desenhar painel gerencial em reunião de terça' },
-      { id: 'TAR-003', tarefa: 'Revisão das rotas de distribuição urbana', dept: 'Dpto Operacional', prio: 'Média', prazo: getRelativeDate(5), status: 'Em Andamento', dono: 'Renato', origem: 'Decisão', obs: 'Otimizar consumo de diesel' },
-      { id: 'TAR-004', tarefa: 'Treinamento de direção defensiva e qualidade', dept: 'Dpto Qualidade', prio: 'Média', prazo: getRelativeDate(8), status: 'Ideia', dono: 'Equipe', origem: 'Ideia', obs: 'Buscar proposta com fornecedor credenciado' },
-      { id: 'TAR-005', tarefa: 'Renovação da apólice de seguro de carga RCTR-C', dept: 'Dpto Financeiro', prio: 'Alta', prazo: getRelativeDate(0), status: 'Em Andamento', dono: 'Renato', origem: 'E-mail', obs: 'Validade termina no fim do mês' },
-      { id: 'TAR-006', tarefa: 'Homologação de novos pneus com durabilidade estendida', dept: 'Dpto Compras', prio: 'Baixa', prazo: getRelativeDate(14), status: 'A Fazer', dono: 'Terceiro', origem: 'Caderno', obs: 'Testar em 2 carretas' },
-      { id: 'TAR-007', tarefa: 'Integração EDI com cliente automotivo', dept: 'Dpto Projetos', prio: 'Alta', prazo: getRelativeDate(-4), status: 'Concluídos', dono: 'Equipe', origem: 'Projeto', obs: 'Testes de carga finalizados com sucesso' },
-      { id: 'TAR-008', tarefa: 'Apresentação trimestral de resultados para o conselho', dept: 'Dpto Diretoria', prio: 'Alta', prazo: getRelativeDate(3), status: 'A Fazer', dono: 'Renato', origem: 'Reunião', obs: 'Consolidar margem líquida e volume expedido' },
-      { id: 'TAR-009', tarefa: 'Conciliação de comprovantes de entrega digital (POD)', dept: 'Dpto Faturamento', prio: 'Média', prazo: getRelativeDate(6), status: 'Concluídos', dono: 'Equipe', origem: 'Decisão', obs: '100% dos canhotos digitalizados' },
-      { id: 'TAR-010', tarefa: 'Pesquisa de satisfação NPS com embarcadores', dept: 'Dpto Atendimento', prio: 'Baixa', prazo: getRelativeDate(12), status: 'Ideia', dono: 'Terceiro', origem: 'Ideia', obs: 'Enviar formulário via WhatsApp institucional' }
-    ];
-
-    const DEFAULT_REUNIOES = [
-      {
-        id: 'REU-001',
-        titulo: 'Alinhamento Operacional e Eficiência de Frota',
-        tipo: 'Operacional',
-        data: getRelativeDate(-1),
-        participantes: 'Renato, Coordenador de Tráfego, Chefe de Oficina',
-        resumo: 'Avaliação dos índices de paradas corretivas e meta de diesel por km.',
-        ata: 'https://docs.google.com/document/d/exemplonovaata1',
-        plano: 'Revisar checklist preventivo de suspensão\nAjustar calibração de carretas frigoríficas'
-      },
-      {
-        id: 'REU-002',
-        titulo: 'Comitê Executivo e Novos Contratos Logísticos',
-        tipo: 'Diretoria',
-        data: getRelativeDate(2),
-        participantes: 'Diretoria Geral, Renato, Gerência Comercial',
-        resumo: 'Negociação com grande contratante de suprimentos do agronegócio.',
-        ata: 'https://docs.google.com/document/d/exemplonovaata2',
-        plano: 'Dimensionar capacidade de frota dedicada\nSubmeter proposta tarifária revisada'
-      },
-      {
-        id: 'REU-003',
-        titulo: 'Revisão Semanal de Qualidade e Sinistralidade',
-        tipo: 'Qualidade',
-        data: getRelativeDate(-5),
-        participantes: 'Equipe de Qualidade, Renato',
-        resumo: 'Zero sinistros registrados nos últimos 45 dias no trecho sudeste.',
-        ata: '',
-        plano: 'Reconhecer motoristas do programa Destaque Nota 10'
-      }
-    ];
-
-    function getRelativeDate(offsetDays) {
-      const d = new Date();
-      d.setDate(d.getDate() + offsetDays);
-      return d.toISOString().split('T')[0];
-    }
-
-    // App State
-    const state = {
-      tasks: [],
-      reunioes: [],
-      syncStatus: 'synced', // 'synced' | 'offline' | 'syncing'
-      activeTab: 'tab-inicio',
-      filters: {
-        status: '',
-        dept: '',
-        prio: '',
-        dono: '',
-        search: ''
-      },
-      reuniaoView: 'dia',
-      reuniaoTipoFilter: ''
-    };
-
-    // DOM Elements
-    const syncIndicator = document.getElementById('syncIndicator');
-    const syncText = document.getElementById('syncText');
-    const toastContainer = document.getElementById('toastContainer');
-    const filterDept = document.getElementById('filterDept');
-    const formTaskDept = document.getElementById('formTaskDept');
-    const taskModal = document.getElementById('taskModal');
-    const reuniaoModal = document.getElementById('reuniaoModal');
-
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', () => {
-      populateDeptSelects();
-      setupTabs();
-      setupFilters();
-      setupModals();
-      loadInitialData();
-    });
-
-    function populateDeptSelects() {
-      filterDept.innerHTML = '<option value="">Todos os Departamentos</option>';
-      formTaskDept.innerHTML = '';
-      DEPARTAMENTOS.forEach(d => {
-        const opt1 = document.createElement('option');
-        opt1.value = d;
-        opt1.textContent = d;
-        filterDept.appendChild(opt1);
-
-        const opt2 = document.createElement('option');
-        opt2.value = d;
-        opt2.textContent = d;
-        formTaskDept.appendChild(opt2);
-      });
-    }
-
-    function setupTabs() {
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          btn.classList.add('active');
-          const tabId = btn.dataset.tab;
-          document.getElementById(tabId).classList.add('active');
-          state.activeTab = tabId;
-
-          if (tabId === 'tab-inicio') {
-            renderKPIs();
-            renderCharts();
-          } else if (tabId === 'tab-tarefas') {
-            renderList();
-          } else if (tabId === 'tab-kanban') {
-            renderKanban();
-          } else if (tabId === 'tab-reunioes') {
-            renderReunioes();
-          }
-        });
-      });
-
-      document.querySelectorAll('.sub-tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.reuniaoView = btn.dataset.view;
-          renderReunioes();
-        });
-      });
-
-      document.getElementById('filterReuniaoTipo').addEventListener('change', (e) => {
-        state.reuniaoTipoFilter = e.target.value;
-        renderReunioes();
-      });
-
-      syncIndicator.addEventListener('click', () => {
-        showToast('Sincronizando com a planilha...', 'warning');
-        loadFromSheet(true);
-      });
-    }
-
-    function setupFilters() {
-      const update = () => {
-        state.filters.status = document.getElementById('filterStatus').value;
-        state.filters.dept = document.getElementById('filterDept').value;
-        state.filters.prio = document.getElementById('filterPrio').value;
-        state.filters.dono = document.getElementById('filterDono').value;
-        renderAll();
+      // Single real meeting seeded
+      const SEED_REUNIAO = {
+        id: "reuniao-001",
+        titulo: "Planejamento do Galpão",
+        data: "2026-10-07",
+        tipo: "Projetos",
+        dept: "Dpto Projetos, Dpto Operacional, Dpto Diretoria",
+        participantes: "Renato Rodrigues, Kelly, Juvenal",
+        resumo: "Definição do layout do galpão (coworking aberto, sala climatizada para cargas frias de diversos clientes, dormitórios mantidos nos fundos), capacidade de armazenagem fixada em cerca de 60 pallets (50 fixos da BNZ), e a partir de agora todas as cargas passam a ser descarregadas diretamente no Galpão, desocupando a Matriz. Pendências: decidir ocupação das equipes de Atendimento, Monitoramento e Transportes (aguardando Diretoria), marcar data da demolição do muro e entregar lista final de demandas de manutenção.",
+        link: "https://docs.google.com/document/d/1sX2LACQgOY9H3YutePX5LiKRz2qHq7wK_M-fTYDzUdY/edit",
+        plano: [
+          { acao: "Demolir o muro mole e contratar caçamba (Crítica)", dono: "Juvenal + João", prazo: "30/10/2026" },
+          { acao: "Nivelar o contêiner torto e resolver o odor (Alta)", dono: "Juvenal", prazo: "30/10/2026" },
+          { acao: "Trocar as borrachas de vedação do contêiner (Alta)", dono: "Kelly", prazo: "20/10/2026" },
+          { acao: "Levantar os pallets devidos por cliente, ex. Danone (Média)", dono: "Juvenal, Milton e Fabiana", prazo: "30/10/2026" },
+          { acao: "Limpeza semanal do galpão, toda quinta-feira (Média)", dono: "Dona Maria", prazo: "" },
+          { acao: "Fechar os buracos da lateral externa (Média)", dono: "Juvenal", prazo: "15/10/2026" },
+          { acao: "Pintura geral do galpão com insumos do estoque (Média)", dono: "Juvenal", prazo: "23/10/2026" },
+          { acao: "Trocar telhas quebradas e consertar cobertura (Média)", dono: "Juvenal", prazo: "16/10/2026" },
+          { acao: "Consolidar a lista de demandas do galpão (Média)", dono: "Juvenal", prazo: "09/10/2026" },
+          { acao: "Remover a grade de ferro do jardim (Baixa)", dono: "Juvenal + João", prazo: "30/10/2026" }
+        ]
       };
 
-      document.getElementById('filterStatus').addEventListener('change', update);
-      document.getElementById('filterDept').addEventListener('change', update);
-      document.getElementById('filterPrio').addEventListener('change', update);
-      document.getElementById('filterDono').addEventListener('change', update);
+      // State
+      let tasks = [];
+      let reunioes = [];
+      let activeTab = 'inicio';
+      let reunioesFilter = 'todos';
 
-      document.getElementById('btnResetFilters').addEventListener('click', () => {
-        document.getElementById('filterStatus').value = '';
-        document.getElementById('filterDept').value = '';
-        document.getElementById('filterPrio').value = '';
-        document.getElementById('filterDono').value = '';
-        state.filters = { status: '', dept: '', prio: '', dono: '', search: state.filters.search };
-        renderAll();
-        showToast('Filtros redefinidos');
-      });
+      // Clean old localStorage on init as strictly requested
+      localStorage.removeItem('masterMind_reunioes');
 
-      const searchInput = document.getElementById('taskListSearch');
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          state.filters.search = e.target.value.toLowerCase().trim();
-          renderList();
-        });
+      // Helper date formatter
+      function cleanId(id) {
+        if (!id) return '';
+        return String(id).replace(/^\*+/, '').trim();
       }
-    }
 
-    function setupModals() {
-      // Nova Tarefa
-      document.getElementById('btnOpenNewTask').addEventListener('click', openNewTask);
-      document.getElementById('btnCloseTaskModal').addEventListener('click', closeTaskModal);
-      document.getElementById('btnCancelTask').addEventListener('click', closeTaskModal);
-
-      // Nova Reunião
-      document.getElementById('btnNovaReuniao').addEventListener('click', openNovaReuniao);
-      document.getElementById('btnCloseReuniaoModal').addEventListener('click', closeReuniaoModal);
-      document.getElementById('btnCancelReuniao').addEventListener('click', closeReuniaoModal);
-
-      // Formulários
-      document.getElementById('taskForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        saveTask();
-      });
-
-      document.getElementById('reuniaoForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        saveReuniao();
-      });
-
-      // Quick Actions no Modal de Tarefa
-      document.getElementById('btnQuickStart').addEventListener('click', () => {
-        document.getElementById('formTaskStatus').value = 'Em Andamento';
-        saveTask();
-      });
-      document.getElementById('btnQuickDone').addEventListener('click', () => {
-        document.getElementById('formTaskStatus').value = 'Concluídos';
-        saveTask();
-      });
-      document.getElementById('btnQuickDelete').addEventListener('click', () => {
-        if (confirm('Deseja mover esta tarefa para Excluídos?')) {
-          document.getElementById('formTaskStatus').value = 'Excluídos';
-          saveTask();
+      function parseDate(dateStr) {
+        if (!dateStr || dateStr.trim() === '') return null;
+        let d = new Date(dateStr);
+        if (!isNaN(d.getTime())) return d;
+        // Try dd/mm/yyyy
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+          const d2 = new Date(parts[2], parts[1] - 1, parts[0]);
+          if (!isNaN(d2.getTime())) return d2;
         }
-      });
-    }
-
-    /* ===== PERSISTÊNCIA & SINCRONIZAÇÃO ===== */
-
-    function setSyncState(status) {
-      state.syncStatus = status;
-      syncIndicator.className = 'sync-status ' + status;
-      if (status === 'synced') {
-        syncText.textContent = 'Sincronizado ✓';
-      } else if (status === 'offline') {
-        syncText.textContent = 'Salvo localmente (offline)';
-      } else {
-        syncText.textContent = 'Sincronizando...';
-      }
-    }
-
-    async function loadInitialData() {
-      // 1. Tenta carregar do localStorage imediatamente
-      const localTasks = localStorage.getItem('mastermind_tasks');
-      const localReunioes = localStorage.getItem('mastermind_reunioes');
-
-      if (localTasks) {
-        try { state.tasks = JSON.parse(localTasks); } catch (e) { state.tasks = [...DEFAULT_TASKS]; }
-      } else {
-        state.tasks = [...DEFAULT_TASKS];
-        localStorage.setItem('mastermind_tasks', JSON.stringify(state.tasks));
+        return null;
       }
 
-      if (localReunioes) {
-        try { state.reunioes = JSON.parse(localReunioes); } catch (e) { state.reunioes = [...DEFAULT_REUNIOES]; }
-      } else {
-        state.reunioes = [...DEFAULT_REUNIOES];
-        localStorage.setItem('mastermind_reunioes', JSON.stringify(state.reunioes));
+      function formatDateDisplay(d) {
+        if (!d) return '';
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
       }
 
-      renderAll();
+      // Calculate days difference
+      function getDaysDiff(targetDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const t = new Date(targetDate);
+        t.setHours(0, 0, 0, 0);
+        const diffTime = t - today;
+        return Math.round(diffTime / (1000 * 60 * 60 * 24));
+      }
 
-      // 2. Busca na nuvem (Google Apps Script)
-      await loadFromSheet(false);
-    }
+      // Compute badge de vencimento
+      function getBadgeVencHtml(prazoStr, status) {
+        if (status === 'Concluídos' || status === 'Excluídos') {
+          return '';
+        }
+        const parsed = parseDate(prazoStr);
+        if (!parsed) return ''; // Se não tem data válida, NÃO mostra nada!
 
-    async function loadFromSheet(showFeedback = true) {
-      setSyncState('syncing');
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6500);
-
-      try {
-        const resp = await fetch(SCRIPT_URL, {
-          method: 'GET',
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-
-        if (!resp.ok) throw new Error('Status HTTP ' + resp.status);
-        const data = await resp.json();
-
-        if (data && data.success && Array.isArray(data.tasks) && data.tasks.length > 0) {
-          state.tasks = data.tasks;
-          localStorage.setItem('mastermind_tasks', JSON.stringify(state.tasks));
-          setSyncState('synced');
-          if (showFeedback) showToast('Sincronização concluída com sucesso!', 'success');
+        const diff = getDaysDiff(parsed);
+        if (diff < 0) {
+          return `<span class="chip badge-venc-atrasada">⚠️ Atrasada (${Math.abs(diff)}d)</span>`;
+        } else if (diff === 0) {
+          return `<span class="chip badge-venc-hoje">⏰ Vence hoje</span>`;
+        } else if (diff <= 7) {
+          return `<span class="chip badge-venc-breve">⏳ Vence em ${diff}d</span>`;
         } else {
-          setSyncState('synced');
-          if (showFeedback) showToast('Planilha sincronizada', 'success');
+          return `<span class="chip badge-venc-ok">📅 ${formatDateDisplay(parsed)}</span>`;
         }
-      } catch (err) {
-        console.warn('Erro ao conectar com Google Apps Script:', err);
-        setSyncState('offline');
-        if (showFeedback) showToast('Offline: utilizando base de dados local', 'warning');
-      } finally {
-        renderAll();
-      }
-    }
-
-    async function writeToSheet(action, taskData) {
-      setSyncState('syncing');
-      localStorage.setItem('mastermind_tasks', JSON.stringify(state.tasks));
-
-      const payload = {
-        action: action,
-        ...taskData
-      };
-
-      try {
-        // Envio com text/plain para evitar preflight CORS e 302 do Apps Script
-        const response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
-          mode: 'no-cors' // Google Script redirect compat
-        });
-        setSyncState('synced');
-      } catch (err) {
-        console.warn('Gravação remota falhou; gravado em cache local:', err);
-        setSyncState('offline');
-      }
-    }
-
-    /* ===== CRUD TAREFAS ===== */
-
-    function getNextTaskId() {
-      let maxNum = 0;
-      state.tasks.forEach(t => {
-        if (t.id && t.id.startsWith('TAR-')) {
-          const n = parseInt(t.id.replace('TAR-', ''), 10);
-          if (!isNaN(n) && n > maxNum) maxNum = n;
-        }
-      });
-      return 'TAR-' + String(maxNum + 1).padStart(3, '0');
-    }
-
-    function openNewTask() {
-      document.getElementById('taskModalTitle').textContent = 'Nova Tarefa';
-      document.getElementById('formTaskId').value = '';
-      document.getElementById('formTaskDesc').value = '';
-      document.getElementById('formTaskDept').value = DEPARTAMENTOS[0];
-      document.getElementById('formTaskPrio').value = 'Média';
-      document.getElementById('formTaskStatus').value = 'A Fazer';
-      document.getElementById('formTaskDono').value = 'Renato';
-      document.getElementById('formTaskPrazo').value = getRelativeDate(3);
-      document.getElementById('formTaskOrigem').value = 'Decisão';
-      document.getElementById('formTaskObs').value = '';
-      document.getElementById('taskModalQuickActions').style.display = 'none';
-
-      taskModal.classList.add('active');
-    }
-
-    function openTask(id) {
-      const t = state.tasks.find(x => x.id === id);
-      if (!t) return;
-
-      document.getElementById('taskModalTitle').textContent = `Tarefa ${t.id}`;
-      document.getElementById('formTaskId').value = t.id;
-      document.getElementById('formTaskDesc').value = t.tarefa || '';
-      document.getElementById('formTaskDept').value = t.dept || DEPARTAMENTOS[0];
-      document.getElementById('formTaskPrio').value = t.prio || 'Média';
-      document.getElementById('formTaskStatus').value = t.status || 'A Fazer';
-      document.getElementById('formTaskDono').value = t.dono || 'Renato';
-      document.getElementById('formTaskPrazo').value = t.prazo || '';
-      document.getElementById('formTaskOrigem').value = t.origem || 'Reunião';
-      document.getElementById('formTaskObs').value = t.obs || '';
-      document.getElementById('taskModalQuickActions').style.display = 'flex';
-
-      taskModal.classList.add('active');
-    }
-
-    function closeTaskModal() {
-      taskModal.classList.remove('active');
-    }
-
-    function saveTask() {
-      const id = document.getElementById('formTaskId').value;
-      const desc = document.getElementById('formTaskDesc').value.trim();
-      if (!desc) {
-        showToast('Informe a descrição da tarefa', 'error');
-        return;
       }
 
-      const taskObj = {
-        id: id || getNextTaskId(),
-        tarefa: desc,
-        dept: document.getElementById('formTaskDept').value,
-        prio: document.getElementById('formTaskPrio').value,
-        status: document.getElementById('formTaskStatus').value,
-        dono: document.getElementById('formTaskDono').value,
-        prazo: document.getElementById('formTaskPrazo').value,
-        origem: document.getElementById('formTaskOrigem').value,
-        obs: document.getElementById('formTaskObs').value.trim()
-      };
-
-      const isUpdate = Boolean(id);
-
-      if (isUpdate) {
-        const idx = state.tasks.findIndex(t => t.id === id);
-        if (idx !== -1) {
-          state.tasks[idx] = taskObj;
-        }
-        writeToSheet('update', taskObj);
-        showToast(`Tarefa ${taskObj.id} atualizada`, 'success');
-      } else {
-        state.tasks.unshift(taskObj);
-        writeToSheet('add', taskObj);
-        showToast(`Tarefa ${taskObj.id} criada com sucesso`, 'success');
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
       }
 
-      closeTaskModal();
-      renderAll();
-    }
+      // App Initialization
+      window.masterMind = {
+        init: function () {
+          // Init reunioes
+          const storedReunioes = localStorage.getItem(STORAGE_REUNIOES_KEY);
+          if (storedReunioes) {
+            try {
+              reunioes = JSON.parse(storedReunioes);
+              // Atualiza o resumo da reunião padrão se já existia na base local
+              const seedIndex = reunioes.findIndex(r => r.id === 'reuniao-001' || r.titulo === 'Planejamento do Galpão');
+              if (seedIndex !== -1) {
+                reunioes[seedIndex].resumo = SEED_REUNIAO.resumo;
+                reunioes[seedIndex].link = SEED_REUNIAO.link;
+                if (!reunioes[seedIndex].dept) {
+                  reunioes[seedIndex].dept = SEED_REUNIAO.dept;
+                }
+                localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+              }
+            } catch(e) {
+              reunioes = [SEED_REUNIAO];
+            }
+          } else {
+            reunioes = [SEED_REUNIAO];
+            localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+          }
 
-    /* ===== CRUD REUNIÕES ===== */
+          // Inicia na aba padrão
+          this.switchTab('inicio');
 
-    function openNovaReuniao() {
-      document.getElementById('reuniaoModalTitle').textContent = 'Nova Reunião Estratégica';
-      document.getElementById('formReuniaoId').value = '';
-      document.getElementById('formReuniaoTitulo').value = '';
-      document.getElementById('formReuniaoTipoInput').value = 'Operacional';
-      document.getElementById('formReuniaoData').value = getRelativeDate(0);
-      document.getElementById('formReuniaoParticipantes').value = '';
-      document.getElementById('formReuniaoResumo').value = '';
-      document.getElementById('formReuniaoAta').value = '';
-      document.getElementById('formReuniaoPlano').value = '';
+          // Load tasks from Sheet
+          this.loadFromSheet();
+        },
 
-      reuniaoModal.classList.add('active');
-    }
+        loadFromSheet: async function () {
+          const syncEl = document.getElementById('syncIndicator');
+          syncEl.className = 'sync-status loading';
+          syncEl.innerHTML = '<span>Sincronizando...</span>';
 
-    function closeReuniaoModal() {
-      reuniaoModal.classList.remove('active');
-    }
+          try {
+            const resp = await fetch(SYNC_URL, { method: 'GET' });
+            if (!resp.ok) throw new Error('Falha ao comunicar com Sheets');
+            const data = await resp.json();
 
-    function saveReuniao() {
-      const titulo = document.getElementById('formReuniaoTitulo').value.trim();
-      if (!titulo) {
-        showToast('Informe o título da reunião', 'error');
-        return;
-      }
+            if (data && data.success && Array.isArray(data.tasks)) {
+              tasks = data.tasks.map(t => ({
+                id: cleanId(t.id || (Math.random() * 1000).toFixed(0)),
+                tarefa: t.tarefa || t.task || 'Tarefa sem título',
+                dept: t.dept || t.departamento || 'Dpto Operacional',
+                prio: t.prio || t.prioridade || 'Média',
+                prazo: t.prazo || '',
+                status: t.status || 'A Fazer',
+                dono: t.dono || t.responsavel || 'Equipe',
+                origem: t.origem || 'Reunião',
+                obs: t.obs || t.observacoes || ''
+              }));
+              localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+              syncEl.className = 'sync-status';
+              syncEl.innerHTML = '<span>Sincronizado ✓</span>';
+            } else {
+              throw new Error('Formato retornado inválido');
+            }
+          } catch (err) {
+            console.warn('Usando armazenamento local/offline:', err);
+            const cached = localStorage.getItem(STORAGE_TASKS_KEY);
+            if (cached) {
+              try { tasks = JSON.parse(cached); } catch(e) { tasks = DEFAULT_TASKS; }
+            } else {
+              tasks = DEFAULT_TASKS;
+              localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+            }
+            syncEl.className = 'sync-status offline';
+            syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
+          }
 
-      const id = document.getElementById('formReuniaoId').value || 'REU-' + Date.now().toString().slice(-4);
-      const reuObj = {
-        id,
-        titulo,
-        tipo: document.getElementById('formReuniaoTipoInput').value,
-        data: document.getElementById('formReuniaoData').value,
-        participantes: document.getElementById('formReuniaoParticipantes').value.trim(),
-        resumo: document.getElementById('formReuniaoResumo').value.trim(),
-        ata: document.getElementById('formReuniaoAta').value.trim(),
-        plano: document.getElementById('formReuniaoPlano').value.trim()
-      };
+          this.populateFilterDropdowns();
+          this.renderAll();
+        },
 
-      const idx = state.reunioes.findIndex(r => r.id === id);
-      if (idx !== -1) {
-        state.reunioes[idx] = reuObj;
-        showToast('Reunião atualizada', 'success');
-      } else {
-        state.reunioes.unshift(reuObj);
-        showToast('Reunião agendada com sucesso', 'success');
-      }
+        saveToSheet: async function (taskObj, action = 'update') {
+          const syncEl = document.getElementById('syncIndicator');
+          syncEl.className = 'sync-status loading';
+          syncEl.innerHTML = '<span>Salvando...</span>';
 
-      localStorage.setItem('mastermind_reunioes', JSON.stringify(state.reunioes));
-      closeReuniaoModal();
-      renderReunioes();
-    }
+          try {
+            // Using text/plain prevents CORS preflight issues with Google Apps Script
+            const payload = JSON.stringify({
+              action: action,
+              id: taskObj.id,
+              tarefa: taskObj.tarefa,
+              dept: taskObj.dept,
+              prio: taskObj.prio,
+              prazo: taskObj.prazo,
+              status: taskObj.status,
+              dono: taskObj.dono,
+              origem: taskObj.origem,
+              obs: taskObj.obs
+            });
 
-    function gerarTarefasDaReuniao(reuId) {
-      const r = state.reunioes.find(x => x.id === reuId);
-      if (!r || !r.plano) {
-        showToast('Esta reunião não possui itens no plano de ação', 'warning');
-        return;
-      }
+            await fetch(SYNC_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: payload,
+              mode: 'no-cors'
+            });
 
-      const linhas = r.plano.split('\n').map(l => l.trim()).filter(Boolean);
-      if (linhas.length === 0) {
-        showToast('Plano de ação vazio', 'warning');
-        return;
-      }
+            syncEl.className = 'sync-status';
+            syncEl.innerHTML = '<span>Sincronizado ✓</span>';
+          } catch(e) {
+            console.warn('Erro ao salvar na nuvem, mantendo localmente:', e);
+            syncEl.className = 'sync-status offline';
+            syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
+          }
+        },
 
-      let count = 0;
-      linhas.forEach((linha, i) => {
-        const newTask = {
-          id: getNextTaskId(),
-          tarefa: linha.replace(/^[-*•0-9.]+\s*/, ''),
-          dept: r.tipo === 'Operacional' ? 'Dpto Operacional' : (r.tipo === 'Diretoria' ? 'Dpto Diretoria' : 'Dpto Projetos'),
-          prio: 'Alta',
-          status: 'A Fazer',
-          dono: 'Renato',
-          prazo: getRelativeDate(3 + i * 2),
-          origem: 'Reunião',
-          obs: `Originada da reunião "${r.titulo}" (${r.data})`
-        };
-        state.tasks.unshift(newTask);
-        writeToSheet('add', newTask);
-        count++;
-      });
+        populateFilterDropdowns: function () {
+          const deptSelect = document.getElementById('filterDept');
+          const donoSelect = document.getElementById('filterDono');
 
-      renderAll();
-      showToast(`${count} tarefa(s) gerada(s) do plano de ação!`, 'success');
-    }
+          const depts = new Set();
+          const donos = new Set();
 
-    /* ===== FILTROS & CÁLCULOS ===== */
+          tasks.forEach(t => {
+            if (t.dept) depts.add(t.dept);
+            if (t.dono) donos.add(t.dono);
+          });
 
-    function getFilteredTasks() {
-      return state.tasks.filter(t => {
-        if (state.filters.status && t.status !== state.filters.status) return false;
-        if (state.filters.dept && t.dept !== state.filters.dept) return false;
-        if (state.filters.prio && t.prio !== state.filters.prio) return false;
-        if (state.filters.dono && t.dono !== state.filters.dono) return false;
-        if (state.filters.search) {
-          const q = state.filters.search;
-          const match = (t.tarefa || '').toLowerCase().includes(q) ||
-                        (t.id || '').toLowerCase().includes(q) ||
-                        (t.dono || '').toLowerCase().includes(q) ||
-                        (t.dept || '').toLowerCase().includes(q) ||
-                        (t.obs || '').toLowerCase().includes(q);
-          if (!match) return false;
-        }
-        return true;
-      });
-    }
+          // Preserve selected values
+          const curDept = deptSelect.value;
+          const curDono = donoSelect.value;
 
-    function getDueInfo(prazoStr, status) {
-      if (status === 'Concluídos') return { text: 'Concluído', cls: 'ok' };
-      if (status === 'Excluídos') return { text: 'Excluído', cls: 'late' };
-      if (!prazoStr) return { text: 'Sem prazo', cls: 'ok' };
+          deptSelect.innerHTML = '<option value="">Todos</option>' + 
+            Array.from(depts).sort().map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+          donoSelect.innerHTML = '<option value="">Todos</option>' + 
+            Array.from(donos).sort().map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const parts = prazoStr.split('-');
-      if (parts.length < 3) return { text: prazoStr, cls: 'ok' };
-      const due = new Date(parts[0], parts[1] - 1, parts[2]);
+          deptSelect.value = curDept;
+          donoSelect.value = curDono;
+        },
 
-      const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+        getFilteredTasks: function () {
+          const fStatus = document.getElementById('filterStatus').value;
+          const fDept = document.getElementById('filterDept').value;
+          const fPrio = document.getElementById('filterPrio').value;
+          const fDono = document.getElementById('filterDono').value;
 
-      if (diffDays < 0) {
-        return { text: `Atrasada (${Math.abs(diffDays)}d)`, cls: 'late' };
-      } else if (diffDays === 0) {
-        return { text: 'Vence hoje', cls: 'today' };
-      } else if (diffDays <= 7) {
-        return { text: `Vence em ${diffDays}d`, cls: 'soon' };
-      } else {
-        return { text: `Vence em ${diffDays}d`, cls: 'ok' };
-      }
-    }
+          return tasks.filter(t => {
+            if (fStatus && t.status !== fStatus) return false;
+            if (fDept && t.dept !== fDept) return false;
+            if (fPrio && t.prio !== fPrio) return false;
+            if (fDono && t.dono !== fDono) return false;
+            return true;
+          });
+        },
 
-    /* ===== RENDERIZADORES ===== */
+        limparFiltros: function () {
+          document.getElementById('filterStatus').value = '';
+          document.getElementById('filterDept').value = '';
+          document.getElementById('filterPrio').value = '';
+          document.getElementById('filterDono').value = '';
+          this.renderAll();
+        },
 
-    function renderAll() {
-      renderKPIs();
-      renderCharts();
-      renderList();
-      renderKanban();
-      renderReunioes();
-    }
+        applyFilters: function () {
+          this.renderAll();
+        },
 
-    function renderKPIs() {
-      const tasks = getFilteredTasks();
-      const total = tasks.length;
-      const concluidos = tasks.filter(t => t.status === 'Concluídos').length;
-      const andamento = tasks.filter(t => t.status === 'Em Andamento').length;
-      const abertos = tasks.filter(t => t.status === 'A Fazer' || t.status === 'Ideia').length;
-      const excluidos = tasks.filter(t => t.status === 'Excluídos').length;
+        switchTab: function (tab) {
+          activeTab = tab;
+          document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+          });
 
-      const ativos = tasks.filter(t => t.status !== 'Concluídos' && t.status !== 'Excluídos');
+          const filterPanel = document.getElementById('taskFilterPanel');
+          const kpiRow = document.getElementById('kpiRow');
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+          // Controle de exibição de filtros e KPIs por aba:
+          // Início: KPIs + Filtros
+          // Tarefas: Sem KPIs, apenas Filtros de Tarefa
+          // Kanban: Sem KPIs e Sem Filtros
+          // Reuniões: Sem KPIs e Sem Filtros de Tarefa
+          if (filterPanel) {
+            filterPanel.style.display = (tab === 'inicio' || tab === 'tarefas') ? 'flex' : 'none';
+          }
+          if (kpiRow) {
+            kpiRow.style.display = (tab === 'inicio') ? 'grid' : 'none';
+          }
 
-      let vencidas = 0;
-      let vence7d = 0;
+          document.getElementById('viewInicio').style.display = tab === 'inicio' ? 'block' : 'none';
+          document.getElementById('viewTarefas').style.display = tab === 'tarefas' ? 'block' : 'none';
+          document.getElementById('viewKanban').style.display = tab === 'kanban' ? 'block' : 'none';
+          document.getElementById('viewReunioes').style.display = tab === 'reunioes' ? 'block' : 'none';
 
-      ativos.forEach(t => {
-        if (!t.prazo) return;
-        const p = t.prazo.split('-');
-        if (p.length < 3) return;
-        const due = new Date(p[0], p[1] - 1, p[2]);
-        const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
-        if (diff < 0) vencidas++;
-        else if (diff <= 7) vence7d++;
-      });
+          this.renderAll();
+        },
 
-      const taxa = total > 0 ? Math.round((concluidos / total) * 100) : 0;
+        renderAll: function () {
+          this.renderKPIs();
+          if (activeTab === 'inicio') {
+            this.renderCharts();
+          } else if (activeTab === 'tarefas') {
+            this.renderList();
+          } else if (activeTab === 'kanban') {
+            this.renderKanban();
+          } else if (activeTab === 'reunioes') {
+            this.renderReunioes();
+          }
+        },
 
-      document.getElementById('kpiTaxaConclusao').textContent = taxa + '%';
-      document.getElementById('kpiConclusaoSub').textContent = `${concluidos} de ${total} tarefas`;
-      document.getElementById('kpiAbertos').textContent = abertos;
-      document.getElementById('kpiAndamento').textContent = andamento;
-      document.getElementById('kpiVence7D').textContent = vence7d;
-      document.getElementById('kpiVencidas').textContent = vencidas;
-      document.getElementById('kpiConcluidos').textContent = concluidos;
-      document.getElementById('kpiTotal').textContent = total;
-      document.getElementById('kpiExcluidos').textContent = excluidos;
-    }
+        renderKPIs: function () {
+          const total = tasks.length;
+          const concluidos = tasks.filter(t => t.status === 'Concluídos').length;
+          const excluidos = tasks.filter(t => t.status === 'Excluídos').length;
+          const ativos = total - excluidos;
+          const abertos = tasks.filter(t => t.status === 'A Fazer' || t.status === 'Ideia').length;
+          const andamento = tasks.filter(t => t.status === 'Em Andamento').length;
 
-    function renderCharts() {
-      if (state.activeTab !== 'tab-inicio') return;
-      const tasks = getFilteredTasks();
+          let vence7D = 0;
+          let vencidas = 0;
 
-      // 1. Distribuição por Status (Donut)
-      const statusMap = { 'Ideia': 0, 'A Fazer': 0, 'Em Andamento': 0, 'Concluídos': 0, 'Excluídos': 0 };
-      tasks.forEach(t => {
-        if (statusMap[t.status] !== undefined) statusMap[t.status]++;
-      });
-      const elStatus = document.getElementById('chartStatus');
-      if (elStatus && window.skipChart) {
-        document.getElementById('c1-total').textContent = `${tasks.length} totais`;
-        window.skipChart.donut(elStatus, {
-          labels: Object.keys(statusMap),
-          values: Object.values(statusMap),
-          colors: ['#A8A096', '#3D7CA6', '#D29922', '#2EA043', '#DA3633']
-        });
-      }
+          tasks.forEach(t => {
+            if (t.status !== 'Concluídos' && t.status !== 'Excluídos' && t.prazo) {
+              const d = parseDate(t.prazo);
+              if (d) {
+                const diff = getDaysDiff(d);
+                if (diff < 0) vencidas++;
+                else if (diff <= 7) vence7D++;
+              }
+            }
+          });
 
-      // 2. Volume por Departamento (Bar)
-      const deptMap = {};
-      DEPARTAMENTOS.forEach(d => deptMap[d.replace('Dpto ', '')] = 0);
-      tasks.forEach(t => {
-        const k = (t.dept || 'Geral').replace('Dpto ', '');
-        deptMap[k] = (deptMap[k] || 0) + 1;
-      });
-      // Apenas depts com tarefas ou top 7
-      const deptEntries = Object.entries(deptMap).filter(([_, v]) => v > 0);
-      if (deptEntries.length === 0) deptEntries.push(['Projetos', 0], ['Frota', 0], ['Qualidade', 0]);
-      const elDept = document.getElementById('chartDept');
-      if (elDept && window.skipChart) {
-        document.getElementById('c2-total').textContent = `${deptEntries.length} departamentos`;
-        window.skipChart.bar(elDept, {
-          labels: deptEntries.map(e => e[0]),
-          values: deptEntries.map(e => e[1]),
-          color: '#3D7CA6',
-          format: 'num'
-        });
-      }
+          const pct = ativos > 0 ? Math.round((concluidos / ativos) * 100) : 0;
 
-      // 3. Distribuição por Prioridade (Donut)
-      const prioMap = { 'Alta': 0, 'Média': 0, 'Baixa': 0 };
-      tasks.forEach(t => {
-        if (prioMap[t.prio] !== undefined) prioMap[t.prio]++;
-      });
-      const elPrio = document.getElementById('chartPrio');
-      if (elPrio && window.skipChart) {
-        document.getElementById('c3-total').textContent = `${tasks.length} itens`;
-        window.skipChart.donut(elPrio, {
-          labels: Object.keys(prioMap),
-          values: Object.values(prioMap),
-          colors: ['#DA3633', '#D29922', '#3D7CA6']
-        });
-      }
+          document.getElementById('kpiConclusao').textContent = `${pct}%`;
+          document.getElementById('kpiConclusaoSub').textContent = `${concluidos} de ${ativos} tarefas`;
+          document.getElementById('kpiAberto').textContent = abertos;
+          document.getElementById('kpiAndamento').textContent = andamento;
+          document.getElementById('kpi7D').textContent = vence7D;
+          document.getElementById('kpiVencidas').textContent = vencidas;
+          document.getElementById('kpiConcluidos').textContent = concluidos;
+          document.getElementById('kpiTotal').textContent = total;
+          document.getElementById('kpiExcluidos').textContent = excluidos;
+        },
 
-      // 4. Carga por Dono (Bar)
-      const donoMap = { 'Renato': 0, 'Equipe': 0, 'Terceiro': 0 };
-      tasks.forEach(t => {
-        if (donoMap[t.dono] !== undefined) donoMap[t.dono]++;
-        else if (t.dono) donoMap[t.dono] = 1;
-      });
-      const elDono = document.getElementById('chartDono');
-      if (elDono && window.skipChart) {
-        document.getElementById('c4-total').textContent = 'Responsáveis';
-        window.skipChart.bar(elDono, {
-          labels: Object.keys(donoMap),
-          values: Object.values(donoMap),
-          color: '#D67448',
-          format: 'num'
-        });
-      }
+        // Helper to render horizontal bars with numbers INSIDE each bar
+        renderHorizontalBars: function (containerId, items) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
 
-      // 5. Abertos x Concluídos (Donut)
-      const abertosCount = tasks.filter(t => t.status === 'A Fazer' || t.status === 'Ideia' || t.status === 'Em Andamento').length;
-      const concluidosCount = tasks.filter(t => t.status === 'Concluídos').length;
-      const elAC = document.getElementById('chartAbertosConcluidos');
-      if (elAC && window.skipChart) {
-        document.getElementById('c5-total').textContent = `${abertosCount + concluidosCount} ativos/concl.`;
-        window.skipChart.donut(elAC, {
-          labels: ['Abertos / Andamento', 'Concluídos'],
-          values: [abertosCount, concluidosCount],
-          colors: ['#D29922', '#2EA043']
-        });
-      }
+          const maxVal = Math.max(...items.map(i => i.value), 1);
+          let html = '';
 
-      // 6. Tendência por Origem (Bar)
-      const origemMap = { 'Reunião': 0, 'Projeto': 0, 'E-mail': 0, 'Decisão': 0, 'Caderno': 0, 'Ideia': 0 };
-      tasks.forEach(t => {
-        if (origemMap[t.origem] !== undefined) origemMap[t.origem]++;
-        else if (t.origem) origemMap[t.origem] = 1;
-      });
-      const elOrigem = document.getElementById('chartOrigem');
-      if (elOrigem && window.skipChart) {
-        document.getElementById('c6-total').textContent = 'Canais';
-        window.skipChart.bar(elOrigem, {
-          labels: Object.keys(origemMap),
-          values: Object.values(origemMap),
-          color: '#5ba3d3',
-          format: 'num'
-        });
-      }
-    }
+          items.forEach(item => {
+            const pct = Math.max(Math.round((item.value / maxVal) * 100), 10);
+            html += `
+              <div class="svg-bar-row">
+                <span class="svg-bar-label" title="${escapeHtml(item.label)}">${escapeHtml(item.label)}</span>
+                <div class="svg-bar-track">
+                  <div class="svg-bar-fill" style="width: ${pct}%; background: ${item.color};">
+                    ${item.value}
+                  </div>
+                </div>
+              </div>
+            `;
+          });
 
-    function renderList() {
-      const container = document.getElementById('taskListContainer');
-      const countEl = document.getElementById('taskCountSummary');
-      if (!container) return;
+          container.innerHTML = html || '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Sem dados</div>';
+        },
 
-      const tasks = getFilteredTasks();
-      if (countEl) countEl.textContent = `Exibindo ${tasks.length} tarefas`;
+        // Helper to render SVG Donut with numbers inside slices and legends
+        renderDonutChart: function (containerId, items) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
 
-      if (tasks.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; padding: 3rem 1rem; text-align: center; color: var(--text-muted); background: var(--surface); border: 1px dashed var(--border); border-radius: 8px;">
-            Nenhuma tarefa encontrada para os critérios selecionados.
-          </div>
-        `;
-        return;
-      }
+          const total = items.reduce((acc, curr) => acc + curr.value, 0);
+          if (total === 0) {
+            container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Sem dados</div>';
+            return;
+          }
 
-      container.innerHTML = tasks.map(t => {
-        const due = getDueInfo(t.prazo, t.status);
-        const prioClass = t.prio === 'Alta' ? 'badge-prio-alta' : (t.prio === 'Média' ? 'badge-prio-media' : 'badge-prio-baixa');
-        const statusSlug = (t.status || '').toLowerCase().replace(/\s+/g, '');
-        const statusClass = `badge-status-${statusSlug}`;
+          const size = 180;
+          const radius = 65;
+          const strokeWidth = 28;
+          const center = size / 2;
+          const circumference = 2 * Math.PI * radius;
 
-        return `
-          <div class="task-card" onclick="openTask('${escapeHtml(t.id)}')">
-            <div class="task-card-header">
-              <span class="task-id">${escapeHtml(t.id)}</span>
-              <span class="task-due-chip ${due.cls}">${escapeHtml(due.text)}</span>
+          let currentOffset = 0;
+          let svgPaths = '';
+
+          items.forEach(item => {
+            const itemPct = item.value / total;
+            const dashLength = itemPct * circumference;
+            const dashOffset = -currentOffset;
+            currentOffset += dashLength;
+
+            svgPaths += `
+              <circle
+                cx="${center}"
+                cy="${center}"
+                r="${radius}"
+                fill="transparent"
+                stroke="${item.color}"
+                stroke-width="${strokeWidth}"
+                stroke-dasharray="${dashLength} ${circumference}"
+                stroke-dashoffset="${dashOffset}"
+                stroke-linecap="butt"
+              >
+                <title>${item.label}: ${item.value}</title>
+              </circle>
+            `;
+          });
+
+          let legendHtml = items.map(item => `
+            <div class="legend-item">
+              <span class="legend-dot" style="background: ${item.color};"></span>
+              <span style="color: var(--cream); font-weight: 500;">${escapeHtml(item.label)}:</span>
+              <span style="color: #FFF; font-weight: 700; margin-left: auto;">${item.value}</span>
             </div>
-            <h4 class="task-title">${escapeHtml(t.tarefa)}</h4>
-            <div class="task-chips-row">
-              <span class="badge-chip ${statusClass}">${escapeHtml(t.status)}</span>
-              <span class="badge-chip ${prioClass}">${escapeHtml(t.prio)}</span>
-              <span class="badge-chip">${escapeHtml(t.dept)}</span>
-            </div>
-            <div class="task-footer-meta">
-              <span>👤 ${escapeHtml(t.dono || 'Sem dono')}</span>
-              <span>📌 ${escapeHtml(t.origem || 'Origem')}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
+          `).join('');
 
-    function renderKanban() {
-      const cols = ['Ideia', 'A Fazer', 'Em Andamento', 'Concluídos', 'Excluídos'];
-      const counts = { 'Ideia': 0, 'A Fazer': 0, 'Em Andamento': 0, 'Concluídos': 0, 'Excluídos': 0 };
-
-      // Limpa colunas
-      cols.forEach(col => {
-        const colEl = document.getElementById('kcol-' + col);
-        if (colEl) colEl.innerHTML = '';
-      });
-
-      const tasks = getFilteredTasks();
-
-      tasks.forEach(t => {
-        const status = t.status || 'Ideia';
-        if (counts[status] !== undefined) counts[status]++;
-
-        const colEl = document.getElementById('kcol-' + status);
-        if (!colEl) return;
-
-        const due = getDueInfo(t.prazo, t.status);
-        const prioClass = t.prio === 'Alta' ? 'badge-prio-alta' : (t.prio === 'Média' ? 'badge-prio-media' : 'badge-prio-baixa');
-
-        const card = document.createElement('div');
-        card.className = 'task-card';
-        card.style.padding = '0.75rem';
-        card.onclick = () => openTask(t.id);
-        card.innerHTML = `
-          <div class="task-card-header">
-            <span class="task-id">${escapeHtml(t.id)}</span>
-            <span class="task-due-chip ${due.cls}" style="font-size:0.65rem;">${escapeHtml(due.text)}</span>
-          </div>
-          <div style="font-size:0.88rem; font-weight:600; color:#fff; line-height:1.3;">${escapeHtml(t.tarefa)}</div>
-          <div class="task-chips-row" style="margin-top:0.2rem;">
-            <span class="badge-chip ${prioClass}">${escapeHtml(t.prio)}</span>
-            <span class="badge-chip" style="font-size:0.65rem;">${escapeHtml(t.dept)}</span>
-          </div>
-          <div class="task-footer-meta" style="margin-top:0.3rem;">
-            <span>👤 ${escapeHtml(t.dono)}</span>
-          </div>
-        `;
-        colEl.appendChild(card);
-      });
-
-      // Atualiza contadores
-      document.getElementById('kcnt-ideia').textContent = counts['Ideia'];
-      document.getElementById('kcnt-afazer').textContent = counts['A Fazer'];
-      document.getElementById('kcnt-andamento').textContent = counts['Em Andamento'];
-      document.getElementById('kcnt-concluidos').textContent = counts['Concluídos'];
-      document.getElementById('kcnt-excluidos').textContent = counts['Excluídos'];
-    }
-
-    function renderReunioes() {
-      const container = document.getElementById('reunioesContainer');
-      if (!container) return;
-
-      let list = [...state.reunioes];
-
-      if (state.reuniaoTipoFilter) {
-        list = list.filter(r => r.tipo === state.reuniaoTipoFilter);
-      }
-
-      if (state.reuniaoView === 'dia') {
-        list.sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
-      } else if (state.reuniaoView === 'tema') {
-        list.sort((a, b) => (a.tipo || '').localeCompare(b.tipo || ''));
-      } else if (state.reuniaoView === 'principais') {
-        list = list.filter(r => r.tipo === 'Diretoria' || r.tipo === 'Operacional');
-      }
-
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; padding: 3rem; text-align: center; color: var(--text-muted); background: var(--surface); border: 1px dashed var(--border); border-radius: 8px;">
-            Nenhuma reunião encontrada.
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = list.map(r => {
-        const ataBtn = r.ata ? `
-          <a href="${escapeHtml(r.ata)}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size:0.75rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem;">
-            📄 Ata Google Docs
-          </a>
-        ` : '';
-
-        const hasPlan = r.plano && r.plano.trim().length > 0;
-        const planoHtml = hasPlan ? `
-          <div class="action-plan-box">
-            <div class="action-plan-header">
-              <span>Plano de Ação</span>
-              <button class="btn-secondary" style="font-size:0.7rem; padding:0.15rem 0.45rem;" onclick="gerarTarefasDaReuniao('${escapeHtml(r.id)}')">
-                Gerar Tarefas do Plano
-              </button>
-            </div>
-            <div style="color:var(--text); white-space:pre-line;">${escapeHtml(r.plano)}</div>
-          </div>
-        ` : '';
-
-        return `
-          <div class="meeting-card">
-            <div class="meeting-card-header">
-              <div>
-                <span class="badge-chip" style="background:rgba(61, 124, 166, 0.2); border-color:var(--blue); color:var(--blue-light); margin-bottom:0.35rem;">${escapeHtml(r.tipo)}</span>
-                <h4 class="meeting-title">${escapeHtml(r.titulo)}</h4>
+          container.innerHTML = `
+            <div class="donut-wrapper">
+              <svg width="${size}" height="${size}" viewBox="0 0 ${size}" style="transform: rotate(-90deg); filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
+                ${svgPaths}
+                <text x="${center}" y="${center}" transform="rotate(90 ${center} ${center})" text-anchor="middle" dominant-baseline="middle" fill="#FFFFFF" font-size="20" font-weight="700">
+                  ${total}
+                </text>
+              </svg>
+              <div class="donut-legend">
+                ${legendHtml}
               </div>
             </div>
-            <div class="meeting-meta">
-              <span>📅 ${escapeHtml(formatDatePt(r.data))}</span>
-              <span>👥 ${escapeHtml(r.participantes || 'Geral')}</span>
-            </div>
-            <div class="meeting-summary">
-              ${escapeHtml(r.resumo || 'Sem resumo cadastrado.')}
-            </div>
-            ${planoHtml}
-            <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:auto; padding-top:0.4rem;">
-              ${ataBtn}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
+          `;
+        },
 
-    /* ===== AUXILIARES ===== */
+        renderCharts: function () {
+          const filtered = this.getFilteredTasks();
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+          // 1. Distribuição por Status
+          const statusCounts = {
+            'Ideia': 0,
+            'A Fazer': 0,
+            'Em Andamento': 0,
+            'Concluídos': 0,
+            'Excluídos': 0
+          };
+          filtered.forEach(t => {
+            if (statusCounts[t.status] !== undefined) statusCounts[t.status]++;
+          });
+          const statusData = [
+            { label: 'Ideia', value: statusCounts['Ideia'], color: '#D9A066' },
+            { label: 'A Fazer', value: statusCounts['A Fazer'], color: '#3D7CA6' },
+            { label: 'Em Andamento', value: statusCounts['Em Andamento'], color: '#E87D48' },
+            { label: 'Concluídos', value: statusCounts['Concluídos'], color: '#7FBF8F' },
+            { label: 'Excluídos', value: statusCounts['Excluídos'], color: '#6B4B3D' }
+          ];
+          this.renderDonutChart('chartStatusArea', statusData);
 
-    function formatDatePt(iso) {
-      if (!iso) return '-';
-      const parts = iso.split('-');
-      if (parts.length < 3) return iso;
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
+          // 2. Volume por Departamento
+          const deptCounts = {};
+          filtered.forEach(t => {
+            const d = t.dept || 'Geral';
+            deptCounts[d] = (deptCounts[d] || 0) + 1;
+          });
+          const paletteDepts = ['#3D7CA6', '#E87D48', '#D9A066', '#7FBF8F', '#A66B49', '#5A7D9A', '#DBC9B5'];
+          const deptData = Object.keys(deptCounts).map((k, idx) => ({
+            label: k,
+            value: deptCounts[k],
+            color: paletteDepts[idx % paletteDepts.length]
+          })).sort((a, b) => b.value - a.value).slice(0, 7);
+          this.renderHorizontalBars('chartDeptArea', deptData);
 
-    function showToast(msg, type = 'info') {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = msg;
-      toastContainer.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(10px)';
-        toast.style.transition = 'all 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
-    }
+          // 3. Distribuição por Prioridade
+          const prioCounts = { 'Alta': 0, 'Média': 0, 'Baixa': 0 };
+          filtered.forEach(t => {
+            if (prioCounts[t.prio] !== undefined) prioCounts[t.prio]++;
+          });
+          const prioData = [
+            { label: 'Alta', value: prioCounts['Alta'], color: '#E5695F' },
+            { label: 'Média', value: prioCounts['Média'], color: '#D9A066' },
+            { label: 'Baixa', value: prioCounts['Baixa'], color: '#3D7CA6' }
+          ];
+          this.renderDonutChart('chartPrioArea', prioData);
+
+          // 4. Carga de Trabalho por Dono
+          const donoCounts = {};
+          filtered.forEach(t => {
+            const d = t.dono || 'Sem Dono';
+            donoCounts[d] = (donoCounts[d] || 0) + 1;
+          });
+          const donoData = Object.keys(donoCounts).map((k, idx) => ({
+            label: k,
+            value: donoCounts[k],
+            color: idx % 2 === 0 ? '#E87D48' : '#3D7CA6'
+          })).sort((a, b) => b.value - a.value).slice(0, 6);
+          this.renderHorizontalBars('chartDonoArea', donoData);
+
+          // 5. Abertos vs Concluídos
+          const abertosCount = filtered.filter(t => t.status === 'A Fazer' || t.status === 'Ideia' || t.status === 'Em Andamento').length;
+          const concluidosCount = filtered.filter(t => t.status === 'Concluídos').length;
+          const abertosVsConcluidosData = [
+            { label: 'Abertos / Em Andamento', value: abertosCount, color: '#E87D48' },
+            { label: 'Concluídos', value: concluidosCount, color: '#7FBF8F' }
+          ];
+          this.renderDonutChart('chartAbertosConcluidosArea', abertosVsConcluidosData);
+
+          // 6. Origem das Demandas
+          const origemCounts = {};
+          filtered.forEach(t => {
+            const o = t.origem || 'Geral';
+            origemCounts[o] = (origemCounts[o] || 0) + 1;
+          });
+          const origemData = Object.keys(origemCounts).map((k, idx) => ({
+            label: k,
+            value: origemCounts[k],
+            color: ['#D9A066', '#3D7CA6', '#E87D48', '#7FBF8F', '#A66B49'][idx % 5]
+          })).sort((a, b) => b.value - a.value);
+          this.renderHorizontalBars('chartOrigemArea', origemData);
+        },
+
+        renderList: function () {
+          const filtered = this.getFilteredTasks();
+          const container = document.getElementById('taskListContainer');
+
+          // Regras da Aba Tarefas:
+          // 1) Tarefas com status "Excluídos" NÃO devem aparecer na lista.
+          let list = filtered.filter(t => t.status !== 'Excluídos');
+
+          // 2) Ordenação:
+          // - Concluídas vão para o final (para baixo).
+          // - Em Aberto (Ideia, A Fazer, Em Andamento) vêm ordenadas por prioridade de vencimento:
+          //   primeiro ATRASADAS, depois VENCE HOJE, depois VENCE AMANHÃ, etc.
+          // - Sem data ficam por último entre as em aberto.
+          list.sort((a, b) => {
+            const aConcluido = a.status === 'Concluídos';
+            const bConcluido = b.status === 'Concluídos';
+
+            if (aConcluido && !bConcluido) return 1;
+            if (!aConcluido && bConcluido) return -1;
+            if (aConcluido && bConcluido) return 0;
+
+            const da = parseDate(a.prazo);
+            const db = parseDate(b.prazo);
+
+            // Tarefas sem data ficam por último entre as em aberto
+            if (da && !db) return -1;
+            if (!da && db) return 1;
+            if (!da && !db) {
+              const prioWeight = { 'Alta': 1, 'Média': 2, 'Baixa': 3 };
+              return (prioWeight[a.prio] || 2) - (prioWeight[b.prio] || 2);
+            }
+
+            // Ambas têm data: menor diferença de dias primeiro (atrasadas < 0, hoje = 0, amanhã = 1, etc.)
+            const diffA = getDaysDiff(da);
+            const diffB = getDaysDiff(db);
+
+            if (diffA !== diffB) {
+              return diffA - diffB;
+            }
+
+            const prioWeight = { 'Alta': 1, 'Média': 2, 'Baixa': 3 };
+            return (prioWeight[a.prio] || 2) - (prioWeight[b.prio] || 2);
+          });
+
+          document.getElementById('counterTarefas').textContent = `Exibindo ${list.length} tarefas`;
+
+          if (list.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border);">Nenhuma tarefa encontrada com os filtros selecionados.</div>';
+            return;
+          }
+
+          container.innerHTML = list.map(t => {
+            const prioClass = t.prio === 'Alta' ? 'chip-prio-alta' : t.prio === 'Média' ? 'chip-prio-media' : 'chip-prio-baixa';
+            const badgeVenc = getBadgeVencHtml(t.prazo, t.status);
+            const isConcluida = t.status === 'Concluídos';
+
+            return `
+              <div class="task-card" onclick="window.masterMind.openTask('${escapeHtml(t.id)}')" style="${isConcluida ? 'opacity: 0.78;' : ''}">
+                <div class="task-card-title">${escapeHtml(t.tarefa)}</div>
+                <div class="task-chips">
+                  <span class="chip chip-dept">🏢 ${escapeHtml(t.dept || 'Geral')}</span>
+                  <span class="chip ${prioClass}">⚡ ${escapeHtml(t.prio || 'Média')}</span>
+                  <span class="chip chip-status" style="${isConcluida ? 'color: var(--success); border-color: rgba(127, 191, 143, 0.4);' : ''}">📌 ${escapeHtml(t.status)}</span>
+                  ${t.dono ? `<span class="chip chip-dono">👤 ${escapeHtml(t.dono)}</span>` : ''}
+                  ${badgeVenc}
+                </div>
+              </div>
+            `;
+          }).join('');
+        },
+
+        renderKanban: function () {
+          const filtered = this.getFilteredTasks();
+
+          const cols = {
+            'Ideia': document.getElementById('colIdeia'),
+            'A Fazer': document.getElementById('colAFazer'),
+            'Em Andamento': document.getElementById('colAndamento'),
+            'Concluídos': document.getElementById('colConcluidos'),
+            'Excluídos': document.getElementById('colExcluidos')
+          };
+
+          const counts = {
+            'Ideia': document.getElementById('countColIdeia'),
+            'A Fazer': document.getElementById('countColAFazer'),
+            'Em Andamento': document.getElementById('countColAndamento'),
+            'Concluídos': document.getElementById('countColConcluidos'),
+            'Excluídos': document.getElementById('countColExcluidos')
+          };
+
+          Object.keys(cols).forEach(k => {
+            cols[k].innerHTML = '';
+          });
+
+          const totals = { 'Ideia': 0, 'A Fazer': 0, 'Em Andamento': 0, 'Concluídos': 0, 'Excluídos': 0 };
+
+          filtered.forEach(t => {
+            const colKey = cols[t.status] ? t.status : 'A Fazer';
+            totals[colKey]++;
+
+            const prioClass = t.prio === 'Alta' ? 'chip-prio-alta' : t.prio === 'Média' ? 'chip-prio-media' : 'chip-prio-baixa';
+            const badgeVenc = getBadgeVencHtml(t.prazo, t.status);
+
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.onclick = () => window.masterMind.openTask(t.id);
+            card.innerHTML = `
+              <div class="task-card-title" style="font-size: 0.88rem;">${escapeHtml(t.tarefa)}</div>
+              <div class="task-chips">
+                <span class="chip chip-dept" style="font-size: 0.65rem;">${escapeHtml(t.dept)}</span>
+                <span class="chip ${prioClass}" style="font-size: 0.65rem;">${escapeHtml(t.prio)}</span>
+                ${t.dono ? `<span class="chip chip-dono" style="font-size: 0.65rem;">${escapeHtml(t.dono)}</span>` : ''}
+                ${badgeVenc}
+              </div>
+            `;
+            cols[colKey].appendChild(card);
+          });
+
+          Object.keys(counts).forEach(k => {
+            counts[k].textContent = totals[k];
+          });
+        },
+
+        filterReunioesView: function (mode, btn) {
+          reunioesFilter = mode;
+          document.querySelectorAll('.view-pill').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          this.renderReunioes();
+        },
+
+        renderReuniaoCard: function (r, rIdx) {
+          const planos = Array.isArray(r.plano) ? r.plano : [];
+          const parsedData = parseDate(r.data);
+          const dataFmt = parsedData ? formatDateDisplay(parsedData) : (r.data || 'Não informada');
+          const deptsFmt = r.dept || r.tipo || 'Dpto Projetos, Operacional';
+          const pessoasFmt = r.participantes || 'Não informado';
+          const resumoFmt = r.resumo || 'Sem resumo cadastrado.';
+
+          // Botão/link da ATA
+          const ataBtnHtml = r.link && r.link.trim() !== ''
+            ? `<a href="${escapeHtml(r.link.trim())}" target="_blank" rel="noopener noreferrer" class="btn-jupiter" style="text-decoration: none; font-size: 0.8rem; padding: 0.45rem 0.85rem;" title="Abrir Google Docs em nova aba">📄 Abrir Ata</a>`
+            : `<span class="btn-jupiter-outline" style="opacity: 0.55; cursor: not-allowed; font-size: 0.78rem; padding: 0.45rem 0.85rem;" title="Documento da ata ainda não anexado">📄 Ata não disponível</span>`;
+
+          return `
+            <article class="reuniao-card">
+              <div class="reuniao-header">
+                <div style="flex: 1;">
+                  <h3 class="reuniao-titulo">${escapeHtml(r.titulo)}</h3>
+                  <div class="reuniao-meta-grid">
+                    <div class="reuniao-meta-item">
+                      <span class="meta-label">📅 Dia:</span>
+                      <span class="meta-val">${escapeHtml(dataFmt)}</span>
+                    </div>
+                    <div class="reuniao-meta-item">
+                      <span class="meta-label">🏢 Depto(s):</span>
+                      <span class="meta-val">${escapeHtml(deptsFmt)}</span>
+                    </div>
+                    <div class="reuniao-meta-item">
+                      <span class="meta-label">👥 Pessoas:</span>
+                      <span class="meta-val">${escapeHtml(pessoasFmt)}</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  ${ataBtnHtml}
+                </div>
+              </div>
+
+              <div class="reuniao-resumo">
+                <div style="font-size: 0.72rem; font-weight: 700; color: var(--amber); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                  📝 Resumo da Reunião
+                </div>
+                <div>
+                  ${escapeHtml(resumoFmt)}
+                </div>
+              </div>
+
+              <div class="reuniao-plano-title">
+                <span>Plano de Ação (${planos.length} deliberações)</span>
+                <button class="btn-jupiter-outline" style="font-size: 0.72rem; padding: 0.25rem 0.5rem;" onclick="window.masterMind.gerarTarefasDaReuniao(${rIdx})">
+                  ⚡ Gerar Tarefas no PMO
+                </button>
+              </div>
+
+              <ul class="action-item-list">
+                ${planos.map(item => `
+                  <li class="action-item">
+                    <div class="action-item-desc">${escapeHtml(item.acao)}</div>
+                    <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                      <span class="chip chip-dono">👤 ${escapeHtml(item.dono || 'A definir')}</span>
+                      ${item.prazo ? `<span class="chip badge-venc-ok">📅 ${escapeHtml(item.prazo)}</span>` : '<span class="chip" style="background: rgba(90,125,154,0.2); color: var(--text-muted);">Sem prazo</span>'}
+                    </div>
+                  </li>
+                `).join('')}
+              </ul>
+            </article>
+          `;
+        },
+
+        renderReunioes: function () {
+          const container = document.getElementById('reunioesContainer');
+          if (!container) return;
+
+          if (reunioes.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface); border-radius: var(--radius);">Nenhuma reunião cadastrada.</div>';
+            return;
+          }
+
+          let html = '';
+
+          if (reunioesFilter === 'dia') {
+            // Agrupado por Dia
+            const grupos = {};
+            reunioes.forEach((r, idx) => {
+              const d = parseDate(r.data);
+              const chave = d ? formatDateDisplay(d) : 'Sem Data Definida';
+              if (!grupos[chave]) grupos[chave] = [];
+              grupos[chave].push({ r, idx });
+            });
+
+            Object.keys(grupos).forEach(dia => {
+              html += `<div class="reunioes-group-header">📅 ${dia} (${grupos[dia].length})</div>`;
+              grupos[dia].forEach(item => {
+                html += this.renderReuniaoCard(item.r, item.idx);
+              });
+            });
+
+          } else if (reunioesFilter === 'semana') {
+            // Agrupado por Semana
+            const gruposSemana = {};
+            reunioes.forEach((r, idx) => {
+              const d = parseDate(r.data);
+              let chave = 'Semana Não Identificada';
+              if (d) {
+                // Cálculo de início da semana (segunda-feira)
+                const temp = new Date(d);
+                const day = temp.getDay();
+                const diff = temp.getDate() - day + (day === 0 ? -6 : 1);
+                const monday = new Date(temp.setDate(diff));
+                const sunday = new Date(monday);
+                sunday.setDate(monday.getDate() + 6);
+                chave = `Semana de ${formatDateDisplay(monday)} a ${formatDateDisplay(sunday)}`;
+              }
+              if (!gruposSemana[chave]) gruposSemana[chave] = [];
+              gruposSemana[chave].push({ r, idx });
+            });
+
+            Object.keys(gruposSemana).forEach(sem => {
+              html += `<div class="reunioes-group-header">🗓️ ${sem} (${gruposSemana[sem].length})</div>`;
+              gruposSemana[sem].forEach(item => {
+                html += this.renderReuniaoCard(item.r, item.idx);
+              });
+            });
+
+          } else if (reunioesFilter === 'tema') {
+            // Agrupado por Tema / Tipo
+            const gruposTema = {};
+            reunioes.forEach((r, idx) => {
+              const chave = r.tipo || 'Geral / Estratégico';
+              if (!gruposTema[chave]) gruposTema[chave] = [];
+              gruposTema[chave].push({ r, idx });
+            });
+
+            Object.keys(gruposTema).forEach(tema => {
+              html += `<div class="reunioes-group-header">📁 Tema: ${tema} (${gruposTema[tema].length})</div>`;
+              gruposTema[tema].forEach(item => {
+                html += this.renderReuniaoCard(item.r, item.idx);
+              });
+            });
+
+          } else {
+            // Visualização padrão: Principais / Todos
+            reunioes.forEach((r, idx) => {
+              html += this.renderReuniaoCard(r, idx);
+            });
+          }
+
+          container.innerHTML = html;
+        },
+
+        activeReuniaoIdxForPmo: null,
+
+        gerarTarefasDaReuniao: function (reuniaoIdx) {
+          const r = reunioes[reuniaoIdx];
+          if (!r || !Array.isArray(r.plano) || r.plano.length === 0) {
+            alert('Esta reunião não possui itens no plano de ação.');
+            return;
+          }
+          this.activeReuniaoIdxForPmo = reuniaoIdx;
+
+          const contextEl = document.getElementById('pmoReuniaoContext');
+          if (contextEl) {
+            const dataFmt = r.data ? (formatDateDisplay(parseDate(r.data)) || r.data) : 'Não informada';
+            contextEl.innerHTML = `📌 <strong>Reunião:</strong> ${escapeHtml(r.titulo)} &nbsp;|&nbsp; 📅 ${escapeHtml(dataFmt)}`;
+          }
+
+          const container = document.getElementById('pmoActionList');
+          if (container) {
+            container.innerHTML = r.plano.map((item, idx) => {
+              const existing = tasks.find(t => t.tarefa.toLowerCase() === item.acao.toLowerCase());
+              const isAlreadyActive = existing && existing.status !== 'Excluídos';
+
+              return `
+                <label class="pmo-select-item" id="pmoItem_${idx}">
+                  <input type="checkbox" class="pmo-select-cb" data-idx="${idx}" onchange="window.masterMind.handlePmoCbChange(this, ${idx})">
+                  <div class="pmo-item-details">
+                    <div class="pmo-item-text">${escapeHtml(item.acao)}</div>
+                    <div class="pmo-item-chips">
+                      <span class="chip chip-dono">👤 ${escapeHtml(item.dono || 'A definir')}</span>
+                      ${item.prazo ? `<span class="chip badge-venc-ok">📅 ${escapeHtml(item.prazo)}</span>` : '<span class="chip" style="background: rgba(90,125,154,0.2); color: var(--text-muted);">Sem prazo</span>'}
+                      ${isAlreadyActive ? '<span class="chip" style="background: rgba(61,124,166,0.25); color: #8FD0F8;">ℹ️ Ativa no Kanban</span>' : ''}
+                    </div>
+                  </div>
+                </label>
+              `;
+            }).join('');
+          }
+
+          this.updatePmoCounter();
+          document.getElementById('pmoSelectModal').classList.add('open');
+        },
+
+        handlePmoCbChange: function (cb, idx) {
+          const label = document.getElementById(`pmoItem_${idx}`);
+          if (label) {
+            label.classList.toggle('is-checked', cb.checked);
+          }
+          this.updatePmoCounter();
+        },
+
+        toggleAllPmo: function (checked) {
+          const cbs = document.querySelectorAll('#pmoActionList .pmo-select-cb');
+          cbs.forEach((cb, idx) => {
+            cb.checked = checked;
+            const label = document.getElementById(`pmoItem_${idx}`);
+            if (label) label.classList.toggle('is-checked', checked);
+          });
+          this.updatePmoCounter();
+        },
+
+        updatePmoCounter: function () {
+          const total = document.querySelectorAll('#pmoActionList .pmo-select-cb').length;
+          const checked = document.querySelectorAll('#pmoActionList .pmo-select-cb:checked').length;
+          const counterEl = document.getElementById('pmoSelectionCounter');
+          if (counterEl) {
+            counterEl.textContent = `${checked} de ${total} selecionado${checked === 1 ? '' : 's'}`;
+          }
+        },
+
+        closePmoSelectModal: function () {
+          document.getElementById('pmoSelectModal').classList.remove('open');
+          this.activeReuniaoIdxForPmo = null;
+        },
+
+        confirmPmoSelection: function () {
+          if (this.activeReuniaoIdxForPmo === null) return;
+          const r = reunioes[this.activeReuniaoIdxForPmo];
+          if (!r || !Array.isArray(r.plano)) return;
+
+          const cbs = document.querySelectorAll('#pmoActionList .pmo-select-cb');
+          const checkedIndices = new Set();
+          cbs.forEach(cb => {
+            if (cb.checked) {
+              checkedIndices.add(parseInt(cb.dataset.idx, 10));
+            }
+          });
+
+          let nextIdNum = tasks.reduce((max, t) => {
+            const num = parseInt(cleanId(t.id), 10);
+            return !isNaN(num) && num > max ? num : max;
+          }, 0);
+
+          let criadas = 0;
+          let descartadas = 0;
+
+          r.plano.forEach((item, idx) => {
+            const isSelected = checkedIndices.has(idx);
+            let cleanPrazo = '';
+            if (item.prazo) {
+              const parts = item.prazo.split('/');
+              if (parts.length === 3) {
+                cleanPrazo = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+              } else {
+                cleanPrazo = item.prazo;
+              }
+            }
+
+            const existingIndex = tasks.findIndex(t => t.tarefa.toLowerCase() === item.acao.toLowerCase());
+
+            if (isSelected) {
+              // Tarefa selecionada pelo usuário: vira tarefa ativa no Kanban
+              if (existingIndex !== -1) {
+                tasks[existingIndex].status = 'A Fazer';
+                if (cleanPrazo) tasks[existingIndex].prazo = cleanPrazo;
+                if (item.dono) tasks[existingIndex].dono = item.dono;
+                this.saveToSheet(tasks[existingIndex], 'update');
+              } else {
+                nextIdNum++;
+                const nova = {
+                  id: String(nextIdNum).padStart(3, '0'),
+                  tarefa: item.acao,
+                  dept: "Dpto Projetos",
+                  prio: item.acao.includes('Crítica') || item.acao.includes('Alta') ? 'Alta' : 'Média',
+                  prazo: cleanPrazo,
+                  status: "A Fazer",
+                  dono: item.dono || "Equipe",
+                  origem: "Reunião",
+                  obs: `Gerado a partir da reunião: ${r.titulo}`
+                };
+                tasks.unshift(nova);
+                this.saveToSheet(nova, 'add');
+              }
+              criadas++;
+            } else {
+              // Tarefa NÃO selecionada: registrada como Excluídos (descartada)
+              if (existingIndex !== -1) {
+                tasks[existingIndex].status = 'Excluídos';
+                this.saveToSheet(tasks[existingIndex], 'update');
+              } else {
+                nextIdNum++;
+                const excl = {
+                  id: String(nextIdNum).padStart(3, '0'),
+                  tarefa: item.acao,
+                  dept: "Dpto Projetos",
+                  prio: item.acao.includes('Crítica') || item.acao.includes('Alta') ? 'Alta' : 'Média',
+                  prazo: cleanPrazo,
+                  status: "Excluídos",
+                  dono: item.dono || "Equipe",
+                  origem: "Reunião",
+                  obs: `Descartado da reunião: ${r.titulo}`
+                };
+                tasks.unshift(excl);
+                this.saveToSheet(excl, 'add');
+              }
+              descartadas++;
+            }
+          });
+
+          localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+          this.closePmoSelectModal();
+          this.populateFilterDropdowns();
+          this.renderAll();
+
+          if (criadas > 0) {
+            alert(`Sucesso: ${criadas} tarefa(s) adicionada(s) ao Kanban e ${descartadas} registrada(s) como Excluídas.`);
+          } else {
+            alert(`Nenhuma tarefa selecionada: todos os ${descartadas} itens foram registrados como Excluídos.`);
+          }
+        },
+
+        // Task Modal Handlers
+        openTask: function (id) {
+          const t = tasks.find(item => cleanId(item.id) === cleanId(id));
+          if (!t) return;
+
+          document.getElementById('modalTaskTitle').textContent = 'Detalhes da Tarefa';
+          document.getElementById('taskModalId').value = t.id;
+          document.getElementById('taskModalDesc').value = t.tarefa;
+          document.getElementById('taskModalDept').value = t.dept || 'Dpto Operacional';
+          document.getElementById('taskModalPrio').value = t.prio || 'Média';
+          document.getElementById('taskModalStatus').value = t.status || 'A Fazer';
+          document.getElementById('taskModalDono').value = t.dono || '';
+          document.getElementById('taskModalPrazo').value = t.prazo || '';
+          document.getElementById('taskModalOrigem').value = t.origem || 'Reunião';
+          document.getElementById('taskModalObs').value = t.obs || '';
+
+          document.getElementById('btnQuickStart').style.display = 'inline-flex';
+          document.getElementById('btnQuickDone').style.display = 'inline-flex';
+          document.getElementById('btnQuickDelete').style.display = 'inline-flex';
+
+          document.getElementById('taskModal').classList.add('open');
+        },
+
+        openNewTask: function () {
+          document.getElementById('modalTaskTitle').textContent = 'Nova Tarefa';
+          document.getElementById('taskModalId').value = '';
+          document.getElementById('taskModalDesc').value = '';
+          document.getElementById('taskModalDept').value = 'Dpto Operacional';
+          document.getElementById('taskModalPrio').value = 'Média';
+          document.getElementById('taskModalStatus').value = 'A Fazer';
+          document.getElementById('taskModalDono').value = '';
+          document.getElementById('taskModalPrazo').value = '';
+          document.getElementById('taskModalOrigem').value = 'Ideia';
+          document.getElementById('taskModalObs').value = '';
+
+          document.getElementById('btnQuickStart').style.display = 'none';
+          document.getElementById('btnQuickDone').style.display = 'none';
+          document.getElementById('btnQuickDelete').style.display = 'none';
+
+          document.getElementById('taskModal').classList.add('open');
+        },
+
+        closeTaskModal: function () {
+          document.getElementById('taskModal').classList.remove('open');
+        },
+
+        quickStatus: function (novoStatus) {
+          document.getElementById('taskModalStatus').value = novoStatus;
+          document.getElementById('taskForm').dispatchEvent(new Event('submit'));
+        },
+
+        saveTask: function (e) {
+          e.preventDefault();
+          const id = document.getElementById('taskModalId').value;
+          const desc = document.getElementById('taskModalDesc').value.trim();
+          const dept = document.getElementById('taskModalDept').value;
+          const prio = document.getElementById('taskModalPrio').value;
+          const status = document.getElementById('taskModalStatus').value;
+          const dono = document.getElementById('taskModalDono').value.trim();
+          const prazo = document.getElementById('taskModalPrazo').value;
+          const origem = document.getElementById('taskModalOrigem').value;
+          const obs = document.getElementById('taskModalObs').value.trim();
+
+          if (!desc) return;
+
+          let targetTask;
+          let isNew = false;
+
+          if (id) {
+            targetTask = tasks.find(t => cleanId(t.id) === cleanId(id));
+          }
+
+          if (targetTask) {
+            targetTask.tarefa = desc;
+            targetTask.dept = dept;
+            targetTask.prio = prio;
+            targetTask.status = status;
+            targetTask.dono = dono;
+            targetTask.prazo = prazo;
+            targetTask.origem = origem;
+            targetTask.obs = obs;
+          } else {
+            isNew = true;
+            const newId = String(tasks.length + 1).padStart(3, '0');
+            targetTask = {
+              id: newId,
+              tarefa: desc,
+              dept: dept,
+              prio: prio,
+              status: status,
+              dono: dono,
+              prazo: prazo,
+              origem: origem,
+              obs: obs
+            };
+            tasks.unshift(targetTask);
+          }
+
+          localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+          this.saveToSheet(targetTask, isNew ? 'add' : 'update');
+          this.closeTaskModal();
+          this.populateFilterDropdowns();
+          this.renderAll();
+        },
+
+        // Reunião Modal Handlers
+        openNovaReuniao: function () {
+          document.getElementById('reuniaoTitulo').value = '';
+          document.getElementById('reuniaoTipo').value = 'Projetos';
+          const today = new Date().toISOString().split('T')[0];
+          document.getElementById('reuniaoData').value = today;
+          document.getElementById('reuniaoDept').value = 'Dpto Projetos, Dpto Operacional';
+          document.getElementById('reuniaoParticipantes').value = '';
+          document.getElementById('reuniaoResumo').value = '';
+          document.getElementById('reuniaoLink').value = '';
+          document.getElementById('reuniaoPlano').value = '';
+
+          document.getElementById('reuniaoModal').classList.add('open');
+        },
+
+        closeReuniaoModal: function () {
+          document.getElementById('reuniaoModal').classList.remove('open');
+        },
+
+        saveReuniao: function (e) {
+          e.preventDefault();
+          const titulo = document.getElementById('reuniaoTitulo').value.trim();
+          const tipo = document.getElementById('reuniaoTipo').value;
+          const data = document.getElementById('reuniaoData').value;
+          const dept = document.getElementById('reuniaoDept').value.trim();
+          const participantes = document.getElementById('reuniaoParticipantes').value.trim();
+          const resumo = document.getElementById('reuniaoResumo').value.trim();
+          const link = document.getElementById('reuniaoLink').value.trim();
+          const planoRaw = document.getElementById('reuniaoPlano').value.trim();
+
+          if (!titulo) return;
+
+          const planoParsed = [];
+          if (planoRaw) {
+            const lines = planoRaw.split('\n');
+            lines.forEach(line => {
+              const l = line.trim();
+              if (l) {
+                const parts = l.split('|');
+                planoParsed.push({
+                  acao: parts[0] ? parts[0].trim() : l,
+                  dono: parts[1] ? parts[1].trim() : '',
+                  prazo: parts[2] ? parts[2].trim() : ''
+                });
+              }
+            });
+          }
+
+          const nova = {
+            id: 'reuniao-' + Date.now(),
+            titulo,
+            tipo,
+            data,
+            dept: dept || tipo,
+            participantes,
+            resumo,
+            link,
+            plano: planoParsed
+          };
+
+          reunioes.unshift(nova);
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+          this.closeReuniaoModal();
+          this.renderReunioes();
+        }
+      };
+
+      // Bootstrap on DOM ready
+      document.addEventListener('DOMContentLoaded', () => {
+        window.masterMind.init();
+      });
+    })();
   </script>
 <script>
 /* Skip artifact shell — fixed helpers served beside every artifact. */
