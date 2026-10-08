@@ -493,4 +493,69 @@ function makeChart(id,type,labels,data,colors,extra){
   var el=document.getElementById(id); if(!el) return;
   if(charts[id]){ charts[id].destroy(); }
   var cfg={ type:type, data:{ labels:labels, datasets:[{ data:data, backgroundColor:colors, borderColor:'rgba(8,8,12,.6)', borderWidth:1 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ labels:{ color:'#9AA7BF', font:{ size:11 } } }, datalabels:{ color:'#F0E5D5', font:{ weight:'bold', size:11 }, formatter:function(v){ return v; } } } } };
-  if(
+  if(extra&&extra.doughnut){ cfg.options.cutout='62%'; }
+  charts[id]=new Chart(el,cfg);
+}
+function renderCharts(){
+  var atv=globalFiltered();
+  var st={},dp={},pr={},dn={},or={};
+  atv.forEach(function(t){ st[t.status]=(st[t.status]||0)+1; dp[t.dept]=(dp[t.dept]||0)+1; pr[t.prio]=(pr[t.prio]||0)+1; dn[t.dono]=(dn[t.dono]||0)+1; or[t.origem]=(or[t.origem]||0)+1; });
+  var stL=Object.keys(st), stD=stL.map(function(k){ return st[k]; });
+  makeChart('chStatus','doughnut',stL,stD,stL.map(function(k){ return STATUS_HEX[k]||'#3D7CA6'; }),{doughnut:true});
+  var dpL=Object.keys(dp), dpD=dpL.map(function(k){ return dp[k]; });
+  makeChart('chDept','bar',dpL,dpD,dpL.map(function(k,i){ return ['#3D7CA6','#D9A066','#7FBF8F','#E5695F','#A66B49','#5A7D9A'][i%6]; }));
+  var prL=Object.keys(pr), prD=prL.map(function(k){ return pr[k]; });
+  makeChart('chPrio','doughnut',prL,prD,prL.map(function(k){ return PRIO_HEX[k]||'#3D7CA6'; }),{doughnut:true});
+  var dnL=Object.keys(dn), dnD=dnL.map(function(k){ return dn[k]; });
+  makeChart('chDono','bar',dnL,dnD,dnL.map(function(k,i){ return ['#7FBF8F','#D9A066','#E5695F','#3D7CA6'][i%4]; }));
+  var k=calcKPIs();
+  makeChart('chAberto','doughnut',['Abertos','Concluídos'],[k.abertos,k.concluidos],['#3D7CA6','#7FBF8F'],{doughnut:true});
+  var orL=Object.keys(or), orD=orL.map(function(k){ return or[k]; });
+  makeChart('chOrigem','bar',orL,orD,orL.map(function(k,i){ return ['#D9A066','#3D7CA6','#7FBF8F','#E5695F','#A66B49'][i%5]; }));
+}
+function renderAll(){
+  renderGlobalFilters();
+  renderFilters();
+  renderKPIs();
+  renderCharts();
+  renderList();
+  renderKanban();
+  renderReunioes();
+  renderReuniaoMesFilter();
+}
+function openNewTask(){
+  var sel=document.getElementById('nDept'); if(sel&&!sel.options.length){ DEPTS.forEach(function(d){ sel.innerHTML+='<option>'+d+'</option>'; }); }
+  document.getElementById('modal-nova').style.display='flex';
+}
+function closeNewModal(){ document.getElementById('modal-nova').style.display='none'; }
+function addTask(){
+  var tarefa=document.getElementById('nTarefa').value.trim();
+  if(!tarefa){ toast('Informe a descrição da tarefa'); return; }
+  var nova={ tarefa:tarefa, dept:document.getElementById('nDept').value, prio:document.getElementById('nPrio').value, prazo:document.getElementById('nPrazo').value, status:document.getElementById('nStatus').value, dono:document.getElementById('nDono').value, origem:document.getElementById('nOrigem').value, obs:document.getElementById('nObs').value };
+  writeToSheet({ action:'add', tarefa:nova.tarefa, dept:nova.dept, prio:nova.prio, prazo:nova.prazo, status:nova.status, dono:nova.dono, origem:nova.origem, obs:nova.obs }).then(function(res){
+    if(res.success){ nova.id=res.data&&res.data.id?res.data.id:('TAR-'+String(tarefas.length+1).padStart(3,'0')); tarefas.push(normalizeTask(nova)); saveLocal(); renderAll(); toast('Tarefa criada: '+nova.id); }
+    else { toast('Erro ao salvar na planilha'); }
+  });
+  closeNewModal();
+}
+function openTask(id){
+  var t=tarefas.find(function(x){ return x.id===id; }); if(!t) return;
+  editarId=id;
+  document.getElementById('eId').value=t.id;
+  document.getElementById('eTarefa').value=t.tarefa;
+  document.getElementById('ePrazo').value=t.prazo;
+  var selDept=document.getElementById('eDept'); if(!selDept.options.length){ DEPTS.forEach(function(d){ selDept.innerHTML+='<option>'+d+'</option>'; }); }
+  selDept.value=t.dept;
+  document.getElementById('ePrio').value=t.prio;
+  document.getElementById('eStatus').value=t.status;
+  document.getElementById('eDono').value=t.dono;
+  document.getElementById('eOrigem').value=t.origem;
+  document.getElementById('eObs').value=t.obs;
+  document.getElementById('btnIniciar').style.display=(t.status==='A Fazer'||t.status==='Ideia')?'inline-block':'none';
+  document.getElementById('btnConcluir').style.display=(t.status!=='Concluídos')?'inline-block':'none';
+  document.getElementById('btnExcluir').style.display=(t.status!=='Excluído')?'inline-block':'none';
+  document.getElementById('modal-editar').style.display='flex';
+}
+function closeModal(){ document.getElementById('modal-editar').style.display='none'; }
+function saveTask(){
+  var t=t
