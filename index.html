@@ -472,4 +472,43 @@ function reuniaoCardHTML(r){
     +(r.participantes?'<div class="reuniao-meta" style="margin-bottom:8px"><span class="chip dept">👥 '+esc(r.participantes)+'</span></div>':'')
     +(r.resumo?'<div class="reuniao-resumo">'+esc(r.resumo)+'</div>':'')
     +(r.link?'<div class="reuniao-meta" style="margin-bottom:8px"><a href="'+esc(r.link)+'" target="_blank" rel="noopener" style="color:#3D7CA6;font-size:12px;font-weight:600">📄 Abrir Ata (Google Docs)</a></div>':'')
-    +(acoes.length?'<div class="reuniao-acoes"><h5>Plano de Ação</h5><ul>'+acoes.map(function(a){ return '<li><span class="pend">▸</span> '+esc(a.acao)+(a.dono?'<span class="dono">'+esc(a.dono)+'</span>':'')+(a.prazo?'<span class
+    +(acoes.length?'<div class="reuniao-acoes"><h5>Plano de Ação</h5><ul>'+acoes.map(function(a){ return '<li><span class="pend">▸</span> '+esc(a.acao)+(a.dono?'<span class="dono">'+esc(a.dono)+'</span>':'')+(a.prazo?'<span class="prazo">'+a.prazo+'</span>':'')+'</li>'; }).join('')+'</ul></div>':'')
+    +'</div>';
+}
+function setReuniaoVisao(v){
+  reuniaoVisao=v;
+  var btns=document.querySelectorAll('#visaoBtns button');
+  btns.forEach(function(b){ b.classList.remove('on'); if(b.getAttribute('onclick').indexOf("'"+v+"'")>=0) b.classList.add('on'); });
+  renderReunioes();
+}
+function renderReunioes(){
+  var tipo=document.getElementById('rTipo').value, mes=document.getElementById('rMes').value;
+  var lista=reunioes.filter(function(r){
+    if(tipo&&r.tipo!==tipo) return false;
+    if(mes&&(r.data||'').slice(0,7)!==mes) return false;
+    return true;
+  });
+  lista.sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
+  var html='';
+  if(!lista.length){ html='<p style="color:#9AA7BF;text-align:center;padding:30px">Nenhuma reunião registrada ainda. Clique em "+ Nova Reunião" para começar.</p>'; document.getElementById('reunioesList').innerHTML=html; return; }
+  if(reuniaoVisao==='dia'){
+    var grupos={};
+    lista.forEach(function(r){ var k=r.data||'sem data'; (grupos[k]=grupos[k]||[]).push(r); });
+    Object.keys(grupos).sort().reverse().forEach(function(k){
+      html+='<div class="grupo-titulo">📅 '+formatDate(k)+' · '+grupos[k].length+' reunião(ões)</div>';
+      grupos[k].forEach(function(r){ html+=reuniaoCardHTML(r); });
+    });
+  } else if(reuniaoVisao==='tema'){
+    var grupos2={};
+    lista.forEach(function(r){ var k=r.tipo||'Outros'; (grupos2[k]=grupos2[k]||[]).push(r); });
+    TEMAS.concat(['Outros']).forEach(function(t){ if(grupos2[t]){ html+='<div class="grupo-titulo">🗂 '+t+' · '+grupos2[t].length+'</div>'; grupos2[t].forEach(function(r){ html+=reuniaoCardHTML(r); }); } });
+  } else {
+    var principais=lista.slice().sort(function(a,b){ return parsePlano(b.plano).length-parsePlano(a.plano).length; }).slice(0,5);
+    html+='<div class="grupo-titulo">⭐ Reuniões principais (por volume de ações)</div>';
+    principais.forEach(function(r){ html+=reuniaoCardHTML(r); });
+  }
+  document.getElementById('reunioesList').innerHTML=html;
+}
+function renderReuniaoMesFilter(){
+  var sel=document.getElementById('rMes'), v=sel.value, meses={};
+  reunioes.forEach(function(r){ var k=(r.data||'').slice(0,7); if(k
