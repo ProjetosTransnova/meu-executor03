@@ -124,25 +124,34 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       --accent-text: #F0A57C;
       --accent-contrast: #FFFFFF;
       --bg: #08080C;
-      --surface: #151624;
-      --surface-elevated: #1C2541;
+      --surface: rgba(21, 22, 36, 0.40);
+      --surface-elevated: rgba(27, 37, 65, 0.40);
       --text: #F0E5D5;
       --text-muted: #9BAEC0;
-      --border: rgba(90, 125, 154, 0.4);
-      --border-strong: #5A7D9A;
+      --border: rgba(240, 229, 213, 0.12);
+      --border-strong: rgba(240, 229, 213, 0.22);
       --glow: #3D7CA6;
       --amber: #D9A066;
       --cream: #DBC9B5;
       --success: #7FBF8F;
       --danger: #E5695F;
       --radius: 10px;
+
+      /* Design System Júpiter — Glassmorphism Tokens */
+      --glass-bg: rgba(21, 22, 36, 0.40);
+      --glass-bg-subtle: rgba(27, 37, 65, 0.40);
+      --glass-border: 1px solid rgba(240, 229, 213, 0.12);
+      --glass-border-glow: 1px solid rgba(240, 229, 213, 0.24);
+      --glass-blur: blur(12px);
+      --glass-glow: 0 0 24px rgba(61, 124, 166, 0.18), 0 0 8px rgba(216, 160, 102, 0.08);
+      --glass-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 24px rgba(61, 124, 166, 0.18), 0 0 8px rgba(216, 160, 102, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.09);
     }
 
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 80% 10%, rgba(61, 124, 166, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 10% 90%, rgba(232, 125, 72, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 10%, rgba(61, 124, 166, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(232, 125, 72, 0.10) 0%, transparent 40%),
         linear-gradient(180deg, #08080C 0%, #0B132B 100%);
       background-attachment: fixed;
       color: var(--text);
@@ -152,11 +161,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       padding-bottom: 3rem;
     }
 
-    /* Header styling */
+    /* 1. BARRA SUPERIOR / CABEÇALHO (Top Bar Glass) */
     .app-header {
-      background: rgba(21, 22, 36, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(240, 229, 213, 0.12);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 24px rgba(61, 124, 166, 0.18), inset 0 -1px 0 rgba(240, 229, 213, 0.08);
       position: sticky;
       top: 0;
       z-index: 90;
@@ -177,7 +188,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .brand-icon {
       font-size: 2rem;
       line-height: 1;
-      filter: drop-shadow(0 0 10px rgba(232, 125, 72, 0.5));
+      filter: drop-shadow(0 0 12px rgba(232, 125, 72, 0.6));
     }
     .brand-title {
       font-size: 1.25rem;
@@ -195,6 +206,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      text-shadow: 0 0 10px rgba(217, 160, 102, 0.25);
     }
     .brand-slogan {
       margin: 0;
@@ -207,7 +219,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       gap: 0.75rem;
     }
 
-    /* Sync badge */
+    /* Sync badge com toque de vidro */
     .sync-status {
       display: inline-flex;
       align-items: center;
@@ -217,7 +229,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       font-size: 0.75rem;
       font-weight: 600;
       background: rgba(127, 191, 143, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(127, 191, 143, 0.4);
+      box-shadow: 0 0 12px rgba(127, 191, 143, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       color: var(--success);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -225,53 +240,63 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .sync-status.offline {
       background: rgba(217, 160, 102, 0.15);
       border-color: rgba(217, 160, 102, 0.4);
+      box-shadow: 0 0 12px rgba(217, 160, 102, 0.2);
       color: var(--amber);
     }
     .sync-status.loading {
       background: rgba(61, 124, 166, 0.2);
       border-color: rgba(61, 124, 166, 0.5);
+      box-shadow: 0 0 12px rgba(61, 124, 166, 0.25);
       color: #6EB2DD;
     }
 
-    /* Navigation Tabs */
+    /* 3. NAVEGAÇÃO (Abas com efeito vidro elegante) */
     .nav-tabs {
       display: flex;
       gap: 0.5rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(240, 229, 213, 0.12);
       margin: 1.5rem 0 1rem;
       overflow-x: auto;
       scrollbar-width: none;
+      padding-bottom: 0.35rem;
     }
     .nav-tab-btn {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
-      padding: 0.65rem 1.1rem;
+      padding: 0.6rem 1.15rem;
+      border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
       white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25), 0 0 14px rgba(61, 124, 166, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
     .nav-tab-btn:hover {
       color: var(--text);
+      background: rgba(27, 37, 65, 0.48);
+      border-color: rgba(240, 229, 213, 0.24);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), 0 0 18px rgba(61, 124, 166, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
     }
     .nav-tab-btn.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-      background: rgba(232, 125, 72, 0.08);
-      border-radius: 6px 6px 0 0;
+      color: #FFFFFF;
+      background: rgba(27, 37, 65, 0.65);
+      border: 1px solid rgba(232, 125, 72, 0.6);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 22px rgba(232, 125, 72, 0.28), 0 0 8px rgba(61, 124, 166, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.20);
     }
 
-    /* Buttons */
+    /* Buttons Júpiter com glow */
     .btn-jupiter {
       background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
       color: #FFFFFF;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       padding: 0.5rem 1rem;
       border-radius: 6px;
       font-weight: 600;
@@ -280,35 +305,41 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       align-items: center;
       gap: 0.4rem;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(232, 125, 72, 0.25);
+      box-shadow: 0 4px 14px rgba(232, 125, 72, 0.3), 0 0 16px rgba(232, 125, 72, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
       transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s;
     }
     .btn-jupiter:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(232, 125, 72, 0.4);
+      box-shadow: 0 6px 18px rgba(232, 125, 72, 0.45), 0 0 24px rgba(232, 125, 72, 0.35);
       filter: brightness(1.08);
     }
     .btn-jupiter-outline {
-      background: rgba(28, 37, 65, 0.6);
+      background: rgba(27, 37, 65, 0.40);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       color: var(--text);
-      border: 1px solid var(--border-strong);
+      border: 1px solid rgba(240, 229, 213, 0.14);
       padding: 0.45rem 0.85rem;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 0 12px rgba(61, 124, 166, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       transition: all 0.2s ease;
     }
     .btn-jupiter-outline:hover {
-      background: var(--surface-elevated);
-      border-color: var(--accent);
+      background: rgba(27, 37, 65, 0.65);
+      border-color: rgba(240, 229, 213, 0.25);
+      box-shadow: 0 0 16px rgba(61, 124, 166, 0.20);
       color: #FFF;
     }
 
-    /* Filter Bar */
+    /* 2. BORDAS E CONTAINERS VIDRO: Painel de Filtros */
     .filter-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: var(--radius);
       padding: 0.85rem 1.15rem;
       margin-bottom: 1.5rem;
@@ -316,7 +347,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       flex-wrap: wrap;
       align-items: flex-end;
       gap: 0.85rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35), 0 0 20px rgba(61, 124, 166, 0.15), 0 0 8px rgba(216, 160, 102, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.10);
     }
     .filter-item {
       display: flex;
@@ -333,21 +364,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       color: var(--amber);
     }
     .filter-item select, .filter-item input {
-      background: var(--surface-elevated);
+      background: rgba(11, 19, 43, 0.75);
       color: var(--text);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(240, 229, 213, 0.14);
       border-radius: 6px;
       padding: 0.45rem 0.65rem;
       font-size: 0.82rem;
       outline: none;
-      transition: border-color 0.2s;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     .filter-item select:focus, .filter-item input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.2);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25), 0 0 12px rgba(232, 125, 72, 0.3);
     }
 
-    /* KPI Grid - 8 lado a lado no desktop */
+    /* KPI Grid - 8 lado a lado no desktop com vidro e leve glow */
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -366,19 +398,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
     .jupiter-kpi {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: var(--radius);
       padding: 0.65rem 0.5rem;
       text-align: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-      transition: transform 0.15s ease, border-color 0.15s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 18px rgba(61, 124, 166, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .jupiter-kpi:hover {
       transform: translateY(-2px);
-      border-color: var(--border-strong);
+      border-color: rgba(240, 229, 213, 0.25);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 24px rgba(61, 124, 166, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.14);
     }
     .jupiter-kpi::before {
       content: "";
@@ -400,6 +435,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       color: #F8F8F8;
       line-height: 1.15;
       margin-bottom: 0.15rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     }
     .jupiter-kpi .title {
       font-size: 0.72rem;
@@ -418,7 +454,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       overflow: hidden;
     }
 
-    /* Charts Section - Maior aproveitamento e altura de 320px */
+    /* Painéis de Gráficos com Efeito Vidro */
     .charts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -426,11 +462,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       margin-bottom: 1.75rem;
     }
     .chart-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: var(--radius);
       padding: 1.15rem;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      box-shadow: var(--glass-shadow);
       display: flex;
       flex-direction: column;
       min-height: 380px;
@@ -441,7 +479,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       justify-content: space-between;
       margin-bottom: 0.85rem;
       padding-bottom: 0.55rem;
-      border-bottom: 1px solid rgba(90, 125, 154, 0.25);
+      border-bottom: 1px solid rgba(240, 229, 213, 0.10);
     }
     .chart-title {
       font-size: 0.95rem;
@@ -452,6 +490,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       display: flex;
       align-items: center;
       gap: 0.45rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
     .chart-render-area {
       min-height: 320px;
@@ -462,7 +501,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       position: relative;
     }
 
-    /* Custom SVG Bar Chart Styles - Números DENTRO da barra com alto contraste */
+    /* Custom SVG Bar Chart Styles */
     .svg-bar-row {
       display: flex;
       align-items: center;
@@ -483,11 +522,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .svg-bar-track {
       flex: 1;
       height: 30px;
-      background: rgba(28, 37, 65, 0.8);
+      background: rgba(27, 37, 65, 0.65);
       border-radius: 6px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(90, 125, 154, 0.3);
+      border: 1px solid rgba(240, 229, 213, 0.10);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
     }
     .svg-bar-fill {
       height: 100%;
@@ -499,13 +539,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       font-weight: 700;
       font-size: 0.84rem;
       color: #FFFFFF;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
       transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       box-sizing: border-box;
       min-width: 32px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
     }
 
-    /* Donut container - Números nas fatias, sem tabelas soltas */
+    /* Donut container */
     .donut-wrapper {
       display: flex;
       flex-direction: column;
@@ -530,26 +571,32 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       gap: 0.35rem;
       padding: 0.25rem 0.55rem;
       border-radius: 999px;
-      background: rgba(28, 37, 65, 0.7);
-      border: 1px solid rgba(90, 125, 154, 0.3);
+      background: rgba(27, 37, 65, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       font-size: 0.72rem;
       font-weight: 600;
       color: var(--cream);
+      box-shadow: 0 0 10px rgba(61, 124, 166, 0.08);
     }
     .donut-badge-item .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       display: inline-block;
+      box-shadow: 0 0 6px currentColor;
     }
 
-    /* Task Card */
+    /* Task Card com Efeito Vidro */
     .task-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: 8px;
       padding: 0.95rem;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 18px rgba(61, 124, 166, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.07);
       cursor: pointer;
       transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       display: flex;
@@ -559,8 +606,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
     .task-card:hover {
       transform: translateY(-2px);
-      border-color: var(--glow);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+      border-color: rgba(240, 229, 213, 0.28);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45), 0 0 26px rgba(61, 124, 166, 0.24), 0 0 8px rgba(216, 160, 102, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.14);
     }
     .task-card-title {
       font-size: 0.96rem;
@@ -588,9 +635,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       letter-spacing: 0.02em;
     }
     .chip-dept {
-      background: rgba(90, 125, 154, 0.22);
+      background: rgba(61, 124, 166, 0.20);
       color: #B5D2EB;
-      border: 1px solid rgba(90, 125, 154, 0.4);
+      border: 1px solid rgba(61, 124, 166, 0.35);
     }
     .chip-prio-alta {
       background: rgba(229, 105, 95, 0.2);
@@ -608,9 +655,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       border: 1px solid rgba(61, 124, 166, 0.4);
     }
     .chip-status {
-      background: rgba(28, 37, 65, 0.8);
+      background: rgba(27, 37, 65, 0.65);
       color: var(--cream);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(240, 229, 213, 0.12);
     }
     .chip-dono {
       background: rgba(166, 107, 73, 0.22);
@@ -647,7 +694,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       gap: 0.65rem;
     }
 
-    /* Kanban Board */
+    /* Kanban Board com Colunas de Vidro */
     .kanban-board {
       display: grid;
       grid-template-columns: repeat(5, minmax(260px, 1fr));
@@ -657,17 +704,20 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       scrollbar-width: thin;
     }
     .kanban-col {
-      background: rgba(21, 22, 36, 0.9);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: var(--radius);
       display: flex;
       flex-direction: column;
       max-height: 80vh;
       min-width: 250px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(61, 124, 166, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
     .kanban-col-header {
       padding: 0.85rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(240, 229, 213, 0.10);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -675,12 +725,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       font-size: 0.88rem;
     }
     .kanban-col-count {
-      background: var(--surface-elevated);
+      background: rgba(27, 37, 65, 0.65);
       color: var(--amber);
       font-size: 0.72rem;
       padding: 0.15rem 0.5rem;
       border-radius: 999px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(240, 229, 213, 0.12);
     }
     .kanban-col-body {
       padding: 0.75rem;
@@ -702,11 +752,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
     .reunioes-filter-group {
       display: inline-flex;
-      background: #10121E;
-      border: 1px solid var(--border-strong);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: 8px;
       padding: 4px;
       gap: 6px;
+      box-shadow: 0 0 16px rgba(61, 124, 166, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
     .reuniao-filter-btn {
       background: transparent;
@@ -732,27 +785,29 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       background: linear-gradient(135deg, rgba(232, 125, 72, 0.25), rgba(217, 160, 102, 0.3));
       border-color: var(--accent);
       color: #FFA97A;
-      box-shadow: 0 0 10px rgba(232, 125, 72, 0.25);
+      box-shadow: 0 0 12px rgba(232, 125, 72, 0.35);
     }
     .reuniao-filter-btn.active[data-filter="mes"] {
       background: linear-gradient(135deg, rgba(61, 124, 166, 0.3), rgba(90, 125, 154, 0.35));
       border-color: #6EB2DD;
       color: #A3D4F7;
-      box-shadow: 0 0 10px rgba(61, 124, 166, 0.25);
+      box-shadow: 0 0 12px rgba(61, 124, 166, 0.35);
     }
     .reuniao-filter-btn.active[data-filter="ano"] {
       background: linear-gradient(135deg, rgba(127, 191, 143, 0.25), rgba(90, 154, 110, 0.3));
       border-color: #7FBF8F;
       color: #B2E5BD;
-      box-shadow: 0 0 10px rgba(127, 191, 143, 0.25);
+      box-shadow: 0 0 12px rgba(127, 191, 143, 0.35);
     }
     .reuniao-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: var(--radius);
       padding: 1.25rem;
       margin-bottom: 1.25rem;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      box-shadow: var(--glass-shadow);
     }
     .reuniao-header {
       display: flex;
@@ -827,11 +882,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-bottom: 1px solid rgba(90, 125, 154, 0.35);
+      border-bottom: 1px solid rgba(240, 229, 213, 0.14);
       padding-bottom: 0.4rem;
     }
     .reuniao-resumo {
-      background: rgba(28, 37, 65, 0.5);
+      background: var(--glass-bg-subtle);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(240, 229, 213, 0.10);
       border-left: 3px solid var(--accent);
       padding: 0.85rem 1rem;
       border-radius: 0 6px 6px 0;
@@ -839,6 +897,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       line-height: 1.55;
       color: var(--text);
       margin: 0.85rem 0;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
     .reuniao-resumo-label {
       font-size: 0.72rem;
@@ -877,6 +936,90 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       align-items: center;
       justify-content: space-between;
     }
+    .reuniao-plano-toggle {
+      background: var(--glass-bg-subtle);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: 8px;
+      padding: 0.7rem 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      margin-top: 1rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    .reuniao-plano-toggle:hover {
+      background: rgba(27, 37, 65, 0.65);
+      border-color: rgba(232, 125, 72, 0.45);
+      box-shadow: 0 0 16px rgba(61, 124, 166, 0.18);
+    }
+    .reuniao-plano-toggle.expanded {
+      border-color: rgba(232, 125, 72, 0.5);
+      background: rgba(27, 37, 65, 0.55);
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    .reuniao-plano-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+    }
+    .plano-flag-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: rgba(232, 125, 72, 0.2);
+      border: 1px solid rgba(232, 125, 72, 0.4);
+      color: #FFA97A;
+      font-size: 0.85rem;
+      line-height: 1;
+      transition: transform 0.25s ease, background-color 0.2s ease;
+    }
+    .reuniao-plano-toggle.expanded .plano-flag-icon {
+      transform: rotate(90deg);
+      background: rgba(232, 125, 72, 0.35);
+      border-color: var(--accent);
+      color: #FFF;
+    }
+    .plano-body-collapsible {
+      display: none;
+      margin-top: 0.65rem;
+      padding: 0.85rem;
+      background: rgba(11, 19, 43, 0.5);
+      border: 1px solid rgba(240, 229, 213, 0.1);
+      border-radius: 8px;
+      animation: fadeInPlano 0.2s ease;
+    }
+    .plano-body-collapsible.expanded {
+      display: block;
+    }
+    @keyframes fadeInPlano {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .plano-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--glass-bg-subtle);
+      border: 1px solid rgba(240, 229, 213, 0.1);
+      border-radius: 6px;
+      margin-bottom: 0.85rem;
+    }
     .action-item-list {
       list-style: none;
       padding: 0;
@@ -891,10 +1034,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       justify-content: space-between;
       gap: 0.75rem;
       padding: 0.55rem 0.75rem;
-      background: var(--surface-elevated);
-      border: 1px solid rgba(90, 125, 154, 0.3);
+      background: var(--glass-bg-subtle);
+      border: 1px solid rgba(240, 229, 213, 0.10);
       border-radius: 6px;
       font-size: 0.8rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
     .action-item-desc {
       font-weight: 600;
@@ -902,12 +1046,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       flex: 1;
     }
 
-    /* Modals */
+    /* Modals com Vidro e Brilho Suave */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(8, 8, 12, 0.82);
-      backdrop-filter: blur(6px);
+      background: rgba(8, 8, 12, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 1000;
       display: none;
       align-items: center;
@@ -918,24 +1063,26 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       display: flex;
     }
     .modal-dialog {
-      background: #151624;
-      border: 1px solid var(--border-strong);
+      background: rgba(21, 22, 36, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(240, 229, 213, 0.16);
       border-radius: var(--radius);
       width: 100%;
       max-width: 620px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 32px rgba(61, 124, 166, 0.22), 0 0 10px rgba(216, 160, 102, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       display: flex;
       flex-direction: column;
     }
     .modal-header {
       padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(240, 229, 213, 0.12);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #1C2541;
+      background: rgba(27, 37, 65, 0.40);
     }
     .modal-header h3 {
       margin: 0;
@@ -979,18 +1126,19 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       gap: 0.85rem;
     }
     .form-control {
-      background: #0B132B;
-      border: 1px solid var(--border);
+      background: rgba(11, 19, 43, 0.75);
+      border: 1px solid rgba(240, 229, 213, 0.14);
       color: var(--text);
       padding: 0.55rem 0.75rem;
       border-radius: 6px;
       font-size: 0.85rem;
       outline: none;
-      transition: border-color 0.2s;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     .form-control:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25), 0 0 12px rgba(232, 125, 72, 0.3);
     }
     textarea.form-control {
       resize: vertical;
@@ -998,16 +1146,456 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
     .modal-footer {
       padding: 1rem 1.25rem;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgba(240, 229, 213, 0.12);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
       flex-wrap: wrap;
-      background: rgba(28, 37, 65, 0.4);
+      background: rgba(27, 37, 65, 0.40);
     }
 
-    /* PMO Action Plan Selection Modal */
+    /* Equipe & Dossiê Styles com Vidro */
+    .equipe-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .equipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.25rem;
+    }
+    .colab-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 22px rgba(61, 124, 166, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .colab-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(240, 229, 213, 0.26);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 28px rgba(61, 124, 166, 0.25), 0 0 10px rgba(216, 160, 102, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+    .colab-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--amber));
+    }
+    .colab-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .colab-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(232, 125, 72, 0.35), rgba(61, 124, 166, 0.45));
+      border: 2px solid rgba(240, 229, 213, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #FFF;
+      flex-shrink: 0;
+      box-shadow: 0 0 14px rgba(61, 124, 166, 0.25);
+    }
+    .colab-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .colab-nome {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #FFF;
+      margin: 0 0 0.15rem;
+    }
+    .colab-cargo {
+      font-size: 0.82rem;
+      color: var(--amber);
+      font-weight: 600;
+      margin: 0;
+    }
+    .colab-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .colab-desc-preview {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      background: var(--glass-bg-subtle);
+      padding: 0.55rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid rgba(240, 229, 213, 0.10);
+    }
+
+    /* Dossie View com Vidro */
+    .dossie-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+    .dossie-banner {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4), 0 0 24px rgba(61, 124, 166, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    }
+    .dossie-person {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+    .dossie-avatar {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, #3D7CA6 100%);
+      border: 2px solid #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #FFF;
+      box-shadow: 0 0 20px rgba(232, 125, 72, 0.45);
+    }
+    .dossie-role-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.35rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(61, 124, 166, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .dossie-role-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--amber);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .dossie-role-desc {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text);
+      margin: 0;
+    }
+
+    /* Matriz FOFA com Vidro */
+    .fofa-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      .fofa-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .fofa-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: var(--radius);
+      padding: 1.1rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), 0 0 18px rgba(61, 124, 166, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      min-height: 200px;
+    }
+    .fofa-card.forcas { border-top: 3px solid #7FBF8F; }
+    .fofa-card.fraquezas { border-top: 3px solid #E5695F; }
+    .fofa-card.oportunidades { border-top: 3px solid #3D7CA6; }
+    .fofa-card.ameacas { border-top: 3px solid #D9A066; }
+
+    .fofa-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px solid rgba(240, 229, 213, 0.10);
+    }
+    .fofa-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .fofa-card.forcas .fofa-title { color: #7FBF8F; }
+    .fofa-card.fraquezas .fofa-title { color: #FFA39E; }
+    .fofa-card.oportunidades .fofa-title { color: #A3D4F7; }
+    .fofa-card.ameacas .fofa-title { color: #F5CE9F; }
+    .fofa-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      flex: 1;
+    }
+    .fofa-item {
+      background: var(--glass-bg-subtle);
+      border: 1px solid rgba(240, 229, 213, 0.10);
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .fofa-item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Linha do Tempo de Fatos */
+    .timeline-container {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(61, 124, 166, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      position: relative;
+      margin-top: 1rem;
+      padding-left: 1.5rem;
+      border-left: 2px solid rgba(90, 125, 154, 0.35);
+    }
+    .timeline-item {
+      position: relative;
+      background: var(--glass-bg-subtle);
+      border: 1px solid rgba(240, 229, 213, 0.12);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      box-shadow: 0 0 14px rgba(61, 124, 166, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.95rem;
+      top: 1rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 8px rgba(232, 125, 72, 0.5);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.35rem;
+    }
+    .timeline-desc {
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: #F8F8F8;
+      margin: 0.25rem 0;
+    }
+
+    /* Contrato de Expectativa com Vidro & Interatividade */
+    .contrato-box {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(240, 229, 213, 0.14);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 24px rgba(61, 124, 166, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      position: relative;
+    }
+    .contrato-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(240, 229, 213, 0.10);
+    }
+    .contrato-prazo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(232, 125, 72, 0.2);
+      border: 1px solid rgba(232, 125, 72, 0.45);
+      color: #FFA97A;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .contrato-sections-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .contrato-section-card {
+      background: var(--glass-bg-subtle);
+      border: 1px solid rgba(240, 229, 213, 0.10);
+      border-radius: 8px;
+      padding: 0.95rem 1.1rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .contrato-section-card.metas { border-left: 3px solid #3D7CA6; }
+    .contrato-section-card.expectativas { border-left: 3px solid #E5695F; }
+    .contrato-section-card.riscos { border-left: 3px solid #D9A066; }
+    .contrato-section-card.manter { border-left: 3px solid #7FBF8F; }
+    .contrato-section-card.compromissos { border-left: 3px solid #E87D48; }
+
+    .contrato-section-title {
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .contrato-item-row {
+      background: rgba(11, 19, 43, 0.65);
+      border: 1px solid rgba(240, 229, 213, 0.08);
+      border-radius: 6px;
+      padding: 0.65rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      position: relative;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .contrato-item-row:hover {
+      border-color: rgba(240, 229, 213, 0.22);
+      background: rgba(11, 19, 43, 0.85);
+    }
+    .contrato-origem-tag {
+      font-size: 0.72rem;
+      color: var(--amber);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .contrato-item-text {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #F8F8F8;
+      outline: none;
+      border: 1px dashed transparent;
+      padding: 3px 5px;
+      border-radius: 4px;
+      cursor: text;
+      transition: all 0.2s;
+    }
+    .contrato-item-text:hover {
+      background: rgba(28, 37, 65, 0.6);
+      border-color: rgba(232, 125, 72, 0.4);
+    }
+    .contrato-item-text:focus {
+      background: rgba(8, 8, 12, 0.95);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25);
+    }
+    .contrato-btn-del {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 2px 5px;
+      border-radius: 4px;
+      line-height: 1;
+      transition: color 0.15s, background-color 0.15s;
+    }
+    .contrato-btn-del:hover {
+      color: var(--danger);
+      background: rgba(229, 105, 95, 0.15);
+    }
+    .contrato-btn-add {
+      background: rgba(27, 37, 65, 0.35);
+      border: 1px dashed rgba(240, 229, 213, 0.2);
+      color: var(--cream);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s;
+      align-self: flex-start;
+      margin-top: 0.2rem;
+    }
+    .contrato-btn-add:hover {
+      background: rgba(27, 37, 65, 0.7);
+      border-color: var(--accent);
+      color: #FFF;
+    }
+
+    /* PMO Action Plan Selection Modal com Vidro */
     .pmo-select-list {
       display: flex;
       flex-direction: column;
@@ -1020,22 +1608,24 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       display: flex;
       align-items: flex-start;
       gap: 0.75rem;
-      background: var(--surface-elevated);
-      border: 1px solid rgba(90, 125, 154, 0.35);
+      background: var(--glass-bg-subtle);
+      border: 1px solid rgba(240, 229, 213, 0.12);
       border-radius: 6px;
       padding: 0.75rem 0.85rem;
       transition: all 0.2s ease;
       cursor: pointer;
       user-select: none;
+      box-shadow: 0 0 12px rgba(61, 124, 166, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
     .pmo-select-item:hover {
-      border-color: var(--accent);
-      background: rgba(28, 37, 65, 0.85);
+      border-color: rgba(232, 125, 72, 0.5);
+      background: rgba(27, 37, 65, 0.65);
+      box-shadow: 0 0 16px rgba(61, 124, 166, 0.18);
     }
     .pmo-select-item.is-checked {
       border-color: var(--accent);
-      background: rgba(232, 125, 72, 0.12);
-      box-shadow: inset 0 0 0 1px rgba(232, 125, 72, 0.3);
+      background: rgba(232, 125, 72, 0.16);
+      box-shadow: 0 0 18px rgba(232, 125, 72, 0.22), inset 0 0 0 1px rgba(232, 125, 72, 0.35);
     }
     .pmo-select-cb {
       margin-top: 0.15rem;
@@ -1127,6 +1717,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </button>
       <button class="nav-tab-btn" data-tab="reunioes" onclick="window.masterMind.switchTab('reunioes')">
         🤝 Reuniões
+      </button>
+      <button class="nav-tab-btn" data-tab="equipe" onclick="window.masterMind.switchTab('equipe')">
+        👥 Equipe
       </button>
     </nav>
 
@@ -1351,6 +1944,39 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         <!-- Rendered by JS -->
       </div>
     </section>
+
+    <!-- TAB 5: EQUIPE (GESTÃO DE PESSOAS - GGC) -->
+    <section id="viewEquipe" class="tab-content" style="display: none;">
+      <!-- Modo 1: Lista de Colaboradores -->
+      <div id="equipeListView">
+        <div class="equipe-toolbar">
+          <div>
+            <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 0.5rem;">
+              👥 Gestão de Pessoas <span style="font-size: 0.8rem; color: var(--amber); font-weight: 600; text-transform: uppercase;">DGG&amp;C — Transnova</span>
+            </h2>
+            <p style="margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--text-muted);">
+              Acompanhamento de desenvolvimento, linha do tempo de fatos e Matriz FOFA individual.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.65rem; align-items: center;">
+            <button class="btn-jupiter" onclick="window.masterMind.openNovoColaborador()">
+              <span style="font-size: 1.1rem; line-height: 1;">+</span> Novo Colaborador
+            </button>
+          </div>
+        </div>
+
+        <div class="equipe-grid" id="colaboradoresGrid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Modo 2: Dossiê Individual do Colaborador -->
+      <div id="equipeDossieView" style="display: none;">
+        <div class="dossie-wrapper" id="dossieContainer">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- MODAL: DETALHES / NOVA TAREFA -->
@@ -1450,6 +2076,189 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           </div>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO/EDITAR COLABORADOR -->
+  <div id="colaboradorModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalColabTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalColabTitle">Cadastrar Colaborador</h3>
+        <button class="modal-close-btn" onclick="window.masterMind.closeColaboradorModal()" aria-label="Fechar">✕</button>
+      </div>
+      <form id="colaboradorForm" onsubmit="window.masterMind.saveColaborador(event)">
+        <div class="modal-body">
+          <input type="hidden" id="colabModalId">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="colabModalNome">Nome do Colaborador *</label>
+              <input type="text" id="colabModalNome" class="form-control" required placeholder="Ex: Raquel">
+            </div>
+            <div class="form-group">
+              <label for="colabModalCargo">Cargo *</label>
+              <input type="text" id="colabModalCargo" class="form-control" required placeholder="Ex: Analista de DP">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="colabModalDept">Departamento</label>
+              <input type="text" id="colabModalDept" class="form-control" value="GGC" placeholder="Ex: GGC">
+            </div>
+            <div class="form-group">
+              <label for="colabModalStatus">Status</label>
+              <select id="colabModalStatus" class="form-control">
+                <option value="Ativo">Ativo</option>
+                <option value="Férias">Férias</option>
+                <option value="Afastado">Afastado</option>
+                <option value="Inativo">Inativo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="colabModalAdmissao">Data de Admissão</label>
+            <input type="date" id="colabModalAdmissao" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="colabModalDesc">Descrição do Cargo (Missão e Responsabilidades) *</label>
+            <textarea id="colabModalDesc" class="form-control" rows="4" required placeholder="Descreva as atribuições, processos sob responsabilidade e escopo da função..."></textarea>
+            <small style="color: var(--text-muted); font-size: 0.72rem;">Esta descrição serve de base oficial para avaliações e contratos de expectativa.</small>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: flex-end;">
+          <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closeColaboradorModal()">Cancelar</button>
+          <button type="submit" class="btn-jupiter">Salvar Colaborador</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO FATO (REGISTRO DE DESENVOLVIMENTO) -->
+  <div id="fatoModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalFatoTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalFatoTitle">Registrar Novo Fato / Ocorrência</h3>
+        <button class="modal-close-btn" onclick="window.masterMind.closeFatoModal()" aria-label="Fechar">✕</button>
+      </div>
+      <form id="fatoForm" onsubmit="window.masterMind.saveFato(event)">
+        <div class="modal-body">
+          <input type="hidden" id="fatoModalColab">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fatoModalData">Data do Fato *</label>
+              <input type="date" id="fatoModalData" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="fatoModalTipo">Tipo de Registro *</label>
+              <select id="fatoModalTipo" class="form-control" onchange="window.masterMind.sugerirQuadranteFofa(this.value)">
+                <option value="Feedback">Feedback</option>
+                <option value="1:1">1:1 (Reunião Individual)</option>
+                <option value="Competência">Competência / Postura</option>
+                <option value="SBI">SBI (Situação-Comportamento-Impacto)</option>
+                <option value="Nota">Nota / Observação</option>
+                <option value="OKR">OKR / Metas</option>
+                <option value="Atitude Positiva">Atitude Positiva / Elogio</option>
+                <option value="Entrega Destacada">Entrega Destacada / Meta Superada</option>
+                <option value="Ocorrência">Ocorrência / Desvio Operacional</option>
+                <option value="Atraso / Prazo">Atraso / Quebra de Prazo</option>
+                <option value="Capacitação">Capacitação / Aprendizado</option>
+                <option value="Novo Desafio">Novo Desafio / Projeto</option>
+                <option value="Risco / Sobrecarga">Risco / Sobrecarga</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fatoModalQuadrante">Quadrante FOFA *</label>
+              <select id="fatoModalQuadrante" class="form-control" required>
+                <option value="Força">💪 Força (Ponto Forte)</option>
+                <option value="Fraqueza">⚠️ Fraqueza (Ponto a Desenvolver)</option>
+                <option value="Oportunidade">🚀 Oportunidade (Crescimento/Melhoria)</option>
+                <option value="Ameaça">🛡️ Ameaça (Risco/Desafio Externo)</option>
+                <option value="Nenhum">📝 Nenhum (Nota / Observação)</option>
+              </select>
+              <small style="color: var(--amber); font-size: 0.7rem;">Sugerido automaticamente com base no tipo.</small>
+            </div>
+            <div class="form-group">
+              <label for="fatoModalImpacto">Impacto / Nota</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;">
+                <select id="fatoModalImpacto" class="form-control">
+                  <option value="Alto">Alto</option>
+                  <option value="Médio" selected>Médio</option>
+                  <option value="Baixo">Baixo</option>
+                </select>
+                <input type="number" id="fatoModalNota" class="form-control" min="1" max="10" placeholder="Nota 1-10">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fatoModalDesc">Descrição do Fato / Evidência *</label>
+            <textarea id="fatoModalDesc" class="form-control" rows="3" required placeholder="Descreva o fato concreto, contexto e o comportamento observado..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fatoModalOrigem">Origem / Canal</label>
+              <select id="fatoModalOrigem" class="form-control">
+                <option value="Observação Direta">Observação Direta</option>
+                <option value="Reunião">Reunião</option>
+                <option value="Feedback de Pares">Feedback de Pares</option>
+                <option value="Cliente / Fornecedor">Cliente / Fornecedor</option>
+                <option value="ERP Rodopar">ERP Rodopar / Sistema</option>
+                <option value="Auditoria">Auditoria</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fatoModalProjeto">Projeto Relacionado</label>
+              <input type="text" id="fatoModalProjeto" class="form-control" placeholder="Ex: Rodopar, Galpão, Folha">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fatoModalObs">Plano de Ação / Observações</label>
+            <textarea id="fatoModalObs" class="form-control" rows="2" placeholder="Alinhamento acordado, encaminhamento ou data de follow-up..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: flex-end;">
+          <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closeFatoModal()">Cancelar</button>
+          <button type="submit" class="btn-jupiter">Salvar Fato</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: FEEDBACK ESTRUTURADO GOOGLE DOCS -->
+  <div id="feedbackModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalFeedbackTitle">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 id="modalFeedbackTitle">📄 Dossiê &amp; Feedback Estruturado Transnova</h3>
+        <button class="modal-close-btn" onclick="window.masterMind.closeFeedbackModal()" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: rgba(28, 37, 65, 0.7); border: 1px solid var(--border-strong); padding: 0.85rem 1rem; border-radius: 6px;">
+          <p style="margin: 0; font-size: 0.85rem; line-height: 1.5; color: #FFF;">
+            O dossiê estruturado foi consolidado com a <strong>Matriz FOFA</strong>, histórico de fatos e <strong>Contrato de Expectativa</strong> de 90 dias pronto para geração oficial.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label style="color: var(--amber);">Pré-visualização do Documento (Padrão Transnova)</label>
+          <textarea id="feedbackPreviewText" class="form-control" rows="12" readonly style="font-family: monospace; font-size: 0.8rem; background: #08080C;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.copyFeedbackToClipboard()">📋 Copiar Texto</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closeFeedbackModal()">Fechar</button>
+          <a id="btnOpenDocsFeedback" href="#" target="_blank" rel="noopener noreferrer" class="btn-jupiter" style="text-decoration: none;">
+            📄 Abrir no Google Docs
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1559,6 +2368,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const SYNC_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
       const STORAGE_TASKS_KEY = 'masterMind_tasks_jupiter';
       const STORAGE_REUNIOES_KEY = 'masterMind_reunioes';
+      const STORAGE_EQUIPE_KEY = 'masterMind_equipe';
+      const STORAGE_FATOS_KEY = 'masterMind_fatos';
+      const STORAGE_CONTRATOS_KEY = 'masterMind_contratos_custom';
 
       // Fallback tasks
       const DEFAULT_TASKS = [
@@ -1631,11 +2443,432 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         };
       }
 
+      // SEED LOCAL (fallback) — 5 colaboradores do GGC especificados
+      const SEED_EQUIPE = [
+        {
+          nome: "Raquel",
+          cargo: "Analista de DP",
+          descricao_cargo: "Analista de Departamento Pessoal Sênior — Participar dos processos de admissão, demissão, rescisões contratuais, folha de pagamento, férias, encargos sociais, benefícios, indicadores de desempenho de pessoal e apoio ao Plano de Cargos e Salários.",
+          departamento: "GGC",
+          admissao: "2024-03-01",
+          status: "Ativo"
+        },
+        {
+          nome: "Carmen",
+          cargo: "Analista de RH",
+          descricao_cargo: "Analista de Gente Gestão & Cultura Sênior — Recrutamento e seleção, treinamento e desenvolvimento, integração de novos colaboradores, avaliação de desempenho, pesquisa de clima, Plano de Cargos e Salários, benefícios e indicadores de gestão de pessoas.",
+          departamento: "GGC",
+          admissao: "2023-08-15",
+          status: "Ativo"
+        },
+        {
+          nome: "Barbara",
+          cargo: "Assistente de GGC",
+          descricao_cargo: "Assistente de Gente Gestão & Cultura IV — Apoiar recrutamento e seleção, triagem de currículos, integração, cadastros no sistema, benefícios, avaliação de desempenho e arquivamento de documentos do DGG&C.",
+          departamento: "GGC",
+          admissao: "2024-05-10",
+          status: "Ativo"
+        },
+        {
+          nome: "Bruno",
+          cargo: "Assistente de DP",
+          descricao_cargo: "Assistente de Departamento Pessoal — Apoiar admissão, rescisões, fechamento de ponto e horas, folha de pagamento, carteiras profissionais, benefícios, arquivamento e cadastros de pessoal da Área Operacional.",
+          departamento: "GGC",
+          admissao: "2024-02-20",
+          status: "Ativo"
+        },
+        {
+          nome: "Mariana",
+          cargo: "Recepcionista",
+          descricao_cargo: "Recepcionista — Recepcionar e atender clientes, fornecedores e visitantes, prestar informações, receber e distribuir correspondência, controlar estoque de uniformes/EPIs e materiais, apoiar endomarketing. Acumula tarefas de Assistente de GGC.",
+          departamento: "GGC",
+          admissao: "2023-11-01",
+          status: "Ativo"
+        }
+      ];
+
+      // SEED LOCAL DE FATOS REAIS DA PLANILHA (aba Fatos) — Gestao_Tarefas_Transnova
+      const SEED_FATOS = [
+        // ================= BARBARA (22/05/2026) =================
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "Competência",
+          quadrante_fofa: "Força",
+          descricao: "Esforçada, Interessada, Competente, Comprometida.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 22/05/2026",
+          projeto: "Desenvolvimento GG&C",
+          observacao: "Perfil engajado e dedicado às metas do departamento."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "Competência",
+          quadrante_fofa: "Força",
+          descricao: "Pensa fora da caixinha, Ótima postura, Se veste bem, Boa ouvinte, Participativa.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 22/05/2026",
+          projeto: "Desenvolvimento GG&C",
+          observacao: "Excelente comunicação interpessoal e escuta ativa."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "SBI",
+          quadrante_fofa: "Fraqueza",
+          descricao: "Não conhece todo o processo do departamento, Está aprendendo sobre as ferramentas.",
+          impacto: "Médio",
+          nota: "6",
+          origem: "Feedback 22/05/2026",
+          projeto: "Capacitação Interna",
+          observacao: "Curva de aprendizagem em andamento para autonomia plena."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "SBI",
+          quadrante_fofa: "Fraqueza",
+          descricao: "Atenção no horário, Atenção na fala (dicção) e escrita.",
+          impacto: "Médio",
+          nota: "6",
+          origem: "Feedback 22/05/2026",
+          projeto: "Comunicação e Pontualidade",
+          observacao: "Alinhar rotina e revisão prévia de redações e e-mails corporativos."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "OKR",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Fazer carreira na Transnova, Ser promovida após implantação dos novos processos.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 22/05/2026",
+          projeto: "Plano de Carreira",
+          observacao: "Potencial acelerado com a consolidação dos novos fluxos de trabalho."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "OKR",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Ganhar espaço em frentes importantes, Ganhar visibilidade para outras frentes além do GG&C, Desenvolver carreira em RH.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 22/05/2026",
+          projeto: "Expansão de Escopo",
+          observacao: "Interesse manifesto em ampliar atuações estratégicas de Recursos Humanos."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "SBI",
+          quadrante_fofa: "Ameaça",
+          descricao: "Se deixar levar pelas situações e postura das pessoas, Não entregar os processos nas datas.",
+          impacto: "Alto",
+          nota: "5",
+          origem: "Feedback 22/05/2026",
+          projeto: "Blindagem Emocional e Prazos",
+          observacao: "Desenvolver postura assertiva sem absorver ruídos externos."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "SBI",
+          quadrante_fofa: "Ameaça",
+          descricao: "Não usar 100% do potencial por falta de atenção, Não vender melhor as ideias.",
+          impacto: "Médio",
+          nota: "6",
+          origem: "Feedback 22/05/2026",
+          projeto: "Influência e Apresentação",
+          observacao: "Capacitar apresentação estruturada para defender suas propostas com segurança."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "Nota",
+          quadrante_fofa: "Força",
+          descricao: "Uma ótima contratação, Encaixou perfeitamente no departamento, Quer fazer carreira.",
+          impacto: "Alto",
+          nota: "10",
+          origem: "Observações do Feedback Anterior",
+          projeto: "Cultura GG&C",
+          observacao: "Excelente encaixe com o time e alto interesse em crescimento contínuo."
+        },
+        {
+          colaborador: "Barbara",
+          data: "2026-05-22",
+          tipo: "Nota",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Definir prazos para entrega, Acessar semanalmente o BI de Contratações, Dominar os cadastros do RH, Buscar aperfeiçoar conhecimentos em transporte e RH.",
+          impacto: "Alto",
+          nota: "8",
+          origem: "Observações do Feedback Anterior",
+          projeto: "Metas de Desenvolvimento",
+          observacao: "Acompanhamento semanal dos indicadores de contratação e rotinas do setor."
+        },
+
+        // ================= BRUNO (12/02/2026) =================
+        {
+          colaborador: "Bruno",
+          data: "2026-02-12",
+          tipo: "Competência",
+          quadrante_fofa: "Força",
+          descricao: "Boa Postura, Comunicação Assertiva, Paciente, Educado, Atencioso, Ágil em aprender, Solicito.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 12/02/2026",
+          projeto: "Atendimento DP",
+          observacao: "Reconhecido pela calma, respeito e rapidez na assimilação de processos."
+        },
+        {
+          colaborador: "Bruno",
+          data: "2026-02-12",
+          tipo: "SBI",
+          quadrante_fofa: "Fraqueza",
+          descricao: "Timidez, Crenças Limitadoras.",
+          impacto: "Médio",
+          nota: "6",
+          origem: "Feedback 12/02/2026",
+          projeto: "Autoconfiança",
+          observacao: "Trabalhar expansão da autoconfiança e posicionamento frente ao time e liderança."
+        },
+        {
+          colaborador: "Bruno",
+          data: "2026-02-12",
+          tipo: "OKR",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Se desenvolver em segurança do trabalho/folha/treinamentos, Fazer graduação, Fazer apresentação de resultados, Liderar grandes projetos, Ser mais pró-ativo.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 12/02/2026",
+          projeto: "Plano de Carreira DP",
+          observacao: "Caminho aberto para evolução técnica e liderança em projetos estratégicos."
+        },
+        {
+          colaborador: "Bruno",
+          data: "2026-02-12",
+          tipo: "SBI",
+          quadrante_fofa: "Ameaça",
+          descricao: "Perder oportunidades por medo, Não se achar merecedor, Se comparar com os outros.",
+          impacto: "Alto",
+          nota: "5",
+          origem: "Feedback 12/02/2026",
+          projeto: "Mentoria",
+          observacao: "Importante acompanhamento para superar a síndrome do impostor e receio de assumir protagonismo."
+        },
+        {
+          colaborador: "Bruno",
+          data: "2026-02-12",
+          tipo: "Nota",
+          quadrante_fofa: "Força",
+          descricao: "Excelente desempenho, Aderiu à cultura, Participa ativamente das mudanças, Abraçou as demandas, Seguiu o Contrato de Expectativa de Out/2025.",
+          impacto: "Alto",
+          nota: "10",
+          origem: "Observações do Feedback Anterior",
+          projeto: "Alinhamento Cultural",
+          observacao: "Comprometimento comprovado com todas as diretrizes do contrato de expectativas pactuado."
+        },
+
+        // ================= CARMEN (25/05/2026) =================
+        {
+          colaborador: "Carmen",
+          data: "2026-05-25",
+          tipo: "Competência",
+          quadrante_fofa: "Força",
+          descricao: "Boa comunicação, Domina assuntos jurídicos, Domina desligamento, Conhece pessoas e cultura, Boa comunicadora, Pessoas se sentem acolhidas, Tem boas ideias.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 25/05/2026",
+          projeto: "Gente e Cultura",
+          observacao: "Referência no acolhimento, domínio de rotinas jurídicas trabalhistas e desligamentos humanizados."
+        },
+        {
+          colaborador: "Carmen",
+          data: "2026-05-25",
+          tipo: "SBI",
+          quadrante_fofa: "Fraqueza",
+          descricao: "Não se envolve nos demais assuntos do RH, Sugere ideias mas não executa, Estende demais conversas, Pouco participativa nos projetos, Não se preocupa com indicadores, Horários.",
+          impacto: "Alto",
+          nota: "5",
+          origem: "Feedback 25/05/2026",
+          projeto: "Execução e Gestão por Indicadores",
+          observacao: "Necessário foco em execução prática, pontualidade e orientação a dados e métricas."
+        },
+        {
+          colaborador: "Carmen",
+          data: "2026-05-25",
+          tipo: "OKR",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Crescer em RH, Executar trabalho de Analista e Supervisão, Atuar na parte estratégica.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 25/05/2026",
+          projeto: "Evolução para Supervisão",
+          observacao: "Capacidade para assumir liderança e visão estratégica de RH com a devida disciplina operacional."
+        },
+        {
+          colaborador: "Carmen",
+          data: "2026-05-25",
+          tipo: "SBI",
+          quadrante_fofa: "Ameaça",
+          descricao: "Não enxergar oportunidades, Estar acostumado com a rotina, Prender informações e não aprender, Não acompanhar o ritmo do departamento.",
+          impacto: "Alto",
+          nota: "5",
+          origem: "Feedback 25/05/2026",
+          projeto: "Alinhamento Departamental",
+          observacao: "Risco de estagnação por acomodação na rotina e retenção isolada de conhecimentos."
+        },
+        {
+          colaborador: "Carmen",
+          data: "2026-05-25",
+          tipo: "Nota",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Conversas fora da sala, Passar conhecimento para frente, Encontrar solução juntos, Planejar entregas atrasadas.",
+          impacto: "Médio",
+          nota: "7",
+          origem: "Observações do Feedback Anterior",
+          projeto: "Plano de Ação Corretivo",
+          observacao: "Evitar conversas dispersas, focar em compartilhamento de conhecimento e entrega de pendências."
+        },
+
+        // ================= MARIANA (13/05/2026) =================
+        {
+          colaborador: "Mariana",
+          data: "2026-05-13",
+          tipo: "Competência",
+          quadrante_fofa: "Força",
+          descricao: "Ótima Postura, Aprende Rápido, Muito Simpática, Inteligente, Interessada.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 13/05/2026",
+          projeto: "Atendimento e GG&C",
+          observacao: "Excelente acolhimento e agilidade na compreensão de novas demandas e procedimentos."
+        },
+        {
+          colaborador: "Mariana",
+          data: "2026-05-13",
+          tipo: "SBI",
+          quadrante_fofa: "Fraqueza",
+          descricao: "Não tão próxima nas tarefas diárias, Não domina a rotina do departamento, Falta de clareza nas prioridades.",
+          impacto: "Médio",
+          nota: "6",
+          origem: "Feedback 13/05/2026",
+          projeto: "Organização Operacional",
+          observacao: "Estruturar lista diária de prioridades e aumentar proximidade com as atividades contínuas do GG&C."
+        },
+        {
+          colaborador: "Mariana",
+          data: "2026-05-13",
+          tipo: "OKR",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Crescer no GGC ou logística, Atuar em tema específico, Ser promovida.",
+          impacto: "Alto",
+          nota: "9",
+          origem: "Feedback 13/05/2026",
+          projeto: "Plano de Crescimento",
+          observacao: "Espaço aberto para especialização interna e futura promoção na área corporativa ou operacional."
+        },
+        {
+          colaborador: "Mariana",
+          data: "2026-05-13",
+          tipo: "SBI",
+          quadrante_fofa: "Ameaça",
+          descricao: "Falta de clareza deixa perdida, Muitos começos e poucos fins, Falta de planejamento e prazos.",
+          impacto: "Alto",
+          nota: "5",
+          origem: "Feedback 13/05/2026",
+          projeto: "Conclusão de Tarefas",
+          observacao: "Combater dispersão definindo prazos finais rigorosos para cada entrega iniciada."
+        },
+        {
+          colaborador: "Mariana",
+          data: "2026-05-13",
+          tipo: "Nota",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Reuniões semanais, Gestão das Ações de Endomarketing 2026, Agência de Marketing, Gestão do Estoque e Inventário, Novo layout da Recepção.",
+          impacto: "Alto",
+          nota: "8",
+          origem: "Observações do Feedback Anterior",
+          projeto: "Projetos 2026",
+          observacao: "Pautas chaves acordadas para acompanhamento nas reuniões semanais de alinhamento."
+        },
+
+        // ================= RAQUEL (06/03/2026) =================
+        {
+          colaborador: "Raquel",
+          data: "2026-03-06",
+          tipo: "Competência",
+          quadrante_fofa: "Força",
+          descricao: "Ótima postura, Conhece do seu trabalho, Ágil, Educada, Determinada, Sempre aberta a ouvir, Solicita.",
+          impacto: "Alto",
+          nota: "10",
+          origem: "Feedback 06/03/2026",
+          projeto: "Departamento Pessoal",
+          observacao: "Grande autoridade técnica no setor, resolução rápida e abertura constante para melhorias."
+        },
+        {
+          colaborador: "Raquel",
+          data: "2026-03-06",
+          tipo: "SBI",
+          quadrante_fofa: "Fraqueza",
+          descricao: "Agir ou falar sem pensar, Se antecipar antes de entender o contexto, Ficar nervosa, Crenças limitantes, Muitos trabalhos manuais.",
+          impacto: "Médio",
+          nota: "6",
+          origem: "Feedback 06/03/2026",
+          projeto: "Autocontrole e Automação",
+          observacao: "Trabalhar equilíbrio emocional frente à pressão e automatizar controles repetitivos manuais."
+        },
+        {
+          colaborador: "Raquel",
+          data: "2026-03-06",
+          tipo: "OKR",
+          quadrante_fofa: "Oportunidade",
+          descricao: "Implantar novas metodologias, Ter mais domínio da postura, Se tornar supervisora de DP, Expandir conhecimentos e ser líder, Ganhar mais dinheiro.",
+          impacto: "Alto",
+          nota: "10",
+          origem: "Feedback 06/03/2026",
+          projeto: "Supervisão de DP",
+          observacao: "Potencial claro para promoção a Supervisora de Departamento Pessoal e líder de referência."
+        },
+        {
+          colaborador: "Raquel",
+          data: "2026-03-06",
+          tipo: "SBI",
+          quadrante_fofa: "Ameaça",
+          descricao: "Não se permitir aprender, Não se achar merecedora, Ser mal interpretada, Estagnar na carreira.",
+          impacto: "Alto",
+          nota: "5",
+          origem: "Feedback 06/03/2026",
+          projeto: "Desenvolvimento de Liderança",
+          observacao: "Cuidado com o sentimento de não-merecimento e desentendimentos de comunicação sob estresse."
+        },
+        {
+          colaborador: "Raquel",
+          data: "2026-03-06",
+          tipo: "Nota",
+          quadrante_fofa: "Força",
+          descricao: "Muito boa em ensinar, Não desperdiça tempo, Sempre solicita, Conhece a rotina e não perde prazos, Colaboradores respeitam e confiam.",
+          impacto: "Alto",
+          nota: "10",
+          origem: "Observações do Feedback Anterior",
+          projeto: "Mentoria e Governança",
+          observacao: "Confiança unânime da equipe, excelente didática interna e rigor absoluto com datas."
+        }
+      ];
+
       // State
       let tasks = [];
       let reunioes = [];
+      let equipe = [];
+      let fatos = [];
       let activeTab = 'inicio';
       let reunioesFilter = 'semana';
+      let activeColabNome = null;
+      let expandedReunioesPlanos = new Set();
 
       // Helper date formatter
       function cleanId(id) {
@@ -1757,12 +2990,62 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               this.loadReunioesFallback();
             }
 
+            // 3. Processamento de EQUIPE DIRETO DA PLANILHA
+            if (data && data.success && Array.isArray(data.equipe) && data.equipe.length > 0) {
+              equipe = data.equipe.map(c => ({
+                nome: c.nome || c.colaborador || '',
+                cargo: c.cargo || '',
+                descricao_cargo: c.descricao_cargo || c.descricao || '',
+                departamento: c.departamento || c.dept || 'GGC',
+                admissao: c.admissao || '',
+                status: c.status || 'Ativo'
+              }));
+              localStorage.setItem(STORAGE_EQUIPE_KEY, JSON.stringify(equipe));
+            } else {
+              this.loadEquipeFallback();
+            }
+
+            // 4. Processamento de FATOS DIRETO DA PLANILHA (aba Fatos)
+            if (data && data.success && Array.isArray(data.fatos) && data.fatos.length > 0) {
+              fatos = data.fatos.map(f => ({
+                colaborador: (f.colaborador || f.nome || '').trim(),
+                data: f.data || '',
+                tipo: f.tipo || 'Feedback',
+                quadrante_fofa: f.quadrante_fofa || f.quadrante || '',
+                descricao: f.descricao || '',
+                impacto: f.impacto || 'Médio',
+                nota: f.nota || '',
+                origem: f.origem || 'Planilha Transnova',
+                projeto: f.projeto || '',
+                observacao: f.observacao || f.obs || ''
+              }));
+              localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
+            } else if (data && data.fatos && Array.isArray(data.fatos) && data.fatos.length > 0) {
+              fatos = data.fatos.map(f => ({
+                colaborador: (f.colaborador || f.nome || '').trim(),
+                data: f.data || '',
+                tipo: f.tipo || 'Feedback',
+                quadrante_fofa: f.quadrante_fofa || f.quadrante || '',
+                descricao: f.descricao || '',
+                impacto: f.impacto || 'Médio',
+                nota: f.nota || '',
+                origem: f.origem || 'Planilha Transnova',
+                projeto: f.projeto || '',
+                observacao: f.observacao || f.obs || ''
+              }));
+              localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
+            } else {
+              this.loadFatosFallback();
+            }
+
             syncEl.className = 'sync-status';
             syncEl.innerHTML = '<span>Sincronizado ✓</span>';
           } catch (err) {
             console.warn('Falha na requisição ao Apps Script, acionando fallback local/offline:', err);
             this.loadTasksFallback();
             this.loadReunioesFallback();
+            this.loadEquipeFallback();
+            this.loadFatosFallback();
             syncEl.className = 'sync-status offline';
             syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
           }
@@ -1797,6 +3080,46 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           // Se não houver em localStorage, utiliza o seed local com as 2 reuniões reais
           reunioes = SEED_REUNIOES_RAW.map((r, idx) => normalizarReuniao(r, idx));
           localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+        },
+
+        loadEquipeFallback: function () {
+          const cached = localStorage.getItem(STORAGE_EQUIPE_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                equipe = parsed;
+                return;
+              }
+            } catch(e) {
+              console.warn('Erro ao ler cache de equipe:', e);
+            }
+          }
+          equipe = JSON.parse(JSON.stringify(SEED_EQUIPE));
+          localStorage.setItem(STORAGE_EQUIPE_KEY, JSON.stringify(equipe));
+        },
+
+        loadFatosFallback: function () {
+          const cached = localStorage.getItem(STORAGE_FATOS_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              // Verifica se contém os dados reais detalhados das colaboradoras (Barbara, Carmen, etc.)
+              const hasRealFacts = Array.isArray(parsed) && parsed.some(f => 
+                (f.colaborador === 'Barbara' || f.colaborador === 'Raquel') && 
+                (f.descricao && (f.descricao.includes('Esforçada') || f.descricao.includes('postura')))
+              );
+              if (hasRealFacts) {
+                fatos = parsed;
+                return;
+              }
+            } catch(e) {
+              console.warn('Erro ao ler cache de fatos:', e);
+            }
+          }
+          // Fallback offline com os dados reais já registrados na aba Fatos
+          fatos = JSON.parse(JSON.stringify(SEED_FATOS));
+          localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
         },
 
         saveToSheet: async function (taskObj, action = 'update') {
@@ -1912,6 +3235,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           document.getElementById('viewTarefas').style.display = tab === 'tarefas' ? 'block' : 'none';
           document.getElementById('viewKanban').style.display = tab === 'kanban' ? 'block' : 'none';
           document.getElementById('viewReunioes').style.display = tab === 'reunioes' ? 'block' : 'none';
+          document.getElementById('viewEquipe').style.display = tab === 'equipe' ? 'block' : 'none';
 
           this.renderAll();
         },
@@ -1926,6 +3250,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             this.renderKanban();
           } else if (activeTab === 'reunioes') {
             this.renderReunioes();
+          } else if (activeTab === 'equipe') {
+            this.renderEquipe();
           }
         },
 
@@ -2319,11 +3645,16 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           const deptFmt = r.departamento || r.dept || 'Geral';
           const resumoFmt = r.resumo || 'Sem resumo cadastrado. Clique para adicionar...';
 
+          const rKey = r.id || String(rIdx);
+          const isExpanded = expandedReunioesPlanos.has(rKey);
+
           // Botão "Abrir Ata" conforme especificação
           const ataLink = (r.link_ata || r.link || '').trim();
           const ataBtnHtml = ataLink !== ''
             ? `<a href="${escapeHtml(ataLink)}" target="_blank" rel="noopener noreferrer" class="btn-jupiter" style="text-decoration: none; font-size: 0.8rem; padding: 0.45rem 0.85rem;" title="Abrir documento no Google Docs">📄 Abrir Ata</a>`
             : `<span class="btn-jupiter-outline" style="opacity: 0.5; cursor: not-allowed; font-size: 0.78rem; padding: 0.45rem 0.85rem;" title="Documento da ata não anexado">📄 Ata não disponível</span>`;
+
+          const itensLabel = planos.length === 1 ? 'ITEM' : 'ITENS';
 
           return `
             <article class="reuniao-card">
@@ -2348,27 +3679,225 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 <div class="reuniao-resumo-text" contenteditable="true" spellcheck="false" title="Clique para editar o resumo da reunião" onblur="window.masterMind.updateReuniaoField(${rIdx}, 'resumo', this.innerText)">${escapeHtml(resumoFmt)}</div>
               </div>
 
-              <div class="reuniao-plano-title">
-                <span>Plano de Ação (${planos.length} item${planos.length === 1 ? '' : 's'})</span>
-                <button class="btn-jupiter-outline" style="font-size: 0.75rem; padding: 0.3rem 0.65rem;" onclick="window.masterMind.gerarTarefasDaReuniao(${rIdx})">
-                  ⚡ Gerar Tarefas no PMO
-                </button>
+              <!-- Header Colapsável do Plano de Ação -->
+              <div id="planoToggle_${rIdx}" class="reuniao-plano-toggle ${isExpanded ? 'expanded' : ''}" onclick="window.masterMind.togglePlanoAcao(${rIdx}, event)" title="Clique para ${isExpanded ? 'ocultar' : 'exibir'} o plano de ação desta reunião">
+                <div class="reuniao-plano-toggle-left">
+                  <span>Plano de Ação — ${planos.length} ${itensLabel}</span>
+                  <span id="planoChevron_${rIdx}" class="plano-flag-icon">${isExpanded ? '▾' : '▸'}</span>
+                </div>
+                <span style="font-size: 0.74rem; color: var(--text-muted); font-weight: 500;">
+                  ${isExpanded ? 'Recolher' : 'Expandir'} plano
+                </span>
               </div>
 
-              <ul class="action-item-list">
-                ${planos.length === 0 ? '<li class="action-item" style="color: var(--text-muted); justify-content: center; font-style: italic;">Nenhum item pendente no plano de ação.</li>' : ''}
-                ${planos.map(item => `
-                  <li class="action-item">
-                    <div class="action-item-desc">${escapeHtml(item.acao)}</div>
-                    <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
-                      <span class="chip chip-dono">👤 ${escapeHtml(item.dono || 'A definir')}</span>
-                      ${item.prazo ? `<span class="chip badge-venc-ok">📅 ${escapeHtml(item.prazo)}</span>` : '<span class="chip" style="background: rgba(90,125,154,0.2); color: var(--text-muted);">Sem prazo</span>'}
+              <!-- Painel Expansível com Seleção Seletiva de PMOs -->
+              <div id="planoBody_${rIdx}" class="plano-body-collapsible ${isExpanded ? 'expanded' : ''}">
+                ${planos.length === 0 ? `
+                  <div style="padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.82rem; font-style: italic;">
+                    Nenhum item pendente no plano de ação desta reunião.
+                  </div>
+                ` : `
+                  <div class="plano-actions-bar">
+                    <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                      <span id="cardPmoCounter_${rIdx}" style="font-size: 0.78rem; color: var(--amber); font-weight: 700;">
+                        0 de ${planos.length} selecionados
+                      </span>
+                      <button type="button" class="btn-jupiter-outline" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="window.masterMind.toggleAllCardPmo(${rIdx}, true)">Marcar Todos</button>
+                      <button type="button" class="btn-jupiter-outline" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="window.masterMind.toggleAllCardPmo(${rIdx}, false)">Desmarcar Todos</button>
                     </div>
-                  </li>
-                `).join('')}
-              </ul>
+                    <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+                      <button type="button" class="btn-jupiter-outline" style="color: var(--danger); border-color: rgba(229, 105, 95, 0.6); font-size: 0.75rem; padding: 0.35rem 0.7rem;" onclick="window.masterMind.deleteCardPmoSelected(${rIdx})">
+                        🗑️ Excluir selecionados
+                      </button>
+                      <button type="button" class="btn-jupiter" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;" onclick="window.masterMind.confirmCardPmoSelection(${rIdx})">
+                        ⚡ Adicionar selecionados
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="action-item-list">
+                    ${planos.map((item, idx) => {
+                      const existing = tasks.find(t => t.tarefa.toLowerCase() === item.acao.toLowerCase());
+                      const isAlreadyActive = existing && existing.status !== 'Excluídos';
+
+                      return `
+                        <label class="pmo-select-item" id="cardPmoItem_${rIdx}_${idx}">
+                          <input type="checkbox" class="pmo-select-cb" data-ridx="${rIdx}" data-idx="${idx}" onchange="window.masterMind.handleCardPmoCbChange(this, ${rIdx}, ${idx})">
+                          <div class="pmo-item-details">
+                            <div class="pmo-item-text">${escapeHtml(item.acao)}</div>
+                            <div class="pmo-item-chips">
+                              <span class="chip chip-dono">👤 ${escapeHtml(item.dono || 'A definir')}</span>
+                              ${item.prazo ? `<span class="chip badge-venc-ok">📅 ${escapeHtml(item.prazo)}</span>` : '<span class="chip" style="background: rgba(90,125,154,0.2); color: var(--text-muted);">Sem prazo</span>'}
+                              ${isAlreadyActive ? '<span class="chip" style="background: rgba(61,124,166,0.25); color: #8FD0F8;">ℹ️ Ativa no Kanban</span>' : ''}
+                            </div>
+                          </div>
+                        </label>
+                      `;
+                    }).join('')}
+                  </div>
+                `}
+              </div>
             </article>
           `;
+        },
+
+        togglePlanoAcao: function (rIdx, evt) {
+          if (evt) evt.stopPropagation();
+          const r = reunioes[rIdx];
+          const rKey = r ? (r.id || String(rIdx)) : String(rIdx);
+          const toggleEl = document.getElementById(`planoToggle_${rIdx}`);
+          const bodyEl = document.getElementById(`planoBody_${rIdx}`);
+          const chevronEl = document.getElementById(`planoChevron_${rIdx}`);
+
+          if (expandedReunioesPlanos.has(rKey)) {
+            expandedReunioesPlanos.delete(rKey);
+            if (toggleEl) toggleEl.classList.remove('expanded');
+            if (bodyEl) bodyEl.classList.remove('expanded');
+            if (chevronEl) chevronEl.textContent = '▸';
+          } else {
+            expandedReunioesPlanos.add(rKey);
+            if (toggleEl) toggleEl.classList.add('expanded');
+            if (bodyEl) bodyEl.classList.add('expanded');
+            if (chevronEl) chevronEl.textContent = '▾';
+          }
+        },
+
+        handleCardPmoCbChange: function (cb, rIdx, idx) {
+          const label = document.getElementById(`cardPmoItem_${rIdx}_${idx}`);
+          if (label) {
+            label.classList.toggle('is-checked', cb.checked);
+          }
+          this.updateCardPmoCounter(rIdx);
+        },
+
+        toggleAllCardPmo: function (rIdx, checked) {
+          const cbs = document.querySelectorAll(`#planoBody_${rIdx} .pmo-select-cb`);
+          cbs.forEach(cb => {
+            cb.checked = checked;
+            const itemIdx = cb.dataset.idx;
+            const label = document.getElementById(`cardPmoItem_${rIdx}_${itemIdx}`);
+            if (label) label.classList.toggle('is-checked', checked);
+          });
+          this.updateCardPmoCounter(rIdx);
+        },
+
+        updateCardPmoCounter: function (rIdx) {
+          const total = document.querySelectorAll(`#planoBody_${rIdx} .pmo-select-cb`).length;
+          const checked = document.querySelectorAll(`#planoBody_${rIdx} .pmo-select-cb:checked`).length;
+          const counterEl = document.getElementById(`cardPmoCounter_${rIdx}`);
+          if (counterEl) {
+            counterEl.textContent = `${checked} de ${total} selecionado${checked === 1 ? '' : 's'}`;
+          }
+        },
+
+        confirmCardPmoSelection: function (rIdx) {
+          const r = reunioes[rIdx];
+          if (!r || !Array.isArray(r.plano) || r.plano.length === 0) return;
+
+          const cbs = document.querySelectorAll(`#planoBody_${rIdx} .pmo-select-cb:checked`);
+          if (cbs.length === 0) {
+            alert('Por favor, marque pelo menos um item para adicionar às tarefas do PMO.');
+            return;
+          }
+
+          const checkedIndices = new Set();
+          cbs.forEach(cb => {
+            checkedIndices.add(parseInt(cb.dataset.idx, 10));
+          });
+
+          let nextIdNum = tasks.reduce((max, t) => {
+            const num = parseInt(cleanId(t.id), 10);
+            return !isNaN(num) && num > max ? num : max;
+          }, 0);
+
+          let criadas = 0;
+          const novosItensPlano = [];
+
+          r.plano.forEach((item, idx) => {
+            const isSelected = checkedIndices.has(idx);
+
+            if (isSelected) {
+              let cleanPrazo = '';
+              if (item.prazo) {
+                const parts = item.prazo.split('/');
+                if (parts.length === 3) {
+                  cleanPrazo = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                } else {
+                  cleanPrazo = item.prazo;
+                }
+              }
+
+              const existingIndex = tasks.findIndex(t => t.tarefa.toLowerCase() === item.acao.toLowerCase());
+              if (existingIndex !== -1) {
+                tasks[existingIndex].status = 'A Fazer';
+                if (cleanPrazo) tasks[existingIndex].prazo = cleanPrazo;
+                if (item.dono) tasks[existingIndex].dono = item.dono;
+                this.saveToSheet(tasks[existingIndex], 'update');
+              } else {
+                nextIdNum++;
+                const nova = {
+                  id: String(nextIdNum).padStart(3, '0'),
+                  tarefa: item.acao,
+                  dept: r.departamento || "Dpto Projetos",
+                  prio: item.acao.includes('Crítica') || item.acao.includes('Alta') ? 'Alta' : 'Média',
+                  prazo: cleanPrazo,
+                  status: "A Fazer",
+                  dono: item.dono || "Equipe",
+                  origem: "Reunião",
+                  obs: `Gerado a partir da reunião: ${r.titulo}`
+                };
+                tasks.unshift(nova);
+                this.saveToSheet(nova, 'add');
+              }
+              criadas++;
+            } else {
+              novosItensPlano.push(item);
+            }
+          });
+
+          r.plano = novosItensPlano;
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+          localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+
+          // Mantém esta reunião expandida para visualizar o plano de ação atualizado
+          const rKey = r.id || String(rIdx);
+          expandedReunioesPlanos.add(rKey);
+
+          this.populateFilterDropdowns();
+          this.renderAll();
+
+          alert(`Sucesso: ${criadas} tarefa(s) adicionada(s) ao Kanban com sucesso!`);
+        },
+
+        deleteCardPmoSelected: function (rIdx) {
+          const r = reunioes[rIdx];
+          if (!r || !Array.isArray(r.plano) || r.plano.length === 0) return;
+
+          const cbs = document.querySelectorAll(`#planoBody_${rIdx} .pmo-select-cb:checked`);
+          if (cbs.length === 0) {
+            alert('Por favor, marque pelo menos um item que deseja excluir do plano de ação.');
+            return;
+          }
+
+          const checkedIndices = new Set();
+          cbs.forEach(cb => {
+            checkedIndices.add(parseInt(cb.dataset.idx, 10));
+          });
+
+          const qtdExcluir = checkedIndices.size;
+          if (!confirm(`Deseja realmente excluir ${qtdExcluir} item(ns) selecionado(s) do plano de ação desta reunião?`)) {
+            return;
+          }
+
+          r.plano = r.plano.filter((_, idx) => !checkedIndices.has(idx));
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+
+          const rKey = r.id || String(rIdx);
+          expandedReunioesPlanos.add(rKey);
+
+          this.renderReunioes();
+
+          alert(`${qtdExcluir} item(ns) removido(s) do plano de ação com sucesso.`);
         },
 
         renderReunioes: function () {
@@ -2805,6 +4334,1106 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
           this.closeReuniaoModal();
           this.renderReunioes();
+        },
+
+        // ==========================================
+        // GESTÃO DE EQUIPE / PESSOAS (GGC)
+        // ==========================================
+
+        renderEquipe: function () {
+          if (activeColabNome) {
+            document.getElementById('equipeListView').style.display = 'none';
+            document.getElementById('equipeDossieView').style.display = 'block';
+            this.renderDossie(activeColabNome);
+          } else {
+            document.getElementById('equipeListView').style.display = 'block';
+            document.getElementById('equipeDossieView').style.display = 'none';
+            this.renderEquipeList();
+          }
+        },
+
+        renderEquipeList: function () {
+          const grid = document.getElementById('colaboradoresGrid');
+          if (!grid) return;
+
+          if (equipe.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border);">Nenhum colaborador cadastrado.</div>';
+            return;
+          }
+
+          const matchQuad = (f, quadKeyword) => {
+            if (!f || !f.quadrante_fofa) return false;
+            const norm = f.quadrante_fofa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return norm.includes(quadKeyword);
+          };
+
+          grid.innerHTML = equipe.map(c => {
+            const fatosColab = fatos.filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === c.nome.trim().toLowerCase());
+            const countForcas = fatosColab.filter(f => matchQuad(f, 'forca')).length;
+            const countFraquezas = fatosColab.filter(f => matchQuad(f, 'fraqueza')).length;
+            const countOport = fatosColab.filter(f => matchQuad(f, 'oportunidade')).length;
+            const countAmeacas = fatosColab.filter(f => matchQuad(f, 'ameaca')).length;
+            const countNotas = fatosColab.filter(f => (f.tipo || '').toLowerCase().includes('nota') || f.quadrante_fofa === 'Nenhum').length;
+
+            const initial = c.nome ? c.nome.trim().charAt(0).toUpperCase() : '?';
+
+            return `
+              <div class="colab-card">
+                <div>
+                  <div class="colab-header">
+                    <div class="colab-avatar">${escapeHtml(initial)}</div>
+                    <div class="colab-info">
+                      <h3 class="colab-nome">${escapeHtml(c.nome)}</h3>
+                      <p class="colab-cargo">${escapeHtml(c.cargo)}</p>
+                    </div>
+                  </div>
+
+                  <div class="colab-meta" style="margin: 0.75rem 0 0.65rem;">
+                    <span class="chip chip-dept">🏢 ${escapeHtml(c.departamento || 'GGC')}</span>
+                    <span class="chip" style="background: rgba(127,191,143,0.18); color: #7FBF8F; border: 1px solid rgba(127,191,143,0.4);">
+                      ● ${escapeHtml(c.status || 'Ativo')}
+                    </span>
+                    <span class="chip" style="background: rgba(61,124,166,0.18); color: #A3D4F7; border: 1px solid rgba(61,124,166,0.4);">
+                      📋 ${fatosColab.length} registros
+                    </span>
+                  </div>
+
+                  <div class="colab-desc-preview" title="${escapeHtml(c.descricao_cargo)}">
+                    ${escapeHtml(c.descricao_cargo || 'Descrição de cargo ainda não preenchida.')}
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(90, 125, 154, 0.25); padding-top: 0.85rem; margin-top: 0.25rem;">
+                  <div style="font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 0.45rem; flex-wrap: wrap;">
+                    <span title="Forças" style="color: #7FBF8F;">💪 ${countForcas}</span>
+                    <span title="Fraquezas" style="color: #FFA39E;">⚠️ ${countFraquezas}</span>
+                    <span title="Oportunidades" style="color: #A3D4F7;">🚀 ${countOport}</span>
+                    <span title="Ameaças" style="color: #F5CE9F;">🛡️ ${countAmeacas}</span>
+                    ${countNotas > 0 ? `<span title="Notas / Observações" style="color: var(--amber);">📝 ${countNotas}</span>` : ''}
+                  </div>
+                  <button class="btn-jupiter" onclick="window.masterMind.abrirDossie('${escapeHtml(c.nome)}')">
+                    Ver dossiê →
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        },
+
+        abrirDossie: function (nome) {
+          activeColabNome = nome;
+          this.renderEquipe();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        voltarParaEquipe: function () {
+          activeColabNome = null;
+          this.renderEquipe();
+        },
+
+        renderDossie: function (colabNome) {
+          const container = document.getElementById('dossieContainer');
+          if (!container) return;
+
+          const colab = equipe.find(c => c.nome.trim().toLowerCase() === colabNome.trim().toLowerCase()) || {
+            nome: colabNome,
+            cargo: 'Cargo a definir',
+            departamento: 'GGC',
+            descricao_cargo: 'Sem descrição cadastrada.',
+            admissao: '',
+            status: 'Ativo'
+          };
+
+          // LINHA DO TEMPO: listar todos os fatos reais daquele colaborador, ordenados por data
+          const fatosColab = fatos
+            .filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === colabNome.trim().toLowerCase())
+            .sort((a, b) => {
+              const da = parseDate(a.data);
+              const db = parseDate(b.data);
+              if (da && db) return da.getTime() - db.getTime(); // Ordem cronológica por data
+              if (da && !db) return -1;
+              if (!da && db) return 1;
+              return 0;
+            });
+
+          // Helper para agrupar por quadrante FOFA (tratando acentos e variações)
+          const matchQuad = (f, quadKeyword) => {
+            if (!f || !f.quadrante_fofa) return false;
+            const norm = f.quadrante_fofa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return norm.includes(quadKeyword);
+          };
+
+          // MATRIZ FOFA: agrupar fatos por quadrante usando o campo quadrante_fofa de cada fato real
+          const forcas = fatosColab.filter(f => matchQuad(f, 'forca'));
+          const fraquezas = fatosColab.filter(f => matchQuad(f, 'fraqueza'));
+          const oportunidades = fatosColab.filter(f => matchQuad(f, 'oportunidade'));
+          const ameacas = fatosColab.filter(f => matchQuad(f, 'ameaca'));
+
+          // Observações do feedback anterior (tipo "Nota" ou registros específicos)
+          const notasColab = fatosColab.filter(f => (f.tipo || '').toLowerCase().includes('nota') || (!f.quadrante_fofa && f.observacao));
+
+          const initial = colab.nome ? colab.nome.trim().charAt(0).toUpperCase() : '?';
+          const dataAdmissaoFmt = colab.admissao ? formatDateDisplay(parseDate(colab.admissao)) || colab.admissao : 'Não informada';
+
+          container.innerHTML = `
+            <!-- Top Controls -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+              <button class="btn-jupiter-outline" onclick="window.masterMind.voltarParaEquipe()">
+                ← Voltar para lista de colaboradores
+              </button>
+              <div style="display: flex; gap: 0.65rem;">
+                <button class="btn-jupiter-outline" onclick="window.masterMind.openEditarColaborador('${escapeHtml(colab.nome)}')">
+                  ✏️ Editar Colaborador
+                </button>
+                <button class="btn-jupiter" onclick="window.masterMind.openNovoFato('${escapeHtml(colab.nome)}')">
+                  <span style="font-size: 1.1rem; line-height: 1;">+</span> Novo Fato
+                </button>
+              </div>
+            </div>
+
+            <!-- 1. Cabeçalho do Dossiê -->
+            <div class="dossie-banner">
+              <div class="dossie-person">
+                <div class="dossie-avatar">${escapeHtml(initial)}</div>
+                <div>
+                  <h2 style="margin: 0; font-size: 1.45rem; font-weight: 700; color: #FFF;">${escapeHtml(colab.nome)}</h2>
+                  <div style="font-size: 0.95rem; font-weight: 600; color: var(--amber); margin-top: 0.2rem;">
+                    ${escapeHtml(colab.cargo)}
+                  </div>
+                  <div style="display: flex; gap: 0.45rem; align-items: center; margin-top: 0.45rem; flex-wrap: wrap;">
+                    <span class="chip chip-dept">🏢 ${escapeHtml(colab.departamento || 'GGC')}</span>
+                    <span class="chip" style="background: rgba(127,191,143,0.2); color: #7FBF8F; border: 1px solid rgba(127,191,143,0.5);">
+                      ● ${escapeHtml(colab.status || 'Ativo')}
+                    </span>
+                    <span class="chip" style="background: rgba(61,124,166,0.2); color: #A3D4F7; border: 1px solid rgba(61,124,166,0.4);">
+                      📅 Admissão: ${escapeHtml(dataAdmissaoFmt)}
+                    </span>
+                    <span class="chip" style="background: rgba(217,160,102,0.2); color: #F5CE9F; border: 1px solid rgba(217,160,102,0.4);">
+                      📋 ${fatosColab.length} fatos reais registrados
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; flex-direction: column; align-items: flex-end;">
+                <button class="btn-jupiter" onclick="window.masterMind.abrirGerarFeedback('${escapeHtml(colab.nome)}')">
+                  📄 Gerar Feedback (Docs)
+                </button>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">FOFA consolidada &amp; Contrato de 90 dias</span>
+              </div>
+            </div>
+
+            <!-- 2. Descrição do Cargo (Missão e Responsabilidades) -->
+            <div class="dossie-role-card">
+              <div class="dossie-role-title">
+                <span>📋 Descrição do Cargo (Missão &amp; Responsabilidades Oficiais)</span>
+              </div>
+              <p class="dossie-role-desc">
+                ${escapeHtml(colab.descricao_cargo || 'Nenhuma descrição detalhada cadastrada para a função.')}
+              </p>
+            </div>
+
+            <!-- 3. MATRIZ FOFA (Agrupada por quadrante com base no campo quadrante_fofa de cada fato real) -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 0.45rem;">
+                  🧭 Matriz FOFA de Desenvolvimento Individual (Fatos Reais)
+                </h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Sincronizada da aba Fatos da planilha Transnova</span>
+              </div>
+
+              <div class="fofa-grid">
+                <!-- FORÇAS -->
+                <div class="fofa-card forcas">
+                  <div class="fofa-header">
+                    <h4 class="fofa-title">💪 FORÇAS (${forcas.length})</h4>
+                    <span style="font-size: 0.7rem; color: #7FBF8F;">Competências &amp; Pontos Fortes</span>
+                  </div>
+                  <div class="fofa-items">
+                    ${forcas.length === 0 ? '<div style="color: var(--text-muted); font-size: 0.78rem; font-style: italic; padding: 0.5rem;">Nenhum ponto registrado neste quadrante.</div>' : ''}
+                    ${forcas.map(f => {
+                      const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+                      return `
+                        <div class="fofa-item">
+                          <div class="fofa-item-top">
+                            <span>📅 ${escapeHtml(dataFmt)} · <strong>${escapeHtml(f.tipo || 'Força')}</strong></span>
+                            ${f.nota ? `<span style="color: #7FBF8F; font-weight: 700;">Nota: ${escapeHtml(f.nota)}</span>` : ''}
+                          </div>
+                          <div style="font-weight: 600; color: #F8F8F8;">${escapeHtml(f.descricao)}</div>
+                          ${f.observacao ? `<div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;"><em>Obs: ${escapeHtml(f.observacao)}</em></div>` : ''}
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+
+                <!-- FRAQUEZAS -->
+                <div class="fofa-card fraquezas">
+                  <div class="fofa-header">
+                    <h4 class="fofa-title">⚠️ FRAQUEZAS (${fraquezas.length})</h4>
+                    <span style="font-size: 0.7rem; color: #FFA39E;">Pontos a Desenvolver</span>
+                  </div>
+                  <div class="fofa-items">
+                    ${fraquezas.length === 0 ? '<div style="color: var(--text-muted); font-size: 0.78rem; font-style: italic; padding: 0.5rem;">Nenhum ponto registrado neste quadrante.</div>' : ''}
+                    ${fraquezas.map(f => {
+                      const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+                      return `
+                        <div class="fofa-item">
+                          <div class="fofa-item-top">
+                            <span>📅 ${escapeHtml(dataFmt)} · <strong>${escapeHtml(f.tipo || 'Fraqueza')}</strong></span>
+                            ${f.impacto ? `<span style="color: #FFA39E; font-weight: 700;">Impacto: ${escapeHtml(f.impacto)}</span>` : ''}
+                          </div>
+                          <div style="font-weight: 600; color: #F8F8F8;">${escapeHtml(f.descricao)}</div>
+                          ${f.observacao ? `<div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;"><em>Obs: ${escapeHtml(f.observacao)}</em></div>` : ''}
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+
+                <!-- OPORTUNIDADES -->
+                <div class="fofa-card oportunidades">
+                  <div class="fofa-header">
+                    <h4 class="fofa-title">🚀 OPORTUNIDADES (${oportunidades.length})</h4>
+                    <span style="font-size: 0.7rem; color: #A3D4F7;">Capacitações &amp; Crescimento</span>
+                  </div>
+                  <div class="fofa-items">
+                    ${oportunidades.length === 0 ? '<div style="color: var(--text-muted); font-size: 0.78rem; font-style: italic; padding: 0.5rem;">Nenhum ponto registrado neste quadrante.</div>' : ''}
+                    ${oportunidades.map(f => {
+                      const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+                      return `
+                        <div class="fofa-item">
+                          <div class="fofa-item-top">
+                            <span>📅 ${escapeHtml(dataFmt)} · <strong>${escapeHtml(f.tipo || 'Oportunidade')}</strong></span>
+                            ${f.projeto ? `<span style="color: #A3D4F7; font-weight: 600;">${escapeHtml(f.projeto)}</span>` : ''}
+                          </div>
+                          <div style="font-weight: 600; color: #F8F8F8;">${escapeHtml(f.descricao)}</div>
+                          ${f.observacao ? `<div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;"><em>Obs: ${escapeHtml(f.observacao)}</em></div>` : ''}
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+
+                <!-- AMEAÇAS -->
+                <div class="fofa-card ameacas">
+                  <div class="fofa-header">
+                    <h4 class="fofa-title">🛡️ AMEAÇAS (${ameacas.length})</h4>
+                    <span style="font-size: 0.7rem; color: #F5CE9F;">Gargalos &amp; Riscos</span>
+                  </div>
+                  <div class="fofa-items">
+                    ${ameacas.length === 0 ? '<div style="color: var(--text-muted); font-size: 0.78rem; font-style: italic; padding: 0.5rem;">Nenhum ponto registrado neste quadrante.</div>' : ''}
+                    ${ameacas.map(f => {
+                      const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+                      return `
+                        <div class="fofa-item">
+                          <div class="fofa-item-top">
+                            <span>📅 ${escapeHtml(dataFmt)} · <strong>${escapeHtml(f.tipo || 'Ameaça')}</strong></span>
+                            ${f.impacto ? `<span style="color: #F5CE9F; font-weight: 700;">Risco: ${escapeHtml(f.impacto)}</span>` : ''}
+                          </div>
+                          <div style="font-weight: 600; color: #F8F8F8;">${escapeHtml(f.descricao)}</div>
+                          ${f.observacao ? `<div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;"><em>Obs: ${escapeHtml(f.observacao)}</em></div>` : ''}
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Contrato de Expectativa Consolidado (SWOT + Observações Reais) -->
+            <div class="contrato-box" id="contratoBoxContainer">
+              ${this.renderContratoExpectativaHtml(colab.nome, fatosColab)}
+            </div>
+
+            <!-- 5. LINHA DO TEMPO DE FATOS (Todos os fatos reais ordenados por data) -->
+            <div class="timeline-container">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                  <h3 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 0.45rem;">
+                    ⏱️ Linha do Tempo de Fatos &amp; Observações (${fatosColab.length})
+                  </h3>
+                  <p style="margin: 0.2rem 0 0; font-size: 0.78rem; color: var(--text-muted);">
+                    Registros reais da planilha (aba Fatos) ordenados por data, incluindo observações e notas de feedback anterior.
+                  </p>
+                </div>
+                <button class="btn-jupiter-outline" onclick="window.masterMind.openNovoFato('${escapeHtml(colab.nome)}')">
+                  + Adicionar Fato
+                </button>
+              </div>
+
+              <div class="timeline-list">
+                ${fatosColab.length === 0 ? '<div style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Nenhum fato registrado até o momento. Clique em "+ Novo Fato" para registrar o primeiro evento.</div>' : ''}
+                ${fatosColab.map(f => {
+                  const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+                  const isNota = (f.tipo || '').toLowerCase().includes('nota') || (!f.quadrante_fofa && f.observacao);
+                  const quadClass = (f.quadrante_fofa || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                  
+                  let quadColor = '#7FBF8F';
+                  if (quadClass.includes('fraqueza')) quadColor = '#FFA39E';
+                  else if (quadClass.includes('oportunidade')) quadColor = '#A3D4F7';
+                  else if (quadClass.includes('ameaca')) quadColor = '#F5CE9F';
+                  else if (isNota) quadColor = '#D9A066';
+
+                  return `
+                    <div class="timeline-item" style="${isNota ? 'border-left: 3px solid var(--amber); background: rgba(217, 160, 102, 0.08);' : ''}">
+                      <div class="timeline-header">
+                        <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
+                          <span style="font-weight: 700; color: #FFF; font-size: 0.86rem;">📅 ${escapeHtml(dataFmt)}</span>
+                          <span class="chip" style="background: rgba(232,125,72,0.2); color: #FFA97A; border: 1px solid rgba(232,125,72,0.4);">
+                            ${escapeHtml(f.tipo)}
+                          </span>
+                          ${f.quadrante_fofa && f.quadrante_fofa !== 'Nenhum' ? `
+                            <span class="chip" style="background: rgba(28,37,65,0.8); color: ${quadColor}; border: 1px solid ${quadColor};">
+                              FOFA: ${escapeHtml(f.quadrante_fofa)}
+                            </span>
+                          ` : ''}
+                          ${isNota ? `
+                            <span class="chip" style="background: rgba(217,160,102,0.25); color: #F5CE9F; border: 1px solid rgba(217,160,102,0.5);">
+                              📝 Observação / Nota do Feedback
+                            </span>
+                          ` : ''}
+                        </div>
+                        <div style="display: flex; gap: 0.45rem; align-items: center; font-size: 0.75rem; color: var(--cream);">
+                          ${f.impacto ? `<span>Impacto: <strong>${escapeHtml(f.impacto)}</strong></span>` : ''}
+                          ${f.nota ? `<span>· Nota: <strong style="color: #FFF;">${escapeHtml(f.nota)}</strong></span>` : ''}
+                        </div>
+                      </div>
+                      <p class="timeline-desc" style="${isNota ? 'color: #FFF; font-size: 0.9rem;' : ''}">${escapeHtml(f.descricao)}</p>
+                      ${f.origem || f.projeto || f.observacao ? `
+                        <div style="margin-top: 0.45rem; font-size: 0.76rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.75rem; border-top: 1px dashed rgba(90,125,154,0.25); padding-top: 0.35rem;">
+                          ${f.origem ? `<span>Origem: <em>${escapeHtml(f.origem)}</em></span>` : ''}
+                          ${f.projeto ? `<span>Projeto: <em>${escapeHtml(f.projeto)}</em></span>` : ''}
+                          ${f.observacao ? `<span style="color: #F5CE9F;">Observação: <strong>${escapeHtml(f.observacao)}</strong></span>` : ''}
+                        </div>
+                      ` : ''}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        },
+
+        openNovoColaborador: function () {
+          document.getElementById('modalColabTitle').textContent = 'Cadastrar Colaborador';
+          document.getElementById('colabModalId').value = '';
+          document.getElementById('colabModalNome').value = '';
+          document.getElementById('colabModalNome').readOnly = false;
+          document.getElementById('colabModalCargo').value = '';
+          document.getElementById('colabModalDept').value = 'GGC';
+          document.getElementById('colabModalStatus').value = 'Ativo';
+          document.getElementById('colabModalAdmissao').value = new Date().toISOString().split('T')[0];
+          document.getElementById('colabModalDesc').value = '';
+
+          document.getElementById('colaboradorModal').classList.add('open');
+        },
+
+        openEditarColaborador: function (nome) {
+          const c = equipe.find(item => item.nome.toLowerCase() === nome.toLowerCase());
+          if (!c) return;
+
+          document.getElementById('modalColabTitle').textContent = `Editar Colaborador: ${c.nome}`;
+          document.getElementById('colabModalId').value = c.nome;
+          document.getElementById('colabModalNome').value = c.nome;
+          document.getElementById('colabModalNome').readOnly = true;
+          document.getElementById('colabModalCargo').value = c.cargo || '';
+          document.getElementById('colabModalDept').value = c.departamento || 'GGC';
+          document.getElementById('colabModalStatus').value = c.status || 'Ativo';
+          document.getElementById('colabModalAdmissao').value = c.admissao || '';
+          document.getElementById('colabModalDesc').value = c.descricao_cargo || '';
+
+          document.getElementById('colaboradorModal').classList.add('open');
+        },
+
+        closeColaboradorModal: function () {
+          document.getElementById('colaboradorModal').classList.remove('open');
+        },
+
+        saveColaborador: function (e) {
+          e.preventDefault();
+          const origNome = document.getElementById('colabModalId').value.trim();
+          const nome = document.getElementById('colabModalNome').value.trim();
+          const cargo = document.getElementById('colabModalCargo').value.trim();
+          const dept = document.getElementById('colabModalDept').value.trim() || 'GGC';
+          const status = document.getElementById('colabModalStatus').value;
+          const admissao = document.getElementById('colabModalAdmissao').value;
+          const desc = document.getElementById('colabModalDesc').value.trim();
+
+          if (!nome || !cargo) return;
+
+          let targetColab = origNome ? equipe.find(c => c.nome.toLowerCase() === origNome.toLowerCase()) : null;
+          let isNew = false;
+
+          if (targetColab) {
+            targetColab.cargo = cargo;
+            targetColab.departamento = dept;
+            targetColab.status = status;
+            targetColab.admissao = admissao;
+            targetColab.descricao_cargo = desc;
+          } else {
+            isNew = true;
+            targetColab = {
+              nome,
+              cargo,
+              departamento: dept,
+              status,
+              admissao,
+              descricao_cargo: desc
+            };
+            equipe.push(targetColab);
+          }
+
+          localStorage.setItem(STORAGE_EQUIPE_KEY, JSON.stringify(equipe));
+          this.saveColaboradorToSheet(targetColab, isNew ? 'add_colaborador' : 'update_colaborador');
+          this.closeColaboradorModal();
+          this.renderEquipe();
+        },
+
+        saveColaboradorToSheet: async function (colabObj, action = 'update_colaborador') {
+          const syncEl = document.getElementById('syncIndicator');
+          syncEl.className = 'sync-status loading';
+          syncEl.innerHTML = '<span>Salvando Equipe...</span>';
+
+          try {
+            const payload = JSON.stringify({
+              action: action,
+              sheet: 'Equipe',
+              nome: colabObj.nome,
+              cargo: colabObj.cargo,
+              descricao_cargo: colabObj.descricao_cargo,
+              departamento: colabObj.departamento,
+              admissao: colabObj.admissao,
+              status: colabObj.status
+            });
+
+            await fetch(SYNC_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: payload,
+              mode: 'no-cors'
+            });
+
+            syncEl.className = 'sync-status';
+            syncEl.innerHTML = '<span>Sincronizado ✓</span>';
+          } catch (e) {
+            console.warn('Erro ao salvar colaborador no Sheets:', e);
+            syncEl.className = 'sync-status offline';
+            syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
+          }
+        },
+
+        openNovoFato: function (colabNome) {
+          document.getElementById('fatoModalColab').value = colabNome || activeColabNome || '';
+          document.getElementById('modalFatoTitle').textContent = `Novo Fato: ${colabNome || activeColabNome}`;
+          document.getElementById('fatoModalData').value = new Date().toISOString().split('T')[0];
+          document.getElementById('fatoModalTipo').value = 'Atitude Positiva';
+          this.sugerirQuadranteFofa('Atitude Positiva');
+          document.getElementById('fatoModalImpacto').value = 'Médio';
+          document.getElementById('fatoModalNota').value = '8';
+          document.getElementById('fatoModalDesc').value = '';
+          document.getElementById('fatoModalOrigem').value = 'Observação Direta';
+          document.getElementById('fatoModalProjeto').value = '';
+          document.getElementById('fatoModalObs').value = '';
+
+          document.getElementById('fatoModal').classList.add('open');
+        },
+
+        sugerirQuadranteFofa: function (tipo) {
+          const select = document.getElementById('fatoModalQuadrante');
+          if (!select) return;
+          if (tipo === 'Atitude Positiva' || tipo === 'Entrega Destacada' || tipo === 'Competência') {
+            select.value = 'Força';
+          } else if (tipo === 'Ocorrência' || tipo === 'Atraso / Prazo') {
+            select.value = 'Fraqueza';
+          } else if (tipo === 'Capacitação' || tipo === 'Novo Desafio' || tipo === 'OKR') {
+            select.value = 'Oportunidade';
+          } else if (tipo === 'Risco / Sobrecarga') {
+            select.value = 'Ameaça';
+          } else if (tipo === 'Nota') {
+            select.value = 'Nenhum';
+          } else {
+            select.value = 'Força';
+          }
+        },
+
+        closeFatoModal: function () {
+          document.getElementById('fatoModal').classList.remove('open');
+        },
+
+        saveFato: function (e) {
+          e.preventDefault();
+          const colab = document.getElementById('fatoModalColab').value.trim();
+          const data = document.getElementById('fatoModalData').value;
+          const tipo = document.getElementById('fatoModalTipo').value;
+          const quadrante = document.getElementById('fatoModalQuadrante').value;
+          const impacto = document.getElementById('fatoModalImpacto').value;
+          const nota = document.getElementById('fatoModalNota').value.trim();
+          const desc = document.getElementById('fatoModalDesc').value.trim();
+          const origem = document.getElementById('fatoModalOrigem').value;
+          const projeto = document.getElementById('fatoModalProjeto').value.trim();
+          const obs = document.getElementById('fatoModalObs').value.trim();
+
+          if (!colab || !desc) return;
+
+          const novoFato = {
+            colaborador: colab,
+            data,
+            tipo,
+            quadrante_fofa: quadrante,
+            descricao: desc,
+            impacto,
+            nota,
+            origem,
+            projeto,
+            observacao: obs
+          };
+
+          fatos.unshift(novoFato);
+          localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
+          this.saveFatoToSheet(novoFato);
+          this.closeFatoModal();
+          this.renderEquipe();
+        },
+
+        saveFatoToSheet: async function (fatoObj) {
+          const syncEl = document.getElementById('syncIndicator');
+          syncEl.className = 'sync-status loading';
+          syncEl.innerHTML = '<span>Salvando Fato...</span>';
+
+          try {
+            const payload = JSON.stringify({
+              action: 'add_fato',
+              sheet: 'Fatos',
+              colaborador: fatoObj.colaborador,
+              data: fatoObj.data,
+              tipo: fatoObj.tipo,
+              quadrante_fofa: fatoObj.quadrante_fofa,
+              descricao: fatoObj.descricao,
+              impacto: fatoObj.impacto,
+              nota: fatoObj.nota,
+              origem: fatoObj.origem,
+              projeto: fatoObj.projeto,
+              observacao: fatoObj.observacao
+            });
+
+            await fetch(SYNC_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: payload,
+              mode: 'no-cors'
+            });
+
+            syncEl.className = 'sync-status';
+            syncEl.innerHTML = '<span>Sincronizado ✓</span>';
+          } catch (e) {
+            console.warn('Erro ao salvar fato no Sheets:', e);
+            syncEl.className = 'sync-status offline';
+            syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
+          }
+        },
+
+        // ==========================================
+        // GERAÇÃO INTELIGENTE DO CONTRATO DE EXPECTATIVA
+        // (CONSOLIDADO DE SWOT + OBSERVAÇÕES REAIS)
+        // ==========================================
+
+        transformarFraquezaEmExpectativa: function (desc) {
+          const lower = (desc || '').toLowerCase();
+          if (lower.includes('agir ou falar') || lower.includes('sem pensar')) {
+            return 'Desenvolver pausa reflexiva antes de responder ou tomar decisões, validando todo o contexto antes de agir.';
+          }
+          if (lower.includes('crenças limit') || lower.includes('crencas limit')) {
+            return 'Trabalhar autoconfiança, quebrar crenças limitantes e reconhecer o próprio potencial técnico e de liderança.';
+          }
+          if (lower.includes('timidez')) {
+            return 'Desenvolver comunicação assertiva, autoconfiança e segurança em apresentações e reuniões da equipe.';
+          }
+          if (lower.includes('não conhece todo o processo') || lower.includes('ferramentas')) {
+            return 'Aprofundar o domínio integral dos processos internos do departamento e rotinas operacionais.';
+          }
+          if (lower.includes('horário') || lower.includes('dicção') || lower.includes('escrita')) {
+            return 'Aprimorar pontualidade e investir no desenvolvimento contínuo de dicção, oratória e redação corporativa.';
+          }
+          if (lower.includes('não se envolve') || lower.includes('pouco participativa')) {
+            return 'Aumentar a proatividade e participação ativa em projetos estratégicos e pautas transversais da área.';
+          }
+          if (lower.includes('sugere ideias mas não executa') || lower.includes('estende')) {
+            return 'Focar em disciplina executiva: transformar ideias em planos de ação concretos e conduzir conversas objetivas.';
+          }
+          if (lower.includes('não tão próxima') || lower.includes('falta de clareza')) {
+            return 'Aproximar-se da rotina do departamento, estabelecendo alinhamentos frequentes e priorização diária das demandas.';
+          }
+          if (lower.includes('trabalhos manuais')) {
+            return 'Mapear e automatizar rotinas manuais repetitivas via ERP Rodopar e planilhas integradas.';
+          }
+          return `Desenvolver competência e superar gap identificado: ${desc}.`;
+        },
+
+        transformarAmeacaEmRisco: function (desc) {
+          const lower = (desc || '').toLowerCase();
+          if (lower.includes('não se achar merecedor') || lower.includes('não se achar merecedora')) {
+            return 'Combater a autossabotagem e síndrome do impostor, reconhecer o próprio valor e assumir novos desafios com firmeza.';
+          }
+          if (lower.includes('se comparar') || lower.includes('medo')) {
+            return 'Superar o receio de errar, focando na própria evolução sem comparações limitantes com terceiros.';
+          }
+          if (lower.includes('deixar levar') || lower.includes('não entregar')) {
+            return 'Fortalecer blindagem emocional frente a ruídos externos e blindar o cumprimento inegociável de datas de entrega.';
+          }
+          if (lower.includes('não usar 100%') || lower.includes('não vender')) {
+            return 'Apresentar e defender ideias com segurança, aproveitando plenamente o potencial técnico disponível.';
+          }
+          if (lower.includes('acostumado com a rotina') || lower.includes('prender informações') || lower.includes('acompanhar')) {
+            return 'Evitar a zona de conforto: compartilhar conhecimento com o time e manter-se em ritmo acelerado de melhoria contínua.';
+          }
+          if (lower.includes('muitos começos e poucos fins') || lower.includes('perdida')) {
+            return 'Mitigar a dispersão executando uma entrega até o fim antes de iniciar novas frentes, com cronogramas explícitos.';
+          }
+          if (lower.includes('mal interpretada') || lower.includes('estagnar')) {
+            return 'Alinhar comunicação clara com liderança e pares para evitar ruídos de interpretação e assegurar evolução contínua.';
+          }
+          return `Mitigar risco e vulnerabilidade identificados: ${desc}.`;
+        },
+
+        transformarOportunidadeEmMeta: function (desc) {
+          const lower = (desc || '').toLowerCase();
+          if (lower.includes('supervisora') || lower.includes('supervisão') || lower.includes('lider')) {
+            return 'Desenvolver competências de liderança, delegação e gestão de equipe para assumir a supervisão do DP/GGC.';
+          }
+          if (lower.includes('carreira') || lower.includes('promovida')) {
+            return 'Construir plano estruturado de evolução na Transnova, acelerando promoção com a consolidação dos novos processos.';
+          }
+          if (lower.includes('graduação') || lower.includes('apresentação de resultados')) {
+            return 'Investir em formação acadêmica/técnica e assumir a liderança em apresentações periódicas de indicadores da área.';
+          }
+          if (lower.includes('espaço em frentes') || lower.includes('visibilidade')) {
+            return 'Ganhar visibilidade em comitês estratégicos e assumir protagonismo em projetos transversais de Gente e Gestão.';
+          }
+          if (lower.includes('bi de contratações') || lower.includes('cadastros')) {
+            return 'Dominar o BI de Contratações e parametrizar cadastros completos no sistema, gerando relatórios de alto impacto.';
+          }
+          if (lower.includes('endomarketing') || lower.includes('layout') || lower.includes('estoque')) {
+            return 'Liderar as ações do cronograma de Endomarketing, organização da Recepção e governança de estoque e uniformes.';
+          }
+          if (lower.includes('novas metodologias') || lower.includes('ganhar mais')) {
+            return 'Implantar metodologias ágeis de DP e elevar nível de maturidade operacional com foco em crescimento de remuneração.';
+          }
+          return `Consolidar oportunidade de crescimento: ${desc}.`;
+        },
+
+        transformarForcaEmPontoManter: function (desc) {
+          const lower = (desc || '').toLowerCase();
+          if (lower.includes('ensinar')) {
+            return 'Continuar atuando como referência técnica, instrutor(a) e facilitador(a) do aprendizado da equipe.';
+          }
+          if (lower.includes('postura') || lower.includes('educad') || lower.includes('atencios')) {
+            return 'Manter excelente postura profissional, comunicação empática e alto padrão de atendimento aos colaboradores.';
+          }
+          if (lower.includes('conhece do seu trabalho') || lower.includes('ágil') || lower.includes('determina')) {
+            return 'Sustentar alto nível de domínio operacional, rigor técnico e agilidade na resolução de solicitações de pessoal.';
+          }
+          if (lower.includes('fora da caixinha') || lower.includes('esforçada')) {
+            return 'Preservar a proatividade, o esforço genuíno e o pensamento inovador na proposição de melhorias contínuas.';
+          }
+          if (lower.includes('jurídicos') || lower.includes('desligamento') || lower.includes('acolhid')) {
+            return 'Permanecer como pilar de segurança jurídica, acolhimento humanizado e condução respeitosa de desligamentos.';
+          }
+          return `Potencializar e manter como padrão de excelência: ${desc}.`;
+        },
+
+        transformarObservacaoEmCompromisso: function (desc, obs) {
+          const texto = obs && obs.trim() ? `${desc} (${obs})` : desc;
+          const lower = texto.toLowerCase();
+          if (lower.includes('ensinar')) {
+            return 'Continuar atuando como referência de ensino e mentoria contínua para novos integrantes do departamento.';
+          }
+          if (lower.includes('bi de contratações') || lower.includes('prazos')) {
+            return 'Acompanhar semanalmente o BI de Contratações e validar prazos de entrega em conjunto com a liderança imediata.';
+          }
+          if (lower.includes('aderiu à cultura') || lower.includes('contrato de expectativa')) {
+            return 'Manter o estrito alinhamento cultural e cumprir integralmente as metas e condutas firmadas nos acordos de feedback.';
+          }
+          if (lower.includes('conversas fora da sala') || lower.includes('passar conhecimento')) {
+            return 'Promover compartilhamento formal de informações na sala de trabalho e planejar entregas pendentes em conjunto.';
+          }
+          if (lower.includes('reuniões semanais') || lower.includes('endomarketing')) {
+            return 'Participar com rigor dos alinhamentos semanais e cumprir o plano de ação de Endomarketing e controle de materiais.';
+          }
+          return `Compromisso prático de feedback: ${desc}.`;
+        },
+
+        // Gera e consolida a estrutura do Contrato a partir dos fatos reais
+        gerarContratoBaseColaborador: function (colabNome, fatosColab) {
+          const matchQuad = (f, quadKeyword) => {
+            if (!f || !f.quadrante_fofa) return false;
+            const norm = f.quadrante_fofa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return norm.includes(quadKeyword);
+          };
+
+          const forcas = fatosColab.filter(f => matchQuad(f, 'forca'));
+          const fraquezas = fatosColab.filter(f => matchQuad(f, 'fraqueza'));
+          const oportunidades = fatosColab.filter(f => matchQuad(f, 'oportunidade'));
+          const ameacas = fatosColab.filter(f => matchQuad(f, 'ameaca'));
+          const notas = fatosColab.filter(f => (f.tipo || '').toLowerCase().includes('nota') || f.quadrante_fofa === 'Nenhum' || (f.observacao && f.observacao.trim().length > 0));
+
+          // 1. Metas de Crescimento (das Oportunidades)
+          const metasCrescimento = oportunidades.map(f => ({
+            id: 'meta_' + Math.random().toString(36).substr(2, 9),
+            origemTexto: `Oportunidade: "${f.descricao}"`,
+            texto: this.transformarOportunidadeEmMeta(f.descricao)
+          }));
+
+          // 2. Expectativas de Desenvolvimento (das Fraquezas)
+          const expectativasDesenv = fraquezas.map(f => ({
+            id: 'exp_' + Math.random().toString(36).substr(2, 9),
+            origemTexto: `Fraqueza: "${f.descricao}"`,
+            texto: this.transformarFraquezaEmExpectativa(f.descricao)
+          }));
+
+          // 3. Riscos a Mitigar / Atenção (das Ameaças)
+          const riscosMitigar = ameacas.map(f => ({
+            id: 'risco_' + Math.random().toString(36).substr(2, 9),
+            origemTexto: `Ameaça: "${f.descricao}"`,
+            texto: this.transformarAmeacaEmRisco(f.descricao)
+          }));
+
+          // 4. Pontos a Manter / Potencializar (das Forças)
+          const pontosManter = forcas.map(f => ({
+            id: 'manter_' + Math.random().toString(36).substr(2, 9),
+            origemTexto: `Força: "${f.descricao}"`,
+            texto: this.transformarForcaEmPontoManter(f.descricao)
+          }));
+
+          // 5. Compromissos e Acordos (das Observações)
+          const compromissos = notas.map(f => ({
+            id: 'comp_' + Math.random().toString(36).substr(2, 9),
+            origemTexto: `Observação do Feedback: "${f.descricao}"`,
+            texto: this.transformarObservacaoEmCompromisso(f.descricao, f.observacao)
+          }));
+
+          return {
+            colaborador: colabNome,
+            prazoMinimoDias: 90,
+            metasCrescimento: metasCrescimento.length > 0 ? metasCrescimento : [{ id: 'm1', origemTexto: 'Geral', texto: 'Atingir 100% de pontualidade e acurácia nas entregas da função.' }],
+            expectativasDesenv: expectativasDesenv.length > 0 ? expectativasDesenv : [{ id: 'e1', origemTexto: 'Geral', texto: 'Elevar autonomia operacional e proatividade na solução de entraves.' }],
+            riscosMitigar: riscosMitigar.length > 0 ? riscosMitigar : [{ id: 'r1', origemTexto: 'Geral', texto: 'Evitar retrabalho alinhando expectativas prévias com a liderança.' }],
+            pontosManter: pontosManter.length > 0 ? pontosManter : [{ id: 'p1', origemTexto: 'Geral', texto: 'Preservar comprometimento, engajamento e pontualidade na rotina.' }],
+            compromissos: compromissos.length > 0 ? compromissos : [{ id: 'c1', origemTexto: 'Geral', texto: 'Checkpoints quinzenais de acompanhamento de metas.' }]
+          };
+        },
+
+        obterContratoColaborador: function (colabNome, fatosColab) {
+          const cacheKey = `${STORAGE_CONTRATOS_KEY}_${colabNome.toLowerCase().trim()}`;
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (parsed && parsed.colaborador) return parsed;
+            } catch (e) {
+              console.warn('Erro ao ler contrato customizado do cache:', e);
+            }
+          }
+          const novo = this.gerarContratoBaseColaborador(colabNome, fatosColab);
+          localStorage.setItem(cacheKey, JSON.stringify(novo));
+          return novo;
+        },
+
+        salvarContratoColaborador: function (colabNome, contratoObj) {
+          const cacheKey = `${STORAGE_CONTRATOS_KEY}_${colabNome.toLowerCase().trim()}`;
+          localStorage.setItem(cacheKey, JSON.stringify(contratoObj));
+        },
+
+        redefinirContratoSWOT: function (colabNome) {
+          if (!confirm(`Deseja recalcular e regenerar o Contrato de Expectativa de ${colabNome} a partir dos fatos reais da SWOT e linha do tempo? Eventuais edições manuais deste contrato serão reiniciadas para a base do feedback.`)) {
+            return;
+          }
+          const fatosColab = fatos.filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === colabNome.trim().toLowerCase());
+          const novo = this.gerarContratoBaseColaborador(colabNome, fatosColab);
+          this.salvarContratoColaborador(colabNome, novo);
+          const el = document.getElementById('contratoBoxContainer');
+          if (el) {
+            el.innerHTML = this.renderContratoExpectativaHtml(colabNome, fatosColab);
+          }
+        },
+
+        editarItemContrato: function (colabNome, secao, itemIdx, novoTexto) {
+          const fatosColab = fatos.filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === colabNome.trim().toLowerCase());
+          const c = this.obterContratoColaborador(colabNome, fatosColab);
+          if (c[secao] && c[secao][itemIdx]) {
+            c[secao][itemIdx].texto = novoTexto.trim();
+            this.salvarContratoColaborador(colabNome, c);
+          }
+        },
+
+        excluirItemContrato: function (colabNome, secao, itemIdx) {
+          const fatosColab = fatos.filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === colabNome.trim().toLowerCase());
+          const c = this.obterContratoColaborador(colabNome, fatosColab);
+          if (c[secao] && c[secao][itemIdx]) {
+            c[secao].splice(itemIdx, 1);
+            this.salvarContratoColaborador(colabNome, c);
+            const el = document.getElementById('contratoBoxContainer');
+            if (el) el.innerHTML = this.renderContratoExpectativaHtml(colabNome, fatosColab);
+          }
+        },
+
+        adicionarItemContratoPrompt: function (colabNome, secao, labelSecao) {
+          const texto = prompt(`Adicionar novo item em "${labelSecao}":`);
+          if (!texto || !texto.trim()) return;
+          const origem = prompt('Origem do item (ex: Acordo 1:1, Observação de campo, Reunião de feedback):', 'Alinhamento com Liderança') || 'Alinhamento com Liderança';
+
+          const fatosColab = fatos.filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === colabNome.trim().toLowerCase());
+          const c = this.obterContratoColaborador(colabNome, fatosColab);
+          if (!c[secao]) c[secao] = [];
+          c[secao].push({
+            id: 'item_' + Date.now(),
+            origemTexto: origem.trim(),
+            texto: texto.trim()
+          });
+          this.salvarContratoColaborador(colabNome, c);
+          const el = document.getElementById('contratoBoxContainer');
+          if (el) el.innerHTML = this.renderContratoExpectativaHtml(colabNome, fatosColab);
+        },
+
+        renderContratoExpectativaHtml: function (colabNome, fatosColab) {
+          const contrato = this.obterContratoColaborador(colabNome, fatosColab);
+
+          const renderSecao = (titulo, badgeEmoji, corBorda, secaoKey, lista, labelSecao) => {
+            return `
+              <div class="contrato-section-card ${secaoKey}">
+                <div class="contrato-section-title" style="color: ${corBorda};">
+                  <span>${badgeEmoji} ${escapeHtml(titulo)} (${lista.length})</span>
+                  <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: normal;">Clique no texto para editar</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                  ${lista.length === 0 ? '<div style="color: var(--text-muted); font-size: 0.78rem; font-style: italic;">Nenhum item nesta seção.</div>' : ''}
+                  ${lista.map((item, idx) => `
+                    <div class="contrato-item-row">
+                      <div class="contrato-origem-tag">
+                        <span>🔍 ${escapeHtml(item.origemTexto || 'SWOT')}</span>
+                        <button class="contrato-btn-del" title="Excluir este item do contrato" onclick="window.masterMind.excluirItemContrato('${escapeHtml(colabNome)}', '${secaoKey}', ${idx})">🗑️</button>
+                      </div>
+                      <div class="contrato-item-text" contenteditable="true" spellcheck="false" title="Clique para editar o texto" onblur="window.masterMind.editarItemContrato('${escapeHtml(colabNome)}', '${secaoKey}', ${idx}, this.innerText)">
+                        ${escapeHtml(item.texto)}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+                <button type="button" class="contrato-btn-add" onclick="window.masterMind.adicionarItemContratoPrompt('${escapeHtml(colabNome)}', '${secaoKey}', '${labelSecao}')">
+                  + Adicionar Item
+                </button>
+              </div>
+            `;
+          };
+
+          return `
+            <div class="contrato-header-bar">
+              <div>
+                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 0.5rem;">
+                  🎯 Contrato de Expectativa &amp; Desenvolvimento Individual
+                </h3>
+                <p style="margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--cream);">
+                  Consolidado automaticamente a partir da Análise SWOT (FOFA) e Linha do Tempo de <strong>${escapeHtml(colabNome)}</strong>. <em>Todos os itens são editáveis pelo gestor.</em>
+                </p>
+              </div>
+              <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
+                <span class="contrato-prazo-badge" title="Ciclo formal com revisões periódicas conforme as situações">
+                  ⏳ Prazo mínimo de 90 dias
+                </span>
+                <button class="btn-jupiter-outline" style="font-size: 0.75rem; padding: 0.35rem 0.65rem;" title="Recalcular automaticamente a partir dos fatos reais" onclick="window.masterMind.redefinirContratoSWOT('${escapeHtml(colabNome)}')">
+                  🔄 Recalcular da SWOT
+                </button>
+                <button class="btn-jupiter" onclick="window.masterMind.abrirGerarFeedback('${escapeHtml(colabNome)}')">
+                  📄 Gerar Feedback (Docs)
+                </button>
+              </div>
+            </div>
+
+            <div class="contrato-sections-grid">
+              <!-- 1. METAS DE CRESCIMENTO (Das Oportunidades) -->
+              ${renderSecao('Metas de Crescimento (Oportunidades)', '🚀', '#A3D4F7', 'metasCrescimento', contrato.metasCrescimento || [], 'Metas de Crescimento')}
+
+              <!-- 2. EXPECTATIVAS DE DESENVOLVIMENTO (Das Fraquezas) -->
+              ${renderSecao('Expectativas de Desenvolvimento (Fraquezas)', '⚠️', '#FFA39E', 'expectativasDesenv', contrato.expectativasDesenv || [], 'Expectativas de Desenvolvimento')}
+
+              <!-- 3. RISCOS A MITIGAR / PONTOS DE ATENÇÃO (Das Ameaças) -->
+              ${renderSecao('Riscos a Mitigar & Pontos de Atenção (Ameaças)', '🛡️', '#F5CE9F', 'riscosMitigar', contrato.riscosMitigar || [], 'Riscos a Mitigar')}
+
+              <!-- 4. PONTOS A MANTER / POTENCIALIZAR (Das Forças) -->
+              ${renderSecao('Pontos a Manter & Potencializar (Forças)', '💪', '#7FBF8F', 'pontosManter', contrato.pontosManter || [], 'Pontos a Manter')}
+
+              <!-- 5. COMPROMISSOS E ACORDOS (Das Observações) -->
+              ${renderSecao('Compromissos & Acordos de Feedback (Observações)', '🤝', '#FFA97A', 'compromissos', contrato.compromissos || [], 'Compromissos e Acordos')}
+            </div>
+          `;
+        },
+
+        abrirGerarFeedback: function (colabNome) {
+          const colab = equipe.find(c => c.nome.trim().toLowerCase() === colabNome.trim().toLowerCase()) || {
+            nome: colabNome,
+            cargo: 'Cargo a definir',
+            departamento: 'GGC',
+            descricao_cargo: '',
+            admissao: ''
+          };
+
+          const fatosColab = fatos.filter(f => f.colaborador && f.colaborador.trim().toLowerCase() === colabNome.trim().toLowerCase());
+          
+          const matchQuad = (f, quadKeyword) => {
+            if (!f || !f.quadrante_fofa) return false;
+            const norm = f.quadrante_fofa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return norm.includes(quadKeyword);
+          };
+
+          const forcas = fatosColab.filter(f => matchQuad(f, 'forca'));
+          const fraquezas = fatosColab.filter(f => matchQuad(f, 'fraqueza'));
+          const oportunidades = fatosColab.filter(f => matchQuad(f, 'oportunidade'));
+          const ameacas = fatosColab.filter(f => matchQuad(f, 'ameaca'));
+          const notas = fatosColab.filter(f => (f.tipo || '').toLowerCase().includes('nota') || f.quadrante_fofa === 'Nenhum' || (f.observacao && f.observacao.trim().length > 0));
+
+          // Carrega o contrato de expectativa consolidado e editado do colaborador
+          const contrato = this.obterContratoColaborador(colabNome, fatosColab);
+
+          const todayFmt = formatDateDisplay(new Date());
+
+          let textDoc = `========================================================================\n`;
+          textDoc += `TRANSNOVA LOGÍSTICA & TRANSPORTES — DOSSIÊ DE DESENVOLVIMENTO INDIVIDUAL\n`;
+          textDoc += `DEPARTAMENTO DE GENTE, GESTÃO & CULTURA (DGG&C)\n`;
+          textDoc += `========================================================================\n\n`;
+          textDoc += `COLABORADOR(A): ${colab.nome}\n`;
+          textDoc += `CARGO: ${colab.cargo}\n`;
+          textDoc += `DEPARTAMENTO: ${colab.departamento || 'GGC'}\n`;
+          textDoc += `DATA DA EMISSÃO: ${todayFmt}\n`;
+          textDoc += `CICLO DE REVISÃO: Prazo mínimo de 90 dias (revisão contínua)\n\n`;
+
+          textDoc += `1. DESCRIÇÃO E ESCOPO DA FUNÇÃO\n`;
+          textDoc += `------------------------------------------------------------------------\n`;
+          textDoc += `${colab.descricao_cargo || 'Atribuições sob alinhamento direto da liderança.'}\n\n`;
+
+          textDoc += `2. MATRIZ FOFA CONSOLIDADA (FATOS REAIS DA LINHA DO TEMPO)\n`;
+          textDoc += `------------------------------------------------------------------------\n`;
+          textDoc += `[FORÇAS / PONTOS FORTES]\n`;
+          if (forcas.length === 0) textDoc += `- Nenhum registro cadastrado no período.\n`;
+          forcas.forEach(f => {
+            const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+            textDoc += `• ${dataFmt} [${f.tipo}]: ${f.descricao}${f.nota ? ` (Nota: ${f.nota})` : ''}${f.observacao ? ` — Obs: ${f.observacao}` : ''}\n`;
+          });
+
+          textDoc += `\n[FRAQUEZAS / PONTOS A DESENVOLVER]\n`;
+          if (fraquezas.length === 0) textDoc += `- Nenhum registro cadastrado no período.\n`;
+          fraquezas.forEach(f => {
+            const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+            textDoc += `• ${dataFmt} [${f.tipo}]: ${f.descricao}${f.impacto ? ` (Impacto: ${f.impacto})` : ''}${f.observacao ? ` — Obs: ${f.observacao}` : ''}\n`;
+          });
+
+          textDoc += `\n[OPORTUNIDADES DE CRESCIMENTO & CAPACITAÇÃO]\n`;
+          if (oportunidades.length === 0) textDoc += `- Nenhum registro cadastrado no período.\n`;
+          oportunidades.forEach(f => {
+            const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+            textDoc += `• ${dataFmt} [${f.tipo}]: ${f.descricao}${f.projeto ? ` (Projeto: ${f.projeto})` : ''}${f.observacao ? ` — Obs: ${f.observacao}` : ''}\n`;
+          });
+
+          textDoc += `\n[AMEAÇAS / RISCOS EXTERNOS & GARGALOS]\n`;
+          if (ameacas.length === 0) textDoc += `- Nenhum registro cadastrado no período.\n`;
+          ameacas.forEach(f => {
+            const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+            textDoc += `• ${dataFmt} [${f.tipo}]: ${f.descricao}${f.impacto ? ` (Risco: ${f.impacto})` : ''}${f.observacao ? ` — Obs: ${f.observacao}` : ''}\n`;
+          });
+
+          if (notas.length > 0) {
+            textDoc += `\n3. OBSERVAÇÕES E NOTAS DO FEEDBACK ANTERIOR\n`;
+            textDoc += `------------------------------------------------------------------------\n`;
+            notas.forEach(f => {
+              const dataFmt = formatDateDisplay(parseDate(f.data)) || f.data;
+              textDoc += `• ${dataFmt}: ${f.descricao}${f.observacao ? ` — [${f.observacao}]` : ''}\n`;
+            });
+          }
+
+          textDoc += `\n========================================================================\n`;
+          textDoc += `4. CONTRATO DE EXPECTATIVA DE DESENVOLVIMENTO (CONSOLIDADO SWOT + OBSERVAÇÕES)\n`;
+          textDoc += `========================================================================\n`;
+          textDoc += `Prazo Mínimo de Validade / Revisão: 90 dias corridos\n\n`;
+
+          textDoc += `A. METAS DE CRESCIMENTO (Derivadas das Oportunidades)\n`;
+          if (!contrato.metasCrescimento || contrato.metasCrescimento.length === 0) {
+            textDoc += `- Nenhuma meta listada.\n`;
+          } else {
+            contrato.metasCrescimento.forEach(item => {
+              textDoc += `• [Origem: ${item.origemTexto}] → Meta: ${item.texto}\n`;
+            });
+          }
+
+          textDoc += `\nB. EXPECTATIVAS DE DESENVOLVIMENTO (Derivadas das Fraquezas)\n`;
+          if (!contrato.expectativasDesenv || contrato.expectativasDesenv.length === 0) {
+            textDoc += `- Nenhuma expectativa listada.\n`;
+          } else {
+            contrato.expectativasDesenv.forEach(item => {
+              textDoc += `• [Origem: ${item.origemTexto}] → Expectativa: ${item.texto}\n`;
+            });
+          }
+
+          textDoc += `\nC. RISCOS A MITIGAR & PONTOS DE ATENÇÃO (Derivados das Ameaças)\n`;
+          if (!contrato.riscosMitigar || contrato.riscosMitigar.length === 0) {
+            textDoc += `- Nenhum risco listado.\n`;
+          } else {
+            contrato.riscosMitigar.forEach(item => {
+              textDoc += `• [Origem: ${item.origemTexto}] → Risco a Mitigar: ${item.texto}\n`;
+            });
+          }
+
+          textDoc += `\nD. PONTOS A MANTER & POTENCIALIZAR (Derivados das Forças)\n`;
+          if (!contrato.pontosManter || contrato.pontosManter.length === 0) {
+            textDoc += `- Nenhum ponto listado.\n`;
+          } else {
+            contrato.pontosManter.forEach(item => {
+              textDoc += `• [Origem: ${item.origemTexto}] → Ponto a Manter: ${item.texto}\n`;
+            });
+          }
+
+          textDoc += `\nE. COMPROMISSOS & ACORDOS PRÁTICOS (Derivados das Observações de Feedback)\n`;
+          if (!contrato.compromissos || contrato.compromissos.length === 0) {
+            textDoc += `- Nenhum compromisso listado.\n`;
+          } else {
+            contrato.compromissos.forEach(item => {
+              textDoc += `• [Origem: ${item.origemTexto}] → Compromisso: ${item.texto}\n`;
+            });
+          }
+
+          textDoc += `\n------------------------------------------------------------------------\n`;
+          textDoc += `TERMO DE COMPROMISSO & CIÊNCIA\n`;
+          textDoc += `O(A) colaborador(a) e a liderança declaram ciência deste Contrato de Expectativa,\n`;
+          textDoc += `comprometendo-se com o plano de ação acordado para o ciclo mínimo de 90 dias.\n\n`;
+          textDoc += `Data: ____/____/________\n\n`;
+          textDoc += `_________________________________________          _________________________________________\n`;
+          textDoc += `Assinatura do Colaborador                          Assinatura da Gestão DGG&C / Transnova\n`;
+
+          document.getElementById('feedbackPreviewText').value = textDoc;
+
+          // Link para Google Docs novo com padrão Transnova
+          const docsUrl = `https://docs.google.com/document/create`;
+          const btnDocs = document.getElementById('btnOpenDocsFeedback');
+          if (btnDocs) {
+            btnDocs.href = docsUrl;
+          }
+
+          document.getElementById('feedbackModal').classList.add('open');
+        },
+
+        copyFeedbackToClipboard: function () {
+          const txt = document.getElementById('feedbackPreviewText').value;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(txt).then(() => {
+              alert('Dossiê copiado para a área de transferência! Você pode colar no Google Docs.');
+            }).catch(() => {
+              alert('Texto selecionado, pressione Ctrl+C para copiar.');
+            });
+          } else {
+            alert('Texto selecionado, pressione Ctrl+C para copiar.');
+          }
+        },
+
+        closeFeedbackModal: function () {
+          document.getElementById('feedbackModal').classList.remove('open');
         }
       };
 
