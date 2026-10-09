@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Master Mind — Transnova (Júpiter)</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B132B'/%3E%3Crect x='1' y='1' width='62' height='62' rx='13' fill='none' stroke='%23E87D48' stroke-width='1.5' stroke-opacity='0.35'/%3E%3Cg fill='%23E87D48' stroke='%23D9A066' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M29 12c-5.5 0-10 4-10 9 0 1.2.3 2.3.8 3.3-2.2 1.2-3.8 3.5-3.8 6.2 0 3 1.9 5.5 4.6 6.5-.4 1.2-.6 2.5-.3 3.8 1 4 4.5 5.5 8.7 4.2V12z'/%3E%3Cpath d='M35 12c5.5 0 10 4 10 9 0 1.2-.3 2.3-.8 3.3 2.2 1.2 3.8 3.5 3.8 6.2 0 3-1.9 5.5-4.6 6.5.4 1.2.6 2.5.3 3.8-1 4-4.5 5.5-8.7 4.2V12z'/%3E%3C/g%3E%3Cpath d='M22 23c2.5 1 4-1 6 0M19 29c3 0 4 3 7 2M22 36c2-1 4 1 6 0' fill='none' stroke='%230B132B' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M42 23c-2.5 1-4-1-6 0M45 29c-3 0-4 3-7 2M42 36c-2-1-4 1-6 0' fill='none' stroke='%230B132B' stroke-width='1.8' stroke-linecap='round'/%3E%3Ctext x='32' y='55' fill='%23F0E5D5' font-family='Inter, system-ui, -apple-system, sans-serif' font-size='8.5' font-weight='700' text-anchor='middle' letter-spacing='0.4'%3EMastermind%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
   <style>
@@ -346,18 +347,30 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.2);
     }
 
-    /* KPI Grid */
+    /* KPI Grid - 8 lado a lado no desktop */
     .kpi-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
       margin-bottom: 1.5rem;
+    }
+    @media (min-width: 600px) {
+      .kpi-row {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .kpi-row {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 0.45rem;
+      }
     }
     .jupiter-kpi {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 0.85rem 0.95rem;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
       position: relative;
       overflow: hidden;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
@@ -382,135 +395,152 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .jupiter-kpi.amber::before { background: var(--amber); }
 
     .jupiter-kpi .val {
-      font-size: 1.45rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: #F8F8F8;
-      line-height: 1.2;
-      margin-bottom: 0.2rem;
+      line-height: 1.15;
+      margin-bottom: 0.15rem;
     }
     .jupiter-kpi .title {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--cream);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .jupiter-kpi .sub {
-      font-size: 0.68rem;
+      font-size: 0.64rem;
       color: var(--text-muted);
-      margin-top: 0.2rem;
+      margin-top: 0.15rem;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
 
-    /* Charts Section */
+    /* Charts Section - Maior aproveitamento e altura de 320px */
     .charts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.25rem;
       margin-bottom: 1.75rem;
     }
     .chart-panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1rem 1.15rem;
+      padding: 1.15rem;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
       display: flex;
       flex-direction: column;
+      min-height: 380px;
     }
     .chart-panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 0.85rem;
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.55rem;
       border-bottom: 1px solid rgba(90, 125, 154, 0.25);
     }
     .chart-title {
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #F8F8F8;
       letter-spacing: -0.01em;
       margin: 0;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
     .chart-render-area {
-      min-height: 220px;
+      min-height: 320px;
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       position: relative;
     }
 
-    /* Custom SVG Chart Styles */
+    /* Custom SVG Bar Chart Styles - Números DENTRO da barra com alto contraste */
     .svg-bar-row {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      margin: 0.35rem 0;
-      font-size: 0.75rem;
+      gap: 0.75rem;
+      margin: 0.45rem 0;
+      font-size: 0.82rem;
     }
     .svg-bar-label {
-      width: 105px;
+      width: 120px;
       text-align: right;
       color: var(--cream);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 0.8rem;
     }
     .svg-bar-track {
       flex: 1;
-      height: 24px;
+      height: 30px;
       background: rgba(28, 37, 65, 0.8);
-      border-radius: 4px;
+      border-radius: 6px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(90, 125, 154, 0.25);
+      border: 1px solid rgba(90, 125, 154, 0.3);
     }
     .svg-bar-fill {
       height: 100%;
-      border-radius: 3px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      padding-right: 8px;
+      padding-right: 10px;
       font-weight: 700;
-      font-size: 0.75rem;
+      font-size: 0.84rem;
       color: #FFFFFF;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
       transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       box-sizing: border-box;
-      min-width: 22px;
+      min-width: 32px;
     }
 
-    /* Donut container */
+    /* Donut container - Números nas fatias, sem tabelas soltas */
     .donut-wrapper {
       display: flex;
-      align-items: center;
-      justify-content: space-around;
-      gap: 1rem;
-      flex-wrap: wrap;
-      padding: 0.5rem 0;
-    }
-    .donut-legend {
-      display: flex;
       flex-direction: column;
-      gap: 0.45rem;
-      font-size: 0.75rem;
-    }
-    .legend-item {
-      display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.5rem 0;
+      width: 100%;
+      height: 100%;
     }
-    .legend-dot {
-      width: 10px;
-      height: 10px;
+    .donut-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-top: 0.25rem;
+      max-width: 100%;
+    }
+    .donut-badge-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(28, 37, 65, 0.7);
+      border: 1px solid rgba(90, 125, 154, 0.3);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+    .donut-badge-item .dot {
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      flex-shrink: 0;
+      display: inline-block;
     }
 
     /* Task Card */
@@ -670,27 +700,51 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       flex-wrap: wrap;
       gap: 0.75rem;
     }
-    .view-pills {
-      display: flex;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 2px;
+    .reunioes-filter-group {
+      display: inline-flex;
+      background: #10121E;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 6px;
     }
-    .view-pill {
+    .reuniao-filter-btn {
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       color: var(--text-muted);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 0.4rem 0.85rem;
-      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.2s;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
     }
-    .view-pill.active {
-      background: var(--surface-elevated);
-      color: var(--accent);
+    .reuniao-filter-btn:hover {
+      color: #FFF;
+      background: rgba(61, 124, 166, 0.2);
+    }
+    .reuniao-filter-btn.active[data-filter="semana"] {
+      background: linear-gradient(135deg, rgba(232, 125, 72, 0.25), rgba(217, 160, 102, 0.3));
+      border-color: var(--accent);
+      color: #FFA97A;
+      box-shadow: 0 0 10px rgba(232, 125, 72, 0.25);
+    }
+    .reuniao-filter-btn.active[data-filter="mes"] {
+      background: linear-gradient(135deg, rgba(61, 124, 166, 0.3), rgba(90, 125, 154, 0.35));
+      border-color: #6EB2DD;
+      color: #A3D4F7;
+      box-shadow: 0 0 10px rgba(61, 124, 166, 0.25);
+    }
+    .reuniao-filter-btn.active[data-filter="ano"] {
+      background: linear-gradient(135deg, rgba(127, 191, 143, 0.25), rgba(90, 154, 110, 0.3));
+      border-color: #7FBF8F;
+      color: #B2E5BD;
+      box-shadow: 0 0 10px rgba(127, 191, 143, 0.25);
     }
     .reuniao-card {
       background: var(--surface);
@@ -704,73 +758,115 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.75rem;
       gap: 1rem;
       flex-wrap: wrap;
+    }
+    .reuniao-title-wrap {
+      flex: 1;
+      min-width: 260px;
     }
     .reuniao-titulo {
       font-size: 1.2rem;
       font-weight: 700;
       color: #FFFFFF;
       margin: 0;
+      outline: none;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px dashed transparent;
+      transition: border-color 0.2s, background-color 0.2s;
+      cursor: text;
     }
-    .reuniao-meta {
+    .reuniao-titulo:hover {
+      border-color: rgba(232, 125, 72, 0.4);
+      background: rgba(28, 37, 65, 0.4);
+    }
+    .reuniao-titulo:focus {
+      border-color: var(--accent);
+      background: rgba(28, 37, 65, 0.85);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25);
+    }
+    .reuniao-meta-clean {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.65rem;
       flex-wrap: wrap;
-      margin-top: 0.3rem;
-      font-size: 0.78rem;
-      color: var(--cream);
+      margin-top: 0.45rem;
+      font-size: 0.82rem;
+      align-items: center;
     }
-    .reuniao-meta-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem 0.85rem;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-    }
-    .reuniao-meta-item {
+    .reuniao-badge-data {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      background: rgba(28, 37, 65, 0.5);
-      padding: 0.3rem 0.65rem;
-      border-radius: 6px;
-      border: 1px solid rgba(90, 125, 154, 0.3);
+      gap: 0.35rem;
+      background: rgba(61, 124, 166, 0.2);
+      border: 1px solid rgba(61, 124, 166, 0.4);
+      color: #A3D4F7;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      font-weight: 600;
     }
-    .meta-label {
-      color: var(--amber);
-      font-weight: 700;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .meta-val {
-      color: #FFFFFF;
-      font-weight: 500;
+    .reuniao-badge-dept {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(217, 160, 102, 0.18);
+      border: 1px solid rgba(217, 160, 102, 0.4);
+      color: #F5CE9F;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      font-weight: 600;
     }
     .reunioes-group-header {
       color: var(--amber);
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin: 1.25rem 0 0.65rem;
+      margin: 1.5rem 0 0.85rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-bottom: 1px solid rgba(90, 125, 154, 0.3);
-      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(90, 125, 154, 0.35);
+      padding-bottom: 0.4rem;
     }
     .reuniao-resumo {
       background: rgba(28, 37, 65, 0.5);
       border-left: 3px solid var(--accent);
       padding: 0.85rem 1rem;
       border-radius: 0 6px 6px 0;
-      font-size: 0.85rem;
-      line-height: 1.5;
+      font-size: 0.86rem;
+      line-height: 1.55;
       color: var(--text);
       margin: 0.85rem 0;
+    }
+    .reuniao-resumo-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .reuniao-resumo-text {
+      outline: none;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px dashed transparent;
+      transition: border-color 0.2s, background-color 0.2s;
+      cursor: text;
+    }
+    .reuniao-resumo-text:hover {
+      border-color: rgba(232, 125, 72, 0.4);
+      background: rgba(28, 37, 65, 0.6);
+    }
+    .reuniao-resumo-text:focus {
+      border-color: var(--accent);
+      background: rgba(11, 19, 43, 0.9);
+      box-shadow: 0 0 0 2px rgba(232, 125, 72, 0.25);
     }
     .reuniao-plano-title {
       font-size: 0.88rem;
@@ -1235,18 +1331,23 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     <!-- TAB 4: REUNIÕES -->
     <section id="viewReunioes" class="tab-content" style="display: none;">
       <div class="reunioes-toolbar">
-        <div class="view-pills" role="tablist" aria-label="Filtros de reuniões">
-          <button class="view-pill active" onclick="window.masterMind.filterReunioesView('todos', this)">Principais</button>
-          <button class="view-pill" onclick="window.masterMind.filterReunioesView('dia', this)">Por Dia</button>
-          <button class="view-pill" onclick="window.masterMind.filterReunioesView('semana', this)">Por Semana</button>
-          <button class="view-pill" onclick="window.masterMind.filterReunioesView('tema', this)">Por Tema</button>
+        <div class="reunioes-filter-group" role="group" aria-label="Filtro de reuniões por período">
+          <button class="reuniao-filter-btn active" data-filter="semana" onclick="window.masterMind.filterReunioesView('semana', this)">
+            🗓️ Semana
+          </button>
+          <button class="reuniao-filter-btn" data-filter="mes" onclick="window.masterMind.filterReunioesView('mes', this)">
+            📅 Mês
+          </button>
+          <button class="reuniao-filter-btn" data-filter="ano" onclick="window.masterMind.filterReunioesView('ano', this)">
+            📆 Ano
+          </button>
         </div>
         <button class="btn-jupiter" onclick="window.masterMind.openNovaReuniao()">
           <span style="font-size: 1.1rem; line-height: 1;">+</span> Nova Reunião
         </button>
       </div>
 
-      <div id="reunioesContainer">
+      <div id="reunioesContainer" style="margin-top: 1rem;">
         <!-- Rendered by JS -->
       </div>
     </section>
@@ -1370,6 +1471,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             <div class="form-group">
               <label for="reuniaoTipo">Tipo / Tema</label>
               <select id="reuniaoTipo" class="form-control">
+                <option value="Treinamento">Treinamento</option>
                 <option value="Projetos">Projetos</option>
                 <option value="Estratégica">Estratégica</option>
                 <option value="Operacional">Operacional</option>
@@ -1422,12 +1524,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
   <div id="pmoSelectModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalPmoSelectTitle">
     <div class="modal-dialog" style="max-width: 680px;">
       <div class="modal-header">
-        <h3 id="modalPmoSelectTitle">⚡ Selecionar Tarefas do Plano de Ação</h3>
+        <h3 id="modalPmoSelectTitle">⚡ Gerenciar Plano de Ação da Reunião</h3>
         <button class="modal-close-btn" onclick="window.masterMind.closePmoSelectModal()" aria-label="Fechar">✕</button>
       </div>
       <div class="modal-body">
         <p style="margin: 0; font-size: 0.84rem; color: var(--cream); line-height: 1.45;">
-          Escolha individualmente quais itens serão transformados em tarefa no Kanban. Os itens <strong>não marcados</strong> NÃO viram tarefa ativa e permanecerão registrados como <strong>Excluídos</strong>.
+          Marque os itens desejados no plano de ação. Clique em <strong>Adicionar selecionados</strong> para transformá-los em tarefas no PMO ou <strong>Excluir selecionados</strong> para descartá-los do plano. Itens não marcados continuam pendentes.
         </p>
         <div id="pmoReuniaoContext" style="font-size: 0.8rem; color: var(--amber); font-weight: 600; background: rgba(28, 37, 65, 0.6); padding: 0.5rem 0.8rem; border-radius: 6px; border: 1px solid rgba(90, 125, 154, 0.3);"></div>
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; font-size: 0.78rem;">
@@ -1441,9 +1543,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           <!-- Gerado dinamicamente -->
         </div>
       </div>
-      <div class="modal-footer" style="justify-content: flex-end; gap: 0.65rem;">
+      <div class="modal-footer" style="justify-content: space-between; gap: 0.65rem;">
         <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.closePmoSelectModal()">Cancelar</button>
-        <button type="button" class="btn-jupiter" onclick="window.masterMind.confirmPmoSelection()">Adicionar selecionados</button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" class="btn-jupiter-outline" style="color: var(--danger); border-color: rgba(229, 105, 95, 0.6);" onclick="window.masterMind.deletePmoSelected()">🗑️ Excluir selecionados</button>
+          <button type="button" class="btn-jupiter" onclick="window.masterMind.confirmPmoSelection()">⚡ Adicionar selecionados</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1453,7 +1558,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     (function () {
       const SYNC_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
       const STORAGE_TASKS_KEY = 'masterMind_tasks_jupiter';
-      const STORAGE_REUNIOES_KEY = 'masterMind_reunioes_jupiter';
+      const STORAGE_REUNIOES_KEY = 'masterMind_reunioes';
 
       // Fallback tasks
       const DEFAULT_TASKS = [
@@ -1469,38 +1574,68 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         { id: "010", tarefa: "Automatizar faturamento de ordens de frete via planilha", dept: "Dpto Faturamento", prio: "Baixa", prazo: "", status: "A Fazer", dono: "Terceiro", origem: "Projeto", obs: "Integração direta com ERP." }
       ];
 
-      // Single real meeting seeded
-      const SEED_REUNIAO = {
-        id: "reuniao-001",
-        titulo: "Planejamento do Galpão",
-        data: "2026-10-07",
-        tipo: "Projetos",
-        dept: "Dpto Projetos, Dpto Operacional, Dpto Diretoria",
-        participantes: "Renato Rodrigues, Kelly, Juvenal",
-        resumo: "Definição do layout do galpão (coworking aberto, sala climatizada para cargas frias de diversos clientes, dormitórios mantidos nos fundos), capacidade de armazenagem fixada em cerca de 60 pallets (50 fixos da BNZ), e a partir de agora todas as cargas passam a ser descarregadas diretamente no Galpão, desocupando a Matriz. Pendências: decidir ocupação das equipes de Atendimento, Monitoramento e Transportes (aguardando Diretoria), marcar data da demolição do muro e entregar lista final de demandas de manutenção.",
-        link: "https://docs.google.com/document/d/1sX2LACQgOY9H3YutePX5LiKRz2qHq7wK_M-fTYDzUdY/edit",
-        plano: [
-          { acao: "Demolir o muro mole e contratar caçamba (Crítica)", dono: "Juvenal + João", prazo: "30/10/2026" },
-          { acao: "Nivelar o contêiner torto e resolver o odor (Alta)", dono: "Juvenal", prazo: "30/10/2026" },
-          { acao: "Trocar as borrachas de vedação do contêiner (Alta)", dono: "Kelly", prazo: "20/10/2026" },
-          { acao: "Levantar os pallets devidos por cliente, ex. Danone (Média)", dono: "Juvenal, Milton e Fabiana", prazo: "30/10/2026" },
-          { acao: "Limpeza semanal do galpão, toda quinta-feira (Média)", dono: "Dona Maria", prazo: "" },
-          { acao: "Fechar os buracos da lateral externa (Média)", dono: "Juvenal", prazo: "15/10/2026" },
-          { acao: "Pintura geral do galpão com insumos do estoque (Média)", dono: "Juvenal", prazo: "23/10/2026" },
-          { acao: "Trocar telhas quebradas e consertar cobertura (Média)", dono: "Juvenal", prazo: "16/10/2026" },
-          { acao: "Consolidar a lista de demandas do galpão (Média)", dono: "Juvenal", prazo: "09/10/2026" },
-          { acao: "Remover a grade de ferro do jardim (Baixa)", dono: "Juvenal + João", prazo: "30/10/2026" }
-        ]
-      };
+      // Parser de plano de ação multilinhas "Ação | Responsável | Prazo"
+      function parsePlanoAcao(raw) {
+        if (!raw) return [];
+        if (Array.isArray(raw)) return raw;
+        const result = [];
+        const lines = String(raw).split('\n');
+        lines.forEach(line => {
+          const l = line.trim();
+          if (!l) return;
+          const parts = l.split('|').map(p => p.trim());
+          result.push({
+            acao: parts[0] || l,
+            dono: parts[1] || 'A definir',
+            prazo: parts[2] || ''
+          });
+        });
+        return result;
+      }
+
+      // Seed local de fallback — 2 reuniões reais especificadas
+      const SEED_REUNIOES_RAW = [
+        {
+          titulo: "Planejamento do Galpão",
+          data: "07/10/2026",
+          tipo: "Projetos",
+          departamento: "Departamento de Projetos",
+          participantes: "Renato Rodrigues, Kelly, Juvenal",
+          resumo: "Definição do layout do galpão (coworking aberto, sala climatizada para cargas frias de diversos clientes, dormitórios mantidos nos fundos), capacidade de armazenagem fixada em cerca de 60 pallets (50 fixos da BNZ), e a partir de agora todas as cargas passam a ser descarregadas diretamente no Galpão, desocupando a Matriz. Pendências: decidir ocupação das equipes de Atendimento, Monitoramento e Transportes (aguardando Diretoria), marcar data da demolição do muro e entregar lista final de demandas de manutenção.",
+          link_ata: "https://docs.google.com/document/d/1sX2LACQgOY9H3YutePX5LiKRz2qHq7wK_M-fTYDzUdY/edit",
+          plano_acao: "Demolir o muro mole e contratar caçamba | Juvenal + João | 30/10/2026\nNivelar o contêiner torto e resolver o odor | Juvenal | 30/10/2026\nTrocar as borrachas de vedação do contêiner | Kelly | 20/10/2026\nLevantar os pallets devidos por cliente, ex. Danone | Juvenal, Milton e Fabiana | 30/10/2026\nLimpeza semanal do galpão, toda quinta-feira | Dona Maria | \nFechar os buracos da lateral externa | Juvenal | 15/10/2026\nPintura geral do galpão com insumos do estoque | Juvenal | 23/10/2026\nTrocar telhas quebradas e consertar cobertura | Juvenal | 16/10/2026\nConsolidar a lista de demandas do galpão | Juvenal | 09/10/2026\nRemover a grade de ferro do jardim | Juvenal + João | 30/10/2026"
+        },
+        {
+          titulo: "Treinamento Estoque Rodopar",
+          data: "08/10/2026",
+          tipo: "Treinamento",
+          departamento: "Frotas, Compras e GGC",
+          participantes: "Renato Rodrigues, Carmem, Raquel, Mariana, Sandra, Patrick, Bruno, Luciano, Thiago Yamada",
+          resumo: "Capacitar os times de Frotas, Compras e GGC (Gente, Gestão e Cultura) na operação e governança do módulo de estoque do ERP Rodopar, estabelecendo rotinas sistêmicas padronizadas, alinhando parâmetros de cadastro, estruturando alçadas de aprovação, controlando transferências internas e garantindo a acurácia de inventários e indicadores operacionais — preparando a Transnova para a consolidação do ERP e a eliminação de planilhas e controles paralelos.",
+          link_ata: "https://docs.google.com/document/d/1_gYDXbo61-u1V5WAFuWFycJO0kpsYnxVfOVBNlzq4Gk/edit",
+          plano_acao: "Realizar inventário físico completo com ajuste de saldos | GGC e Frotas | nov/2026\nOrganizar prateleiras e localizações (físico x lógico) | GGC e Frotas | nov/2026\nPadronizar cadastro de produtos, grupos e subgrupos | Compras, Frota e GGC | out/2026\nConcluir depara de produtos (prioridade: pneus) | Frota | nov/2026\nConciliar saldo de combustível (aproximadamente 22 mil litros) | Frota e Compras | nov/2026\nEstruturar fluxo de pneus (ressolagem, fornecedores, notas) | Frota e Compras | nov/2026\nConfigurar aprovadores/liberadores + notificação e app mobile | Dpto Compras e Rodopar | out/2026\nDefinir níveis mínimo/máximo por produto e localização | Compras, Frotas e GG&C | nov/2026\nPadronizar distribuição de materiais e itens recondicionáveis | Gerenciamento e Cultura (GGC) | nov/2026\nValidar acessos e credenciais (portal.br, app mobile, Datapad) | Rodopar | out/2026\nDefinir relatórios e indicadores de estoque | Renato, Luciano e Compras | nov/2026\nReunião de acompanhamento (Follow-up) do plano de ação | Todos | 10/11/2026"
+        }
+      ];
+
+      function normalizarReuniao(r, idx) {
+        return {
+          id: r.id || `reuniao-${idx || Date.now()}`,
+          titulo: r.titulo || r.title || 'Reunião sem título',
+          data: r.data || r.date || '',
+          tipo: r.tipo || r.type || 'Geral',
+          departamento: r.departamento || r.dept || 'Geral',
+          participantes: r.participantes || '',
+          resumo: r.resumo || r.summary || '',
+          link_ata: r.link_ata || r.link || '',
+          plano: parsePlanoAcao(r.plano_acao || r.plano || '')
+        };
+      }
 
       // State
       let tasks = [];
       let reunioes = [];
       let activeTab = 'inicio';
-      let reunioesFilter = 'todos';
-
-      // Clean old localStorage on init as strictly requested
-      localStorage.removeItem('masterMind_reunioes');
+      let reunioesFilter = 'semana';
 
       // Helper date formatter
       function cleanId(id) {
@@ -1510,14 +1645,21 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
       function parseDate(dateStr) {
         if (!dateStr || dateStr.trim() === '') return null;
-        let d = new Date(dateStr);
-        if (!isNaN(d.getTime())) return d;
+        const s = dateStr.trim();
+        // Try yyyy-mm-dd
+        if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+          const parts = s.split('-');
+          const dIso = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2].substring(0, 2), 10));
+          if (!isNaN(dIso.getTime())) return dIso;
+        }
         // Try dd/mm/yyyy
-        const parts = dateStr.split('/');
+        const parts = s.split('/');
         if (parts.length === 3) {
-          const d2 = new Date(parts[2], parts[1] - 1, parts[0]);
+          const d2 = new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
           if (!isNaN(d2.getTime())) return d2;
         }
+        let d = new Date(s);
+        if (!isNaN(d.getTime())) return d;
         return null;
       }
 
@@ -1571,33 +1713,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       // App Initialization
       window.masterMind = {
         init: function () {
-          // Init reunioes
-          const storedReunioes = localStorage.getItem(STORAGE_REUNIOES_KEY);
-          if (storedReunioes) {
-            try {
-              reunioes = JSON.parse(storedReunioes);
-              // Atualiza o resumo da reunião padrão se já existia na base local
-              const seedIndex = reunioes.findIndex(r => r.id === 'reuniao-001' || r.titulo === 'Planejamento do Galpão');
-              if (seedIndex !== -1) {
-                reunioes[seedIndex].resumo = SEED_REUNIAO.resumo;
-                reunioes[seedIndex].link = SEED_REUNIAO.link;
-                if (!reunioes[seedIndex].dept) {
-                  reunioes[seedIndex].dept = SEED_REUNIAO.dept;
-                }
-                localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
-              }
-            } catch(e) {
-              reunioes = [SEED_REUNIAO];
-            }
-          } else {
-            reunioes = [SEED_REUNIAO];
-            localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
-          }
-
           // Inicia na aba padrão
           this.switchTab('inicio');
 
-          // Load tasks from Sheet
+          // Carrega dados da planilha via GET (tarefas e reuniões)
           this.loadFromSheet();
         },
 
@@ -1611,6 +1730,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             if (!resp.ok) throw new Error('Falha ao comunicar com Sheets');
             const data = await resp.json();
 
+            // 1. Processamento de TAREFAS
             if (data && data.success && Array.isArray(data.tasks)) {
               tasks = data.tasks.map(t => ({
                 id: cleanId(t.id || (Math.random() * 1000).toFixed(0)),
@@ -1624,26 +1744,59 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 obs: t.obs || t.observacoes || ''
               }));
               localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
-              syncEl.className = 'sync-status';
-              syncEl.innerHTML = '<span>Sincronizado ✓</span>';
             } else {
-              throw new Error('Formato retornado inválido');
+              this.loadTasksFallback();
             }
+
+            // 2. Processamento de REUNIÕES DIRETO DA PLANILHA
+            if (data && data.success && Array.isArray(data.reunioes) && data.reunioes.length > 0) {
+              reunioes = data.reunioes.map((r, idx) => normalizarReuniao(r, idx));
+              localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+            } else {
+              // Se a resposta não trouxe array de reuniões, usa fallback offline/seed
+              this.loadReunioesFallback();
+            }
+
+            syncEl.className = 'sync-status';
+            syncEl.innerHTML = '<span>Sincronizado ✓</span>';
           } catch (err) {
-            console.warn('Usando armazenamento local/offline:', err);
-            const cached = localStorage.getItem(STORAGE_TASKS_KEY);
-            if (cached) {
-              try { tasks = JSON.parse(cached); } catch(e) { tasks = DEFAULT_TASKS; }
-            } else {
-              tasks = DEFAULT_TASKS;
-              localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
-            }
+            console.warn('Falha na requisição ao Apps Script, acionando fallback local/offline:', err);
+            this.loadTasksFallback();
+            this.loadReunioesFallback();
             syncEl.className = 'sync-status offline';
             syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
           }
 
           this.populateFilterDropdowns();
           this.renderAll();
+        },
+
+        loadTasksFallback: function () {
+          const cached = localStorage.getItem(STORAGE_TASKS_KEY);
+          if (cached) {
+            try { tasks = JSON.parse(cached); } catch(e) { tasks = DEFAULT_TASKS; }
+          } else {
+            tasks = DEFAULT_TASKS;
+            localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+          }
+        },
+
+        loadReunioesFallback: function () {
+          const cached = localStorage.getItem(STORAGE_REUNIOES_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                reunioes = parsed.map((r, idx) => normalizarReuniao(r, idx));
+                return;
+              }
+            } catch(e) {
+              console.warn('Erro ao ler cache de reuniões:', e);
+            }
+          }
+          // Se não houver em localStorage, utiliza o seed local com as 2 reuniões reais
+          reunioes = SEED_REUNIOES_RAW.map((r, idx) => normalizarReuniao(r, idx));
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
         },
 
         saveToSheet: async function (taskObj, action = 'update') {
@@ -1816,51 +1969,62 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           const container = document.getElementById(containerId);
           if (!container) return;
 
-          const maxVal = Math.max(...items.map(i => i.value), 1);
-          let html = '';
+          const nonZeroItems = items.filter(i => i.value > 0);
+          const displayItems = nonZeroItems.length > 0 ? items : items;
+          const maxVal = Math.max(...displayItems.map(i => i.value), 1);
+          let html = '<div style="display: flex; flex-direction: column; justify-content: center; height: 100%; gap: 0.35rem;">';
 
-          items.forEach(item => {
-            const pct = Math.max(Math.round((item.value / maxVal) * 100), 10);
+          displayItems.forEach(item => {
+            const pct = Math.max(Math.round((item.value / maxVal) * 100), item.value > 0 ? 12 : 6);
             html += `
               <div class="svg-bar-row">
                 <span class="svg-bar-label" title="${escapeHtml(item.label)}">${escapeHtml(item.label)}</span>
                 <div class="svg-bar-track">
                   <div class="svg-bar-fill" style="width: ${pct}%; background: ${item.color};">
-                    ${item.value}
+                    <span>${item.value}</span>
                   </div>
                 </div>
               </div>
             `;
           });
 
-          container.innerHTML = html || '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Sem dados</div>';
+          html += '</div>';
+          container.innerHTML = html;
         },
 
-        // Helper to render SVG Donut with numbers inside slices and legends
+        // Helper to render SVG Donut with numbers INSIDE slices, centered and highly legible
         renderDonutChart: function (containerId, items) {
           const container = document.getElementById(containerId);
           if (!container) return;
 
           const total = items.reduce((acc, curr) => acc + curr.value, 0);
           if (total === 0) {
-            container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Sem dados</div>';
+            container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Sem dados cadastrados</div>';
             return;
           }
 
-          const size = 180;
-          const radius = 65;
-          const strokeWidth = 28;
+          const size = 230;
           const center = size / 2;
+          const radius = 78;
+          const strokeWidth = 46;
           const circumference = 2 * Math.PI * radius;
 
           let currentOffset = 0;
           let svgPaths = '';
+          let sliceNumberTexts = '';
 
           items.forEach(item => {
+            if (item.value <= 0) return;
+
             const itemPct = item.value / total;
             const dashLength = itemPct * circumference;
             const dashOffset = -currentOffset;
-            currentOffset += dashLength;
+
+            // Calcular ângulo médio da fatia para posicionar o número DENTRO da fatia
+            const startAngle = (currentOffset / circumference) * (2 * Math.PI) - (Math.PI / 2);
+            const midAngle = startAngle + ((dashLength / circumference) * (2 * Math.PI)) / 2;
+            const textX = center + radius * Math.cos(midAngle);
+            const textY = center + radius * Math.sin(midAngle);
 
             svgPaths += `
               <circle
@@ -1877,26 +2041,50 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 <title>${item.label}: ${item.value}</title>
               </circle>
             `;
+
+            // O número fica centralizado exatamente dentro da fatia
+            sliceNumberTexts += `
+              <text
+                x="${textX.toFixed(2)}"
+                y="${textY.toFixed(2)}"
+                text-anchor="middle"
+                dominant-baseline="central"
+                fill="#FFFFFF"
+                font-size="13"
+                font-weight="700"
+                style="pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.85);"
+              >
+                ${item.value}
+              </text>
+            `;
+
+            currentOffset += dashLength;
           });
 
-          let legendHtml = items.map(item => `
-            <div class="legend-item">
-              <span class="legend-dot" style="background: ${item.color};"></span>
-              <span style="color: var(--cream); font-weight: 500;">${escapeHtml(item.label)}:</span>
-              <span style="color: #FFF; font-weight: 700; margin-left: auto;">${item.value}</span>
-            </div>
+          // Badges horizontais compactos com as cores e nomes correspondentes (sem tabelas soltas)
+          const badgesHtml = items.filter(i => i.value > 0).map(item => `
+            <span class="donut-badge-item">
+              <span class="dot" style="background: ${item.color};"></span>
+              <span>${escapeHtml(item.label)}: <strong>${item.value}</strong></span>
+            </span>
           `).join('');
 
           container.innerHTML = `
             <div class="donut-wrapper">
-              <svg width="${size}" height="${size}" viewBox="0 0 ${size}" style="transform: rotate(-90deg); filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
-                ${svgPaths}
-                <text x="${center}" y="${center}" transform="rotate(90 ${center} ${center})" text-anchor="middle" dominant-baseline="middle" fill="#FFFFFF" font-size="20" font-weight="700">
+              <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));">
+                <g style="transform: rotate(-90deg); transform-origin: center center;">
+                  ${svgPaths}
+                </g>
+                <text x="${center}" y="${center - 6}" text-anchor="middle" dominant-baseline="middle" fill="#FFFFFF" font-size="22" font-weight="700">
                   ${total}
                 </text>
+                <text x="${center}" y="${center + 14}" text-anchor="middle" dominant-baseline="middle" fill="var(--cream)" font-size="11" font-weight="600">
+                  TOTAL
+                </text>
+                ${sliceNumberTexts}
               </svg>
-              <div class="donut-legend">
-                ${legendHtml}
+              <div class="donut-badges">
+                ${badgesHtml}
               </div>
             </div>
           `;
@@ -2112,42 +2300,39 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
         filterReunioesView: function (mode, btn) {
           reunioesFilter = mode;
-          document.querySelectorAll('.view-pill').forEach(p => p.classList.remove('active'));
-          btn.classList.add('active');
+          document.querySelectorAll('.reuniao-filter-btn').forEach(p => p.classList.remove('active'));
+          if (btn) btn.classList.add('active');
           this.renderReunioes();
+        },
+
+        updateReuniaoField: function (rIdx, field, val) {
+          if (!reunioes[rIdx]) return;
+          const cleanVal = (val || '').trim();
+          reunioes[rIdx][field] = cleanVal;
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
         },
 
         renderReuniaoCard: function (r, rIdx) {
           const planos = Array.isArray(r.plano) ? r.plano : [];
           const parsedData = parseDate(r.data);
           const dataFmt = parsedData ? formatDateDisplay(parsedData) : (r.data || 'Não informada');
-          const deptsFmt = r.dept || r.tipo || 'Dpto Projetos, Operacional';
-          const pessoasFmt = r.participantes || 'Não informado';
-          const resumoFmt = r.resumo || 'Sem resumo cadastrado.';
+          const deptFmt = r.departamento || r.dept || 'Geral';
+          const resumoFmt = r.resumo || 'Sem resumo cadastrado. Clique para adicionar...';
 
-          // Botão/link da ATA
-          const ataBtnHtml = r.link && r.link.trim() !== ''
-            ? `<a href="${escapeHtml(r.link.trim())}" target="_blank" rel="noopener noreferrer" class="btn-jupiter" style="text-decoration: none; font-size: 0.8rem; padding: 0.45rem 0.85rem;" title="Abrir Google Docs em nova aba">📄 Abrir Ata</a>`
-            : `<span class="btn-jupiter-outline" style="opacity: 0.55; cursor: not-allowed; font-size: 0.78rem; padding: 0.45rem 0.85rem;" title="Documento da ata ainda não anexado">📄 Ata não disponível</span>`;
+          // Botão "Abrir Ata" conforme especificação
+          const ataLink = (r.link_ata || r.link || '').trim();
+          const ataBtnHtml = ataLink !== ''
+            ? `<a href="${escapeHtml(ataLink)}" target="_blank" rel="noopener noreferrer" class="btn-jupiter" style="text-decoration: none; font-size: 0.8rem; padding: 0.45rem 0.85rem;" title="Abrir documento no Google Docs">📄 Abrir Ata</a>`
+            : `<span class="btn-jupiter-outline" style="opacity: 0.5; cursor: not-allowed; font-size: 0.78rem; padding: 0.45rem 0.85rem;" title="Documento da ata não anexado">📄 Ata não disponível</span>`;
 
           return `
             <article class="reuniao-card">
               <div class="reuniao-header">
-                <div style="flex: 1;">
-                  <h3 class="reuniao-titulo">${escapeHtml(r.titulo)}</h3>
-                  <div class="reuniao-meta-grid">
-                    <div class="reuniao-meta-item">
-                      <span class="meta-label">📅 Dia:</span>
-                      <span class="meta-val">${escapeHtml(dataFmt)}</span>
-                    </div>
-                    <div class="reuniao-meta-item">
-                      <span class="meta-label">🏢 Depto(s):</span>
-                      <span class="meta-val">${escapeHtml(deptsFmt)}</span>
-                    </div>
-                    <div class="reuniao-meta-item">
-                      <span class="meta-label">👥 Pessoas:</span>
-                      <span class="meta-val">${escapeHtml(pessoasFmt)}</span>
-                    </div>
+                <div class="reuniao-title-wrap">
+                  <h3 class="reuniao-titulo" contenteditable="true" spellcheck="false" title="Clique para editar o título da reunião" onblur="window.masterMind.updateReuniaoField(${rIdx}, 'titulo', this.innerText)">${escapeHtml(r.titulo)}</h3>
+                  <div class="reuniao-meta-clean">
+                    <span class="reuniao-badge-data">📅 ${escapeHtml(dataFmt)}</span>
+                    <span class="reuniao-badge-dept">🏢 ${escapeHtml(deptFmt)}</span>
                   </div>
                 </div>
                 <div>
@@ -2156,22 +2341,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
               <div class="reuniao-resumo">
-                <div style="font-size: 0.72rem; font-weight: 700; color: var(--amber); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                  📝 Resumo da Reunião
+                <div class="reuniao-resumo-label">
+                  <span>📝 Resumo da Reunião</span>
+                  <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: normal;">(editável ao clicar)</span>
                 </div>
-                <div>
-                  ${escapeHtml(resumoFmt)}
-                </div>
+                <div class="reuniao-resumo-text" contenteditable="true" spellcheck="false" title="Clique para editar o resumo da reunião" onblur="window.masterMind.updateReuniaoField(${rIdx}, 'resumo', this.innerText)">${escapeHtml(resumoFmt)}</div>
               </div>
 
               <div class="reuniao-plano-title">
-                <span>Plano de Ação (${planos.length} deliberações)</span>
-                <button class="btn-jupiter-outline" style="font-size: 0.72rem; padding: 0.25rem 0.5rem;" onclick="window.masterMind.gerarTarefasDaReuniao(${rIdx})">
+                <span>Plano de Ação (${planos.length} item${planos.length === 1 ? '' : 's'})</span>
+                <button class="btn-jupiter-outline" style="font-size: 0.75rem; padding: 0.3rem 0.65rem;" onclick="window.masterMind.gerarTarefasDaReuniao(${rIdx})">
                   ⚡ Gerar Tarefas no PMO
                 </button>
               </div>
 
               <ul class="action-item-list">
+                ${planos.length === 0 ? '<li class="action-item" style="color: var(--text-muted); justify-content: center; font-style: italic;">Nenhum item pendente no plano de ação.</li>' : ''}
                 ${planos.map(item => `
                   <li class="action-item">
                     <div class="action-item-desc">${escapeHtml(item.acao)}</div>
@@ -2191,37 +2376,55 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           if (!container) return;
 
           if (reunioes.length === 0) {
-            container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface); border-radius: var(--radius);">Nenhuma reunião cadastrada.</div>';
+            container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border);">Nenhuma reunião encontrada.</div>';
             return;
           }
 
           let html = '';
 
-          if (reunioesFilter === 'dia') {
-            // Agrupado por Dia
-            const grupos = {};
+          if (reunioesFilter === 'ano') {
+            // Agrupado por Ano
+            const gruposAno = {};
             reunioes.forEach((r, idx) => {
               const d = parseDate(r.data);
-              const chave = d ? formatDateDisplay(d) : 'Sem Data Definida';
-              if (!grupos[chave]) grupos[chave] = [];
-              grupos[chave].push({ r, idx });
+              const chave = d ? String(d.getFullYear()) : 'Sem Ano Definido';
+              if (!gruposAno[chave]) gruposAno[chave] = [];
+              gruposAno[chave].push({ r, idx });
             });
 
-            Object.keys(grupos).forEach(dia => {
-              html += `<div class="reunioes-group-header">📅 ${dia} (${grupos[dia].length})</div>`;
-              grupos[dia].forEach(item => {
+            const sortedAnos = Object.keys(gruposAno).sort((a, b) => b.localeCompare(a));
+            sortedAnos.forEach(ano => {
+              html += `<div class="reunioes-group-header">📆 Ano ${ano} (${gruposAno[ano].length})</div>`;
+              gruposAno[ano].forEach(item => {
                 html += this.renderReuniaoCard(item.r, item.idx);
               });
             });
 
-          } else if (reunioesFilter === 'semana') {
-            // Agrupado por Semana
+          } else if (reunioesFilter === 'mes') {
+            // Agrupado por Mês
+            const mesesNomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const gruposMes = {};
+            reunioes.forEach((r, idx) => {
+              const d = parseDate(r.data);
+              const chave = d ? `${mesesNomes[d.getMonth()]} / ${d.getFullYear()}` : 'Sem Mês Definido';
+              if (!gruposMes[chave]) gruposMes[chave] = [];
+              gruposMes[chave].push({ r, idx });
+            });
+
+            Object.keys(gruposMes).forEach(mes => {
+              html += `<div class="reunioes-group-header">📅 ${mes} (${gruposMes[mes].length})</div>`;
+              gruposMes[mes].forEach(item => {
+                html += this.renderReuniaoCard(item.r, item.idx);
+              });
+            });
+
+          } else {
+            // Padrão: SEMANA (agrupado por semana)
             const gruposSemana = {};
             reunioes.forEach((r, idx) => {
               const d = parseDate(r.data);
               let chave = 'Semana Não Identificada';
               if (d) {
-                // Cálculo de início da semana (segunda-feira)
                 const temp = new Date(d);
                 const day = temp.getDay();
                 const diff = temp.getDate() - day + (day === 0 ? -6 : 1);
@@ -2239,28 +2442,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               gruposSemana[sem].forEach(item => {
                 html += this.renderReuniaoCard(item.r, item.idx);
               });
-            });
-
-          } else if (reunioesFilter === 'tema') {
-            // Agrupado por Tema / Tipo
-            const gruposTema = {};
-            reunioes.forEach((r, idx) => {
-              const chave = r.tipo || 'Geral / Estratégico';
-              if (!gruposTema[chave]) gruposTema[chave] = [];
-              gruposTema[chave].push({ r, idx });
-            });
-
-            Object.keys(gruposTema).forEach(tema => {
-              html += `<div class="reunioes-group-header">📁 Tema: ${tema} (${gruposTema[tema].length})</div>`;
-              gruposTema[tema].forEach(item => {
-                html += this.renderReuniaoCard(item.r, item.idx);
-              });
-            });
-
-          } else {
-            // Visualização padrão: Principais / Todos
-            reunioes.forEach((r, idx) => {
-              html += this.renderReuniaoCard(r, idx);
             });
           }
 
@@ -2344,14 +2525,17 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         confirmPmoSelection: function () {
           if (this.activeReuniaoIdxForPmo === null) return;
           const r = reunioes[this.activeReuniaoIdxForPmo];
-          if (!r || !Array.isArray(r.plano)) return;
+          if (!r || !Array.isArray(r.plano) || r.plano.length === 0) return;
 
-          const cbs = document.querySelectorAll('#pmoActionList .pmo-select-cb');
+          const cbs = document.querySelectorAll('#pmoActionList .pmo-select-cb:checked');
+          if (cbs.length === 0) {
+            alert('Por favor, marque pelo menos um item para adicionar às tarefas.');
+            return;
+          }
+
           const checkedIndices = new Set();
           cbs.forEach(cb => {
-            if (cb.checked) {
-              checkedIndices.add(parseInt(cb.dataset.idx, 10));
-            }
+            checkedIndices.add(parseInt(cb.dataset.idx, 10));
           });
 
           let nextIdNum = tasks.reduce((max, t) => {
@@ -2360,24 +2544,24 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           }, 0);
 
           let criadas = 0;
-          let descartadas = 0;
+          const novosItensPlano = [];
 
           r.plano.forEach((item, idx) => {
             const isSelected = checkedIndices.has(idx);
-            let cleanPrazo = '';
-            if (item.prazo) {
-              const parts = item.prazo.split('/');
-              if (parts.length === 3) {
-                cleanPrazo = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-              } else {
-                cleanPrazo = item.prazo;
-              }
-            }
-
-            const existingIndex = tasks.findIndex(t => t.tarefa.toLowerCase() === item.acao.toLowerCase());
 
             if (isSelected) {
-              // Tarefa selecionada pelo usuário: vira tarefa ativa no Kanban
+              // Transforma em tarefa ativa
+              let cleanPrazo = '';
+              if (item.prazo) {
+                const parts = item.prazo.split('/');
+                if (parts.length === 3) {
+                  cleanPrazo = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                } else {
+                  cleanPrazo = item.prazo;
+                }
+              }
+
+              const existingIndex = tasks.findIndex(t => t.tarefa.toLowerCase() === item.acao.toLowerCase());
               if (existingIndex !== -1) {
                 tasks[existingIndex].status = 'A Fazer';
                 if (cleanPrazo) tasks[existingIndex].prazo = cleanPrazo;
@@ -2388,7 +2572,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 const nova = {
                   id: String(nextIdNum).padStart(3, '0'),
                   tarefa: item.acao,
-                  dept: "Dpto Projetos",
+                  dept: r.departamento || "Dpto Projetos",
                   prio: item.acao.includes('Crítica') || item.acao.includes('Alta') ? 'Alta' : 'Média',
                   prazo: cleanPrazo,
                   status: "A Fazer",
@@ -2400,41 +2584,54 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 this.saveToSheet(nova, 'add');
               }
               criadas++;
+              // O item adicionado SAI do plano de ação da reunião
             } else {
-              // Tarefa NÃO selecionada: registrada como Excluídos (descartada)
-              if (existingIndex !== -1) {
-                tasks[existingIndex].status = 'Excluídos';
-                this.saveToSheet(tasks[existingIndex], 'update');
-              } else {
-                nextIdNum++;
-                const excl = {
-                  id: String(nextIdNum).padStart(3, '0'),
-                  tarefa: item.acao,
-                  dept: "Dpto Projetos",
-                  prio: item.acao.includes('Crítica') || item.acao.includes('Alta') ? 'Alta' : 'Média',
-                  prazo: cleanPrazo,
-                  status: "Excluídos",
-                  dono: item.dono || "Equipe",
-                  origem: "Reunião",
-                  obs: `Descartado da reunião: ${r.titulo}`
-                };
-                tasks.unshift(excl);
-                this.saveToSheet(excl, 'add');
-              }
-              descartadas++;
+              // O item NÃO selecionado PERMANECE pendente no plano de ação da reunião
+              novosItensPlano.push(item);
             }
           });
 
+          // Atualiza o plano de ação da reunião removendo os itens que viraram tarefa
+          r.plano = novosItensPlano;
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
           localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+
           this.closePmoSelectModal();
           this.populateFilterDropdowns();
           this.renderAll();
 
-          if (criadas > 0) {
-            alert(`Sucesso: ${criadas} tarefa(s) adicionada(s) ao Kanban e ${descartadas} registrada(s) como Excluídas.`);
-          } else {
-            alert(`Nenhuma tarefa selecionada: todos os ${descartadas} itens foram registrados como Excluídos.`);
+          alert(`Sucesso: ${criadas} tarefa(s) adicionada(s) ao Kanban com sucesso!`);
+        },
+
+        deletePmoSelected: function () {
+          if (this.activeReuniaoIdxForPmo === null) return;
+          const r = reunioes[this.activeReuniaoIdxForPmo];
+          if (!r || !Array.isArray(r.plano) || r.plano.length === 0) return;
+
+          const cbs = document.querySelectorAll('#pmoActionList .pmo-select-cb:checked');
+          if (cbs.length === 0) {
+            alert('Por favor, marque pelo menos um item que deseja excluir do plano de ação.');
+            return;
           }
+
+          const checkedIndices = new Set();
+          cbs.forEach(cb => {
+            checkedIndices.add(parseInt(cb.dataset.idx, 10));
+          });
+
+          const qtdExcluir = checkedIndices.size;
+          if (!confirm(`Deseja realmente excluir ${qtdExcluir} item(ns) selecionado(s) do plano de ação desta reunião?`)) {
+            return;
+          }
+
+          // Mantém apenas os itens não marcados
+          r.plano = r.plano.filter((_, idx) => !checkedIndices.has(idx));
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+
+          this.closePmoSelectModal();
+          this.renderReunioes();
+
+          alert(`${qtdExcluir} item(ns) removido(s) do plano de ação com sucesso.`);
         },
 
         // Task Modal Handlers
@@ -2593,12 +2790,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           const nova = {
             id: 'reuniao-' + Date.now(),
             titulo,
-            tipo,
+            tipo: tipo || 'Geral',
             data,
-            dept: dept || tipo,
+            departamento: dept || tipo || 'Geral',
+            dept: dept || tipo || 'Geral',
             participantes,
             resumo,
-            link,
+            link_ata: link,
+            link: link,
             plano: planoParsed
           };
 
