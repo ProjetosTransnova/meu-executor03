@@ -236,8 +236,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       color: var(--success);
       cursor: pointer;
       transition: all 0.2s ease;
-      line-height: 1.25;
-      text-align: left;
     }
     .sync-status.offline {
       background: rgba(217, 160, 102, 0.15);
@@ -1936,8 +1934,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </div>
       </div>
       <div class="header-actions">
-        <div id="syncIndicator" class="sync-status offline" title="Status da sincronização Google Sheets" onclick="window.masterMind.loadFromSheet()">
-          <span>Dados locais (offline)</span>
+        <div id="syncIndicator" class="sync-status" title="Status da sincronização Google Sheets" onclick="window.masterMind.loadFromSheet()">
+          <span>Sincronizado ✓</span>
         </div>
         <button class="btn-jupiter" onclick="window.masterMind.openNewTask()">
           <span style="font-size: 1.1rem; line-height: 1;">+</span> Nova Tarefa
@@ -2167,20 +2165,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     <!-- TAB 4: REUNIÕES -->
     <section id="viewReunioes" class="tab-content" style="display: none;">
       <div class="reunioes-toolbar">
-        <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
-          <div class="reunioes-filter-group" role="group" aria-label="Filtro de reuniões por período">
-            <button class="reuniao-filter-btn active" data-filter="semana" onclick="window.masterMind.filterReunioesView('semana', this)">
-              🗓️ Semana
-            </button>
-            <button class="reuniao-filter-btn" data-filter="mes" onclick="window.masterMind.filterReunioesView('mes', this)">
-              📅 Mês
-            </button>
-            <button class="reuniao-filter-btn" data-filter="ano" onclick="window.masterMind.filterReunioesView('ano', this)">
-              📆 Ano
-            </button>
-          </div>
-          <button type="button" class="btn-jupiter-outline" onclick="window.masterMind.refreshReunioesFromSheet()" title="Recarregar reuniões da planilha">
-            🔄 Atualizar
+        <div class="reunioes-filter-group" role="group" aria-label="Filtro de reuniões por período">
+          <button class="reuniao-filter-btn active" data-filter="semana" onclick="window.masterMind.filterReunioesView('semana', this)">
+            🗓️ Semana
+          </button>
+          <button class="reuniao-filter-btn" data-filter="mes" onclick="window.masterMind.filterReunioesView('mes', this)">
+            📅 Mês
+          </button>
+          <button class="reuniao-filter-btn" data-filter="ano" onclick="window.masterMind.filterReunioesView('ano', this)">
+            📆 Ano
           </button>
         </div>
         <button class="btn-jupiter" onclick="window.masterMind.openNovaReuniao()">
@@ -2624,935 +2617,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     </div>
   </div>
 
-        // ================= BARBARA (Ciclo 1/2026 - Anterior) =================
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Esforçada, Interessada, Competente, Comprometida.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Desenvolvimento GG&C",
-          observacao: "Perfil engajado e dedicado às metas do departamento."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Pensa fora da caixinha, Ótima postura, Se veste bem, Boa ouvinte, Participativa.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Desenvolvimento GG&C",
-          observacao: "Excelente comunicação interpessoal e escuta ativa."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Não conhece todo o processo do departamento, Está aprendendo sobre as ferramentas.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Capacitação Interna",
-          observacao: "Curva de aprendizagem em andamento para autonomia plena."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Atenção no horário, Atenção na fala (dicção) e escrita.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Comunicação e Pontualidade",
-          observacao: "Alinhar rotina e revisão prévia de redações e e-mails corporativos."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Fazer carreira na Transnova, Ser promovida após implantação dos novos processos.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Plano de Carreira",
-          observacao: "Potencial acelerado com a consolidação dos novos fluxos de trabalho."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Ganhar espaço em frentes importantes, Ganhar visibilidade para outras frentes além do GG&C, Desenvolver carreira em RH.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Expansão de Escopo",
-          observacao: "Interesse manifesto em ampliar atuações estratégicas de Recursos Humanos."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Se deixar levar pelas situações e postura das pessoas, Não entregar os processos nas datas.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Blindagem Emocional e Prazos",
-          observacao: "Desenvolver postura assertiva sem absorver ruídos externos."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Não usar 100% do potencial por falta de atenção, Não vender melhor as ideias.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 22/05/2026 (Ciclo 1)",
-          projeto: "Influência e Apresentação",
-          observacao: "Capacitar apresentação estruturada para defender suas propostas com segurança."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "Nota",
-          quadrante_fofa: "Força",
-          descricao: "Uma ótima contratação, Encaixou perfeitamente no departamento, Quer fazer carreira.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Cultura GG&C",
-          observacao: "Excelente encaixe com o time e alto interesse em crescimento contínuo."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-22",
-          tipo: "Nota",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Definir prazos para entrega, Acessar semanalmente o BI de Contratações, Dominar os cadastros do RH, Buscar aperfeiçoar conhecimentos em transporte e RH.",
-          impacto: "Alto",
-          nota: "8",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Metas de Desenvolvimento",
-          observacao: "Acompanhamento semanal dos indicadores de contratação e rotinas do setor."
-        },
-        // --- BARBARA (Ciclo 2/2026 - Atual / out-nov-dez) ---
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-18",
-          tipo: "Entrega Destacada",
-          quadrante_fofa: "Força",
-          descricao: "Dominou o BI de Contratações e reduziu tempo de triagem de currículos em 40%.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Observação Direta",
-          projeto: "Governança GG&C",
-          observacao: "Atingiu uma das metas do contrato anterior com excelência."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-24",
-          tipo: "Atitude Positiva",
-          quadrante_fofa: "Força",
-          descricao: "Pontualidade 100% mantida e postura proativa nas reuniões semanais de alinhamento.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Reunião de Acompanhamento",
-          projeto: "Cultura GG&C",
-          observacao: "Evolução notável na gestão de horários e comunicação."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-20",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Ainda necessita supervisão no fechamento final de relatórios complexos no ERP.",
-          impacto: "Médio",
-          nota: "7",
-          origem: "1:1 Quinzenal",
-          projeto: "Capacitação ERP",
-          observacao: "Reduziu o número de fraquezas em relação ao Ciclo 1; em evolução."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-25",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Assumir a condução autônoma do processo de integração de novos motoristas.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Plano de Metas Q4",
-          projeto: "Integração Operacional",
-          observacao: "Próximo passo na carreira rumo a assistente sênior."
-        },
-        {
-          colaborador: "Barbara",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-22",
-          tipo: "Risco / Sobrecarga",
-          quadrante_fofa: "Ameaça",
-          descricao: "Picos de contratação simultâneos podem gerar acúmulo de fichas cadastrais.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Auditoria Interna",
-          projeto: "Gestão de Gargalos",
-          observacao: "Mitigado com apoio do assistente Bruno em semanas de pico."
-        },
-
-        // ================= BRUNO (Ciclo 1/2026 - Anterior) =================
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-02-12",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Boa Postura, Comunicação Assertiva, Paciente, Educado, Atencioso, Ágil em aprender, Solicito.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 12/02/2026 (Ciclo 1)",
-          projeto: "Atendimento DP",
-          observacao: "Reconhecido pela calma, respeito e rapidez na assimilação de processos."
-        },
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-02-12",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Timidez, Crenças Limitadoras.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 12/02/2026 (Ciclo 1)",
-          projeto: "Autoconfiança",
-          observacao: "Trabalhar expansão da autoconfiança e posicionamento frente ao time e liderança."
-        },
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-02-12",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Se desenvolver em segurança do trabalho/folha/treinamentos, Fazer graduação, Fazer apresentação de resultados, Liderar grandes projetos, Ser mais pró-ativo.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 12/02/2026 (Ciclo 1)",
-          projeto: "Plano de Carreira DP",
-          observacao: "Caminho aberto para evolução técnica e liderança em projetos estratégicos."
-        },
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-02-12",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Perder oportunidades por medo, Não se achar merecedor, Se comparar com os outros.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 12/02/2026 (Ciclo 1)",
-          projeto: "Mentoria",
-          observacao: "Importante acompanhamento para superar a síndrome do impostor e receio de assumir protagonismo."
-        },
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-02-12",
-          tipo: "Nota",
-          quadrante_fofa: "Força",
-          descricao: "Excelente desempenho, Aderiu à cultura, Participa ativamente das mudanças, Abraçou as demandas, Seguiu o Contrato de Expectativa de Out/2025.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Alinhamento Cultural",
-          observacao: "Comprometimento comprovado com todas as diretrizes do contrato de expectativas pactuado."
-        },
-        // --- BRUNO (Ciclo 2/2026 - Atual / out-nov-dez) ---
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-16",
-          tipo: "Entrega Destacada",
-          quadrante_fofa: "Força",
-          descricao: "Apresentou resultados de horas extras e espelho de ponto na reunião com segurança e sem timidez.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Reunião de Fechamento",
-          projeto: "Governança DP",
-          observacao: "Venceu a timidez apontada no Ciclo 1 e assumiu protagonismo claro."
-        },
-        {
-          colaborador: "Bruno",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-22",
-          tipo: "Capacitação",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Iniciou curso de especialização em cálculos trabalhistas e eSocial.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Plano de Desenvolvimento",
-          projeto: "Formação Técnica",
-          observacao: "Compromisso firmado no Ciclo 1 sendo plenamente cumprido."
-        },
-
-        // ================= CARMEN (Ciclo 1/2026 - Anterior) =================
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-25",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Boa comunicação, Domina assuntos jurídicos, Domina desligamento, Conhece pessoas e cultura, Boa comunicadora, Pessoas se sentem acolhidas, Tem boas ideias.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 25/05/2026 (Ciclo 1)",
-          projeto: "Gente e Cultura",
-          observacao: "Referência no acolhimento, domínio de rotinas jurídicas trabalhistas e desligamentos humanizados."
-        },
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-25",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Não se envolve nos demais assuntos do RH, Sugere ideias mas não executa, Estende demais conversas, Pouco participativa nos projetos, Não se preocupa com indicadores, Horários.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 25/05/2026 (Ciclo 1)",
-          projeto: "Execução e Gestão por Indicadores",
-          observacao: "Necessário foco em execução prática, pontualidade e orientação a dados e métricas."
-        },
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-25",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Crescer em RH, Executar trabalho de Analista e Supervisão, Atuar na parte estratégica.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 25/05/2026 (Ciclo 1)",
-          projeto: "Evolução para Supervisão",
-          observacao: "Capacidade para assumir liderança e visão estratégica de RH com a devida disciplina operacional."
-        },
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-25",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Não enxergar oportunidades, Estar acostumado com a rotina, Prender informações e não aprender, Não acompanhar o ritmo do departamento.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 25/05/2026 (Ciclo 1)",
-          projeto: "Alinhamento Departamental",
-          observacao: "Risco de estagnação por acomodação na rotina e retenção isolada de conhecimentos."
-        },
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-25",
-          tipo: "Nota",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Conversas fora da sala, Passar conhecimento para frente, Encontrar solução juntos, Planejar entregas atrasadas.",
-          impacto: "Médio",
-          nota: "7",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Plano de Ação Corretivo",
-          observacao: "Evitar conversas dispersas, focar em compartilhamento de conhecimento e entrega de pendências."
-        },
-        // --- CARMEN (Ciclo 2/2026 - Atual / out-nov-dez) ---
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-19",
-          tipo: "Atitude Positiva",
-          quadrante_fofa: "Força",
-          descricao: "Participou ativamente do treinamento de estoque Rodopar e assumiu a padronização de cadastros.",
-          impacto: "Alto",
-          nota: "8",
-          origem: "Treinamento Estoque",
-          projeto: "Integração ERP",
-          observacao: "Demonstrou engajamento imediato com projetos transversais que antes evitava."
-        },
-        {
-          colaborador: "Carmen",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-23",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Pontualidade em reuniões de comitê executivo ainda requer atenção para não atrasar a pauta.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Observação Direta",
-          projeto: "Gestão do Tempo",
-          observacao: "Evoluiu na execução, mantendo atenção à gestão rígida de horários."
-        },
-
-        // ================= MARIANA (Ciclo 1/2026 - Anterior) =================
-        {
-          colaborador: "Mariana",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-13",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Ótima Postura, Aprende Rápido, Muito Simpática, Inteligente, Interessada.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 13/05/2026 (Ciclo 1)",
-          projeto: "Atendimento e GG&C",
-          observacao: "Excelente acolhimento e agilidade na compreensão de novas demandas e procedimentos."
-        },
-        {
-          colaborador: "Mariana",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-13",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Não tão próxima nas tarefas diárias, Não domina a rotina do departamento, Falta de clareza nas prioridades.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 13/05/2026 (Ciclo 1)",
-          projeto: "Organização Operacional",
-          observacao: "Estruturar lista diária de prioridades e aumentar proximidade com as atividades contínuas do GG&C."
-        },
-        {
-          colaborador: "Mariana",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-13",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Crescer no GGC ou logística, Atuar em tema específico, Ser promovida.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 13/05/2026 (Ciclo 1)",
-          projeto: "Plano de Crescimento",
-          observacao: "Espaço aberto para especialização interna e futura promoção na área corporativa ou operacional."
-        },
-        {
-          colaborador: "Mariana",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-13",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Falta de clareza deixa perdida, Muitos começos e poucos fins, Falta de planejamento e prazos.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 13/05/2026 (Ciclo 1)",
-          projeto: "Conclusão de Tarefas",
-          observacao: "Combater dispersão definindo prazos finais rigorosos para cada entrega iniciada."
-        },
-        {
-          colaborador: "Mariana",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-05-13",
-          tipo: "Nota",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Reuniões semanais, Gestão das Ações de Endomarketing 2026, Agência de Marketing, Gestão do Estoque e Inventário, Novo layout da Recepção.",
-          impacto: "Alto",
-          nota: "8",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Projetos 2026",
-          observacao: "Pautas chaves acordadas para acompanhamento nas reuniões semanais de alinhamento."
-        },
-        // --- MARIANA (Ciclo 2/2026 - Atual / out-nov-dez) ---
-        {
-          colaborador: "Mariana",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-15",
-          tipo: "Entrega Destacada",
-          quadrante_fofa: "Força",
-          descricao: "Concluiu o plano de reorganização do estoque de uniformes e EPIs da Recepção sem pendências.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Auditoria Interna",
-          projeto: "Governança Estoque",
-          observacao: "Concluiu entrega de ponta a ponta, combatendo a dispersão apontada no Ciclo 1."
-        },
-
-        // ================= RAQUEL (Ciclo 1/2026 - Anterior) =================
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-03-06",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Ótima postura, Conhece do seu trabalho, Ágil, Educada, Determinada, Sempre aberta a ouvir, Solicita.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Feedback 06/03/2026 (Ciclo 1)",
-          projeto: "Departamento Pessoal",
-          observacao: "Grande autoridade técnica no setor, resolução rápida e abertura constante para melhorias."
-        },
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-03-06",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Agir ou falar sem pensar, Se antecipar antes de entender o contexto, Ficar nervosa, Crenças limitantes, Muitos trabalhos manuais.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 06/03/2026 (Ciclo 1)",
-          projeto: "Autocontrole e Automação",
-          observacao: "Trabalhar equilíbrio emocional frente à pressão e automatizar controles repetitivos manuais."
-        },
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-03-06",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Implantar novas metodologias, Ter mais domínio da postura, Se tornar supervisora de DP, Expandir conhecimentos e ser líder, Ganhar mais dinheiro.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Feedback 06/03/2026 (Ciclo 1)",
-          projeto: "Supervisão de DP",
-          observacao: "Potencial claro para promoção a Supervisora de Departamento Pessoal e líder de referência."
-        },
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-03-06",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Não se permitir aprender, Não se achar merecedora, Ser mal interpretada, Estagnar na carreira.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 06/03/2026 (Ciclo 1)",
-          projeto: "Desenvolvimento de Liderança",
-          observacao: "Cuidado com o sentimento de não-merecimento e desentendimentos de comunicação sob estresse."
-        },
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 1/2026",
-          data: "2026-03-06",
-          tipo: "Nota",
-          quadrante_fofa: "Força",
-          descricao: "Muito boa em ensinar, Não desperdiça tempo, Sempre solicita, Conhece a rotina e não perde prazos, Colaboradores respeitam e confiam.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Mentoria e Governança",
-          observacao: "Confiança unânime da equipe, excelente didática interna e rigor absoluto com datas."
-        },
-        // --- RAQUEL (Ciclo 2/2026 - Atual / out-nov-dez) ---
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-17",
-          tipo: "Entrega Destacada",
-          quadrante_fofa: "Força",
-          descricao: "Automatizou o fechamento da folha e parametrizou novos relatórios no Rodopar sem erros.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Auditoria DP",
-          projeto: "Automação Folha",
-          observacao: "Superou o gap de processos manuais com automação direta no ERP."
-        },
-        {
-          colaborador: "Raquel",
-          ciclo: "Ciclo 2/2026",
-          data: "2026-10-21",
-          tipo: "Atitude Positiva",
-          quadrante_fofa: "Força",
-          descricao: "Demonstrou excelente inteligência emocional e liderança durante alinhamento difícil de horas extras.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Reunião Diretoria",
-          projeto: "Liderança",
-          observacao: "Pausa reflexiva aplicada com sucesso; postura de futura supervisora."
-        }
-      ];
-=======
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Pensa fora da caixinha, Ótima postura, Se veste bem, Boa ouvinte, Participativa.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026",
-          projeto: "Desenvolvimento GG&C",
-          observacao: "Excelente comunicação interpessoal e escuta ativa."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Não conhece todo o processo do departamento, Está aprendendo sobre as ferramentas.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 22/05/2026",
-          projeto: "Capacitação Interna",
-          observacao: "Curva de aprendizagem em andamento para autonomia plena."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Atenção no horário, Atenção na fala (dicção) e escrita.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 22/05/2026",
-          projeto: "Comunicação e Pontualidade",
-          observacao: "Alinhar rotina e revisão prévia de redações e e-mails corporativos."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Fazer carreira na Transnova, Ser promovida após implantação dos novos processos.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026",
-          projeto: "Plano de Carreira",
-          observacao: "Potencial acelerado com a consolidação dos novos fluxos de trabalho."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Ganhar espaço em frentes importantes, Ganhar visibilidade para outras frentes além do GG&C, Desenvolver carreira em RH.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 22/05/2026",
-          projeto: "Expansão de Escopo",
-          observacao: "Interesse manifesto em ampliar atuações estratégicas de Recursos Humanos."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Se deixar levar pelas situações e postura das pessoas, Não entregar os processos nas datas.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 22/05/2026",
-          projeto: "Blindagem Emocional e Prazos",
-          observacao: "Desenvolver postura assertiva sem absorver ruídos externos."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Não usar 100% do potencial por falta de atenção, Não vender melhor as ideias.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 22/05/2026",
-          projeto: "Influência e Apresentação",
-          observacao: "Capacitar apresentação estruturada para defender suas propostas com segurança."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "Nota",
-          quadrante_fofa: "Força",
-          descricao: "Uma ótima contratação, Encaixou perfeitamente no departamento, Quer fazer carreira.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Cultura GG&C",
-          observacao: "Excelente encaixe com o time e alto interesse em crescimento contínuo."
-        },
-        {
-          colaborador: "Barbara",
-          data: "2026-05-22",
-          tipo: "Nota",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Definir prazos para entrega, Acessar semanalmente o BI de Contratações, Dominar os cadastros do RH, Buscar aperfeiçoar conhecimentos em transporte e RH.",
-          impacto: "Alto",
-          nota: "8",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Metas de Desenvolvimento",
-          observacao: "Acompanhamento semanal dos indicadores de contratação e rotinas do setor."
-        },
-
-        // ================= BRUNO (12/02/2026) =================
-        {
-          colaborador: "Bruno",
-          data: "2026-02-12",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Boa Postura, Comunicação Assertiva, Paciente, Educado, Atencioso, Ágil em aprender, Solicito.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 12/02/2026",
-          projeto: "Atendimento DP",
-          observacao: "Reconhecido pela calma, respeito e rapidez na assimilação de processos."
-        },
-        {
-          colaborador: "Bruno",
-          data: "2026-02-12",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Timidez, Crenças Limitadoras.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 12/02/2026",
-          projeto: "Autoconfiança",
-          observacao: "Trabalhar expansão da autoconfiança e posicionamento frente ao time e liderança."
-        },
-        {
-          colaborador: "Bruno",
-          data: "2026-02-12",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Se desenvolver em segurança do trabalho/folha/treinamentos, Fazer graduação, Fazer apresentação de resultados, Liderar grandes projetos, Ser mais pró-ativo.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 12/02/2026",
-          projeto: "Plano de Carreira DP",
-          observacao: "Caminho aberto para evolução técnica e liderança em projetos estratégicos."
-        },
-        {
-          colaborador: "Bruno",
-          data: "2026-02-12",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Perder oportunidades por medo, Não se achar merecedor, Se comparar com os outros.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 12/02/2026",
-          projeto: "Mentoria",
-          observacao: "Importante acompanhamento para superar a síndrome do impostor e receio de assumir protagonismo."
-        },
-        {
-          colaborador: "Bruno",
-          data: "2026-02-12",
-          tipo: "Nota",
-          quadrante_fofa: "Força",
-          descricao: "Excelente desempenho, Aderiu à cultura, Participa ativamente das mudanças, Abraçou as demandas, Seguiu o Contrato de Expectativa de Out/2025.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Alinhamento Cultural",
-          observacao: "Comprometimento comprovado com todas as diretrizes do contrato de expectativas pactuado."
-        },
-
-        // ================= CARMEN (25/05/2026) =================
-        {
-          colaborador: "Carmen",
-          data: "2026-05-25",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Boa comunicação, Domina assuntos jurídicos, Domina desligamento, Conhece pessoas e cultura, Boa comunicadora, Pessoas se sentem acolhidas, Tem boas ideias.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 25/05/2026",
-          projeto: "Gente e Cultura",
-          observacao: "Referência no acolhimento, domínio de rotinas jurídicas trabalhistas e desligamentos humanizados."
-        },
-        {
-          colaborador: "Carmen",
-          data: "2026-05-25",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Não se envolve nos demais assuntos do RH, Sugere ideias mas não executa, Estende demais conversas, Pouco participativa nos projetos, Não se preocupa com indicadores, Horários.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 25/05/2026",
-          projeto: "Execução e Gestão por Indicadores",
-          observacao: "Necessário foco em execução prática, pontualidade e orientação a dados e métricas."
-        },
-        {
-          colaborador: "Carmen",
-          data: "2026-05-25",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Crescer em RH, Executar trabalho de Analista e Supervisão, Atuar na parte estratégica.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 25/05/2026",
-          projeto: "Evolução para Supervisão",
-          observacao: "Capacidade para assumir liderança e visão estratégica de RH com a devida disciplina operacional."
-        },
-        {
-          colaborador: "Carmen",
-          data: "2026-05-25",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Não enxergar oportunidades, Estar acostumado com a rotina, Prender informações e não aprender, Não acompanhar o ritmo do departamento.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 25/05/2026",
-          projeto: "Alinhamento Departamental",
-          observacao: "Risco de estagnação por acomodação na rotina e retenção isolada de conhecimentos."
-        },
-        {
-          colaborador: "Carmen",
-          data: "2026-05-25",
-          tipo: "Nota",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Conversas fora da sala, Passar conhecimento para frente, Encontrar solução juntos, Planejar entregas atrasadas.",
-          impacto: "Médio",
-          nota: "7",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Plano de Ação Corretivo",
-          observacao: "Evitar conversas dispersas, focar em compartilhamento de conhecimento e entrega de pendências."
-        },
-
-        // ================= MARIANA (13/05/2026) =================
-        {
-          colaborador: "Mariana",
-          data: "2026-05-13",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Ótima Postura, Aprende Rápido, Muito Simpática, Inteligente, Interessada.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 13/05/2026",
-          projeto: "Atendimento e GG&C",
-          observacao: "Excelente acolhimento e agilidade na compreensão de novas demandas e procedimentos."
-        },
-        {
-          colaborador: "Mariana",
-          data: "2026-05-13",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Não tão próxima nas tarefas diárias, Não domina a rotina do departamento, Falta de clareza nas prioridades.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 13/05/2026",
-          projeto: "Organização Operacional",
-          observacao: "Estruturar lista diária de prioridades e aumentar proximidade com as atividades contínuas do GG&C."
-        },
-        {
-          colaborador: "Mariana",
-          data: "2026-05-13",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Crescer no GGC ou logística, Atuar em tema específico, Ser promovida.",
-          impacto: "Alto",
-          nota: "9",
-          origem: "Feedback 13/05/2026",
-          projeto: "Plano de Crescimento",
-          observacao: "Espaço aberto para especialização interna e futura promoção na área corporativa ou operacional."
-        },
-        {
-          colaborador: "Mariana",
-          data: "2026-05-13",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Falta de clareza deixa perdida, Muitos começos e poucos fins, Falta de planejamento e prazos.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 13/05/2026",
-          projeto: "Conclusão de Tarefas",
-          observacao: "Combater dispersão definindo prazos finais rigorosos para cada entrega iniciada."
-        },
-        {
-          colaborador: "Mariana",
-          data: "2026-05-13",
-          tipo: "Nota",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Reuniões semanais, Gestão das Ações de Endomarketing 2026, Agência de Marketing, Gestão do Estoque e Inventário, Novo layout da Recepção.",
-          impacto: "Alto",
-          nota: "8",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Projetos 2026",
-          observacao: "Pautas chaves acordadas para acompanhamento nas reuniões semanais de alinhamento."
-        },
-
-        // ================= RAQUEL (06/03/2026) =================
-        {
-          colaborador: "Raquel",
-          data: "2026-03-06",
-          tipo: "Competência",
-          quadrante_fofa: "Força",
-          descricao: "Ótima postura, Conhece do seu trabalho, Ágil, Educada, Determinada, Sempre aberta a ouvir, Solicita.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Feedback 06/03/2026",
-          projeto: "Departamento Pessoal",
-          observacao: "Grande autoridade técnica no setor, resolução rápida e abertura constante para melhorias."
-        },
-        {
-          colaborador: "Raquel",
-          data: "2026-03-06",
-          tipo: "SBI",
-          quadrante_fofa: "Fraqueza",
-          descricao: "Agir ou falar sem pensar, Se antecipar antes de entender o contexto, Ficar nervosa, Crenças limitantes, Muitos trabalhos manuais.",
-          impacto: "Médio",
-          nota: "6",
-          origem: "Feedback 06/03/2026",
-          projeto: "Autocontrole e Automação",
-          observacao: "Trabalhar equilíbrio emocional frente à pressão e automatizar controles repetitivos manuais."
-        },
-        {
-          colaborador: "Raquel",
-          data: "2026-03-06",
-          tipo: "OKR",
-          quadrante_fofa: "Oportunidade",
-          descricao: "Implantar novas metodologias, Ter mais domínio da postura, Se tornar supervisora de DP, Expandir conhecimentos e ser líder, Ganhar mais dinheiro.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Feedback 06/03/2026",
-          projeto: "Supervisão de DP",
-          observacao: "Potencial claro para promoção a Supervisora de Departamento Pessoal e líder de referência."
-        },
-        {
-          colaborador: "Raquel",
-          data: "2026-03-06",
-          tipo: "SBI",
-          quadrante_fofa: "Ameaça",
-          descricao: "Não se permitir aprender, Não se achar merecedora, Ser mal interpretada, Estagnar na carreira.",
-          impacto: "Alto",
-          nota: "5",
-          origem: "Feedback 06/03/2026",
-          projeto: "Desenvolvimento de Liderança",
-          observacao: "Cuidado com o sentimento de não-merecimento e desentendimentos de comunicação sob estresse."
-        },
-        {
-          colaborador: "Raquel",
-          data: "2026-03-06",
-          tipo: "Nota",
-          quadrante_fofa: "Força",
-          descricao: "Muito boa em ensinar, Não desperdiça tempo, Sempre solicita, Conhece a rotina e não perde prazos, Colaboradores respeitam e confiam.",
-          impacto: "Alto",
-          nota: "10",
-          origem: "Observações do Feedback Anterior",
-          projeto: "Mentoria e Governança",
-          observacao: "Confiança unânime da equipe, excelente didática interna e rigor absoluto com datas."
-        }
-      ];
-
-      // State
-      let tasks = [];
-=======
   <!-- SCRIPT -->
   <script>
     (function () {
-      const SYNC_URL = 'https://script.google.com/macros/s/AKfycbwX4Y99BkGT6mVKdfBmpqAd83R2V0l4ALTQJ4vdd3Lo1vkRBO-UdwGwdIgdpi4_xCNbWg/exec';
-      const STORAGE_TASKS_KEY = 'masterMind_tasks';
-      const STORAGE_TASKS_LEGACY_KEY = 'masterMind_tasks_jupiter';
+      const SYNC_URL = 'https://script.google.com/macros/s/AKfycbxXlC1Qj7aRpIkOuKh1rbLzY2YYQB3p92AxAigommkR9lvUHH01VqTm9b82slcxwLb_oQ/exec';
+      const STORAGE_TASKS_KEY = 'masterMind_tasks_jupiter';
       const STORAGE_REUNIOES_KEY = 'masterMind_reunioes';
       const STORAGE_EQUIPE_KEY = 'masterMind_equipe';
       const STORAGE_FATOS_KEY = 'masterMind_fatos';
@@ -3564,159 +2633,26 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const CICLO_ATUAL_PADRAO = 'Ciclo 2/2026';
       const CICLO_ANTERIOR_PADRAO = 'Ciclo 1/2026';
 
-      // DADOS EMBUTIDOS DE CARREGAMENTO IMEDIATO SÍNCRONO (FONTE INICIAL GARANTIDA)
-      const DADOS_EMBUTIDOS = {
-        tasks: [
-          { id: "TAR-001", tarefa: "Cronograma Mestre PMO", dept: "Dpto Projetos", prio: "Alta", prazo: "", status: "Concluídos", dono: "Renato", origem: "Projeto", obs: "" },
-          { id: "TAR-002", tarefa: "Treinamento Estoque com Frota, GGC e Compras", dept: "Dpto GGC", prio: "Média", prazo: "2026-10-08", status: "Concluídos", dono: "Equipe", origem: "Reunião", obs: "" },
-          { id: "TAR-003", tarefa: "Revisão Procedimento ISO", dept: "Dpto Qualidade", prio: "Baixa", prazo: "", status: "Concluídos", dono: "Renato", origem: "Projeto", obs: "" },
-          { id: "TAR-004", tarefa: "Calibração de Rastreadores", dept: "Dpto Frota", prio: "Média", prazo: "", status: "Concluídos", dono: "Terceiro", origem: "E-mail", obs: "" },
-          { id: "TAR-005", tarefa: "Checklist Diário Operação", dept: "Dpto Operacional", prio: "Baixa", prazo: "", status: "Concluídos", dono: "Equipe", origem: "Decisão", obs: "" },
-          { id: "TAR-006", tarefa: "App motorista offline", dept: "Dpto Projetos", prio: "Média", prazo: "", status: "Concluídos", dono: "Renato", origem: "Ideia", obs: "" },
-          { id: "TAR-007", tarefa: "Dashboard TV no pátio", dept: "Dpto Operacional", prio: "Baixa", prazo: "", status: "Concluídos", dono: "Equipe", origem: "Caderno", obs: "" },
-          { id: "TAR-010", tarefa: "Endomarketing campanha", dept: "Dpto GGC", prio: "Baixa", prazo: "", status: "Concluídos", dono: "Equipe", origem: "Reunião", obs: "" },
-          { id: "TAR-011", tarefa: "Teste de integração app-planilha", dept: "Dpto Projetos", prio: "Média", prazo: "", status: "Concluídos", dono: "Renato", origem: "Projeto", obs: "" },
-          { id: "TAR-016", tarefa: "Criar planilha para inventário do galpão", dept: "Dpto Projetos", prio: "Alta", prazo: "2026-09-28", status: "Concluídos", dono: "Renato", origem: "Decisão", obs: "" },
-          { id: "TAR-027", tarefa: "Ida ao galpão com Kelly", dept: "Dpto Diretoria", prio: "Alta", prazo: "2026-10-05", status: "Concluídos", dono: "Renato", origem: "Decisão", obs: "" },
-          { id: "TAR-028", tarefa: "Reunião com Giants", dept: "Dpto Comercial", prio: "Alta", prazo: "2026-10-05", status: "Concluídos", dono: "Renato", origem: "Reunião", obs: "" },
-          { id: "TAR-030", tarefa: "Reunião de Alinhamento com Rodolfo – Giants", dept: "Dpto Comercial", prio: "Alta", prazo: "2026-10-05", status: "Concluídos", dono: "Renato", origem: "Reunião", obs: "" },
-          { id: "TAR-032", tarefa: "Reunião com a Mednet", dept: "Dpto GGC", prio: "Média", prazo: "2026-10-09", status: "Concluídos", dono: "Renato", origem: "Reunião", obs: "Realizada em 09/10/2026 - Ata criada no Google Docs" },
-          { id: "TAR-033", tarefa: "Resposta Auditoria Nestlé", dept: "Dpto Operacional", prio: "Alta", prazo: "", status: "Concluídos", dono: "Renato", origem: "Reunião", obs: "" },
-          { id: "TAR-036", tarefa: "Feedback da Equipe", dept: "Dpto GGC", prio: "Alta", prazo: "2026-10-09", status: "Concluídos", dono: "Renato", origem: "Reunião", obs: "" },
-          { id: "TAR-038", tarefa: "Nivelar o contêiner torto e resolver o odor (Alta)", dept: "Dpto Projetos", prio: "Alta", prazo: "2026-10-30", status: "Em Andamento", dono: "Renato", origem: "Ideia", obs: "Assinatura em andamento - Renato envia no final da tarde (09/10)" }
-        ],
-        reunioes: [
-          {
-            id: "reuniao-1",
-            titulo: "Planejamento do Galpão",
-            data: "07/10/2026",
-            tipo: "Projetos",
-            departamento: "Departamento de Projetos",
-            participantes: "Renato Rodrigues, Kelly, Juvenal",
-            resumo: "Definição do layout do galpão (coworking aberto, sala climatizada para cargas frias de diversos clientes, dormitórios mantidos nos fundos), capacidade de armazenagem fixada em cerca de 60 pallets (50 fixos da BNZ), e cargas passam a ser descarregadas diretamente no Galpão, desocupando a Matriz.",
-            link_ata: "https://docs.google.com/document/d/1sX2LACQgOY9H3YutePX5LiKRz2qHq7wK_M-fTYDzUdY/edit",
-            plano_acao: "Demolir o muro mole e contratar caçamba | Juvenal + João | 30/10/2026\nNivelar o contêiner torto e resolver o odor | Juvenal | 30/10/2026\nTrocar as borrachas de vedação do contêiner | Kelly | 20/10/2026\nLevantar os pallets devidos por cliente, ex. Danone | Juvenal, Milton e Fabiana | 30/10/2026\nLimpeza semanal do galpão, toda quinta-feira | Dona Maria | \nFechar os buracos da lateral externa | Juvenal | 15/10/2026\nPintura geral do galpão com insumos do estoque | Juvenal | 23/10/2026\nTrocar telhas quebradas e consertar cobertura | Juvenal | 16/10/2026\nConsolidar a lista de demandas do galpão | Juvenal | 09/10/2026\nRemover a grade de ferro do jardim | Juvenal + João | 30/10/2026"
-          },
-          {
-            id: "reuniao-2",
-            titulo: "Treinamento Estoque Rodopar",
-            data: "08/10/2026",
-            tipo: "Treinamento",
-            departamento: "Frotas, Compras e GGC",
-            participantes: "Renato Rodrigues, Carmem, Raquel, Mariana, Sandra, Patrick, Bruno, Luciano, Thiago Yamada",
-            resumo: "Capacitar Frotas, Compras e GGC na operação e governança do módulo de estoque do ERP Rodopar, rotinas sistêmicas padronizadas, alçadas de aprovação, transferências internas, acurácia de inventários e indicadores.",
-            link_ata: "https://docs.google.com/document/d/1_gYDXbo61-u1V5WAFuWFycJO0kpsYnxVfOVBNlzq4Gk/edit",
-            plano_acao: "Realizar inventário físico completo com ajuste de saldos | GGC e Frotas | nov/2026\nOrganizar prateleiras e localizações (físico x lógico) | GGC e Frotas | nov/2026\nPadronizar cadastro de produtos, grupos e subgrupos | Compras, Frota e GGC | out/2026\nConcluir depara de produtos (prioridade: pneus) | Frota | nov/2026\nConciliar saldo de combustível (aproximadamente 22 mil litros) | Frota e Compras | nov/2026\nEstruturar fluxo de pneus (ressolagem, fornecedores, notas) | Frota e Compras | nov/2026\nConfigurar aprovadores/liberadores + notificação e app mobile | Dpto Compras e Rodopar | out/2026\nDefinir níveis mínimo/máximo por produto e localização | Compras, Frotas e GG&C | nov/2026\nPadronizar distribuição de materiais e itens recondicionáveis | GGC | nov/2026\nValidar acessos e credenciais (portal.br, app mobile, Datapad) | Rodopar | out/2026\nDefinir relatórios e indicadores de estoque | Renato, Luciano e Compras | nov/2026\nReunião de acompanhamento (Follow-up) do plano de ação | Todos | 10/11/2026"
-          },
-          {
-            id: "reuniao-3",
-            titulo: "Alinhamento E-Social e Saúde Ocupacional - Mednet",
-            data: "09/10/2026",
-            tipo: "Reunião",
-            departamento: "Dpto GGC e Mednet",
-            participantes: "Renato Rodrigues, Bárbara, Carmen, Kauane, Theysa",
-            resumo: "Alinhamento de setores, funções e GHEs da documentação de saúde ocupacional com o E-Social. Divergências identificadas, demissional com exames pendentes, suspensão de agendamentos por 4-5 dias durante migração.",
-            link_ata: "https://docs.google.com/document/d/1W_mcXdu5Fuu-Mi8EKC3clRLvP0WExbPeUxz04MeFC7U/edit",
-            plano_acao: "Puxar relatório do E-Social da contabilidade | Carmen | Imediato\nEnviar planilha do E-Social (como registrado) | Mednet (Teise/Kauane) | A combinar\nValidar documentações e definir GHE/riscos/local de atuação | Renato | Após recebimento\nSubir setores/funções com alíquota social na plataforma | Mednet (Teise) | A combinar\nExcluir setores/funções antigos após validação | Mednet (Teise/Kauane) | A combinar\nCadastrar novos cargos com zero funcionários | Mednet (Teise) | Quando houver novos cargos\nRedobrar atenção nos agendamentos durante a transição | Bárbara | Durante a transição\nBate-papo de alinhamento (1h, 9h-10h) | Renato + Mednet | A combinar"
-          },
-          {
-            id: "reuniao-4",
-            titulo: "Alinhamento Folha de Pagamento - AGI Contabilidade",
-            data: "08/10/2026",
-            tipo: "Reunião",
-            departamento: "Dpto GGC e Contabilidade",
-            participantes: "Renato Rodrigues, Raquel, Carmen, Mariana, Victor",
-            resumo: "Segundo estágio do plano de melhorias da folha com a AGI. Adoção do relatório de verbas para conferência, envio da planilha base 9 para teste, atenção a vale-transporte/benefícios, cipeiros, migração futura para Domínio.",
-            link_ata: "https://docs.google.com/document/d/11k4UVSmpD81bcfLVjnlbIXW-RS3_MgjLzmFAgUbYoCE/edit",
-            plano_acao: "Enviar planilha da folha (base 9) para teste | AJE (Victor) | Após a reunião\nTestar conferência com a nova planilha | Raquel | Próximo fechamento\nSinalizar erros encontrados na folha | Transnova (Raquel) | Contínuo\nCentralizar informações na plataforma (afastamentos, turmas) | AJE (Victor) | Contínuo\nEnviar variáveis de rescisão com antecedência (5 dias) | Transnova | Contínuo\nAtenção aos cipeiros (não aceitar carta de renúncia) | Transnova (Raquel) | Contínuo\nCadastrar rubrica de pensão alimentícia | AJE | Realizado\nAgendar reunião presencial de fechamento do ano | Renato + AJE | Nov/Dez"
-          }
-        ],
-        equipe: [
-          {
-            nome: "Raquel",
-            cargo: "Analista de DP",
-            descricao_cargo: "Analista de Departamento Pessoal Sênior — Participar dos processos de admissão, demissão, rescisões contratuais, folha de pagamento, férias, encargos sociais, benefícios, indicadores de desempenho de pessoal e apoio ao Plano de Cargos e Salários.",
-            departamento: "GGC",
-            admissao: "2024-03-01",
-            status: "Ativo"
-          },
-          {
-            nome: "Carmen",
-            cargo: "Analista de RH",
-            descricao_cargo: "Analista de Gente Gestão & Cultura Sênior — Recrutamento e seleção, treinamento e desenvolvimento, integração de novos colaboradores, avaliação de desempenho, pesquisa de clima, Plano de Cargos e Salários, benefícios e indicadores de gestão de pessoas.",
-            departamento: "GGC",
-            admissao: "2023-08-15",
-            status: "Ativo"
-          },
-          {
-            nome: "Barbara",
-            cargo: "Assistente de GGC",
-            descricao_cargo: "Assistente de Gente Gestão & Cultura IV — Apoiar recrutamento e seleção, triagem de currículos, integração, cadastros no sistema, benefícios, avaliação de desempenho e arquivamento de documentos do DGG&C.",
-            departamento: "GGC",
-            admissao: "2024-05-10",
-            status: "Ativo"
-          },
-          {
-            nome: "Bruno",
-            cargo: "Assistente de DP",
-            descricao_cargo: "Assistente de Departamento Pessoal — Apoiar admissão, rescisões, fechamento de ponto e horas, folha de pagamento, carteiras profissionais, benefícios, arquivamento e cadastros de pessoal da Área Operacional.",
-            departamento: "GGC",
-            admissao: "2024-02-20",
-            status: "Ativo"
-          },
-          {
-            nome: "Mariana",
-            cargo: "Recepcionista",
-            descricao_cargo: "Recepcionista — Recepcionar e atender clientes, fornecedores e visitantes, prestar informações, receber e distribuir correspondência, controlar estoque de uniformes/EPIs e materiais, apoiar endomarketing. Acumula tarefas de Assistente de GGC.",
-            departamento: "GGC",
-            admissao: "2023-11-01",
-            status: "Ativo"
-          }
-        ],
-        fatos: [
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "Competência", quadrante_fofa: "Força", descricao: "Esforçada, Interessada, Competente, Comprometida.", impacto: "Alto", nota: "9", origem: "Feedback 22/05/2026", projeto: "Desenvolvimento GG&C", observacao: "Perfil engajado e dedicado às metas do departamento." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "Competência", quadrante_fofa: "Força", descricao: "Pensa fora da caixinha, Ótima postura, Se veste bem, Boa ouvinte, Participativa.", impacto: "Alto", nota: "9", origem: "Feedback 22/05/2026", projeto: "Desenvolvimento GG&C", observacao: "Excelente comunicação interpessoal e escuta ativa." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "SBI", quadrante_fofa: "Fraqueza", descricao: "Não conhece todo o processo do departamento, Está aprendendo sobre as ferramentas.", impacto: "Médio", nota: "6", origem: "Feedback 22/05/2026", projeto: "Capacitação Interna", observacao: "Curva de aprendizagem em andamento para autonomia plena." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "SBI", quadrante_fofa: "Fraqueza", descricao: "Atenção no horário, Atenção na fala (dicção) e escrita.", impacto: "Médio", nota: "6", origem: "Feedback 22/05/2026", projeto: "Comunicação e Pontualidade", observacao: "Alinhar rotina e revisão prévia de redações e e-mails corporativos." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "OKR", quadrante_fofa: "Oportunidade", descricao: "Fazer carreira na Transnova, Ser promovida após implantação dos novos processos.", impacto: "Alto", nota: "9", origem: "Feedback 22/05/2026", projeto: "Plano de Carreira", observacao: "Potencial acelerado com a consolidação dos novos fluxos de trabalho." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "OKR", quadrante_fofa: "Oportunidade", descricao: "Ganhar espaço em frentes importantes, Ganhar visibilidade para outras frentes além do GG&C, Desenvolver carreira em RH.", impacto: "Alto", nota: "9", origem: "Feedback 22/05/2026", projeto: "Expansão de Escopo", observacao: "Interesse manifesto em ampliar atuações estratégicas de Recursos Humanos." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "SBI", quadrante_fofa: "Ameaça", descricao: "Se deixar levar pelas situações e postura das pessoas, Não entregar os processos nas datas.", impacto: "Alto", nota: "5", origem: "Feedback 22/05/2026", projeto: "Blindagem Emocional e Prazos", observacao: "Desenvolver postura assertiva sem absorver ruídos externos." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "SBI", quadrante_fofa: "Ameaça", descricao: "Não usar 100% do potencial por falta de atenção, Não vender melhor as ideias.", impacto: "Médio", nota: "6", origem: "Feedback 22/05/2026", projeto: "Influência e Apresentação", observacao: "Capacitar apresentação estruturada para defender suas propostas com segurança." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "Nota", quadrante_fofa: "Força", descricao: "Uma ótima contratação, Encaixou perfeitamente no departamento, Quer fazer carreira.", impacto: "Alto", nota: "10", origem: "Observações do Feedback Anterior", projeto: "Cultura GG&C", observacao: "Excelente encaixe com o time e alto interesse em crescimento contínuo." },
-          { colaborador: "Barbara", ciclo: "Ciclo 1/2026", data: "2026-05-22", tipo: "Nota", quadrante_fofa: "Oportunidade", descricao: "Definir prazos para entrega, Acessar semanalmente o BI de Contratações, Dominar os cadastros do RH, Buscar aperfeiçoar conhecimentos em transporte e RH.", impacto: "Alto", nota: "8", origem: "Observações do Feedback Anterior", projeto: "Metas de Desenvolvimento", observacao: "Acompanhamento semanal dos indicadores de contratação e rotinas do setor." },
-
-          { colaborador: "Bruno", ciclo: "Ciclo 1/2026", data: "2026-02-12", tipo: "Competência", quadrante_fofa: "Força", descricao: "Boa Postura, Comunicação Assertiva, Paciente, Educado, Atencioso, Ágil em aprender, Solicito.", impacto: "Alto", nota: "9", origem: "Feedback 12/02/2026", projeto: "Atendimento DP", observacao: "Reconhecido pela calma, respeito e rapidez na assimilação de processos." },
-          { colaborador: "Bruno", ciclo: "Ciclo 1/2026", data: "2026-02-12", tipo: "SBI", quadrante_fofa: "Fraqueza", descricao: "Timidez, Crenças Limitadoras.", impacto: "Médio", nota: "6", origem: "Feedback 12/02/2026", projeto: "Autoconfiança", observacao: "Trabalhar expansão da autoconfiança e posicionamento frente ao time e liderança." },
-          { colaborador: "Bruno", ciclo: "Ciclo 1/2026", data: "2026-02-12", tipo: "OKR", quadrante_fofa: "Oportunidade", descricao: "Se desenvolver em segurança do trabalho/folha/treinamentos, Fazer graduação, Fazer apresentação de resultados, Liderar grandes projetos, Ser mais pró-ativo.", impacto: "Alto", nota: "9", origem: "Feedback 12/02/2026", projeto: "Plano de Carreira DP", observacao: "Caminho aberto para evolução técnica e liderança em projetos estratégicos." },
-          { colaborador: "Bruno", ciclo: "Ciclo 1/2026", data: "2026-02-12", tipo: "SBI", quadrante_fofa: "Ameaça", descricao: "Perder oportunidades por medo, Não se achar merecedor, Se comparar com os outros.", impacto: "Alto", nota: "5", origem: "Feedback 12/02/2026", projeto: "Mentoria", observacao: "Importante acompanhamento para superar a síndrome do impostor e receio de assumir protagonismo." },
-          { colaborador: "Bruno", ciclo: "Ciclo 1/2026", data: "2026-02-12", tipo: "Nota", quadrante_fofa: "Força", descricao: "Excelente desempenho, Aderiu à cultura, Participa ativamente das mudanças, Abraçou as demandas, Seguiu o Contrato de Expectativa de Out/2025.", impacto: "Alto", nota: "10", origem: "Observações do Feedback Anterior", projeto: "Alinhamento Cultural", observacao: "Comprometimento comprovado com todas as diretrizes do contrato de expectativas pactuado." },
-
-          { colaborador: "Carmen", ciclo: "Ciclo 1/2026", data: "2026-05-25", tipo: "Competência", quadrante_fofa: "Força", descricao: "Boa comunicação, Domina assuntos jurídicos, Domina desligamento, Conhece pessoas e cultura, Boa comunicadora, Pessoas se sentem acolhidas, Tem boas ideias.", impacto: "Alto", nota: "9", origem: "Feedback 25/05/2026", projeto: "Gente e Cultura", observacao: "Referência no acolhimento, domínio de rotinas jurídicas trabalhistas e desligamentos humanizados." },
-          { colaborador: "Carmen", ciclo: "Ciclo 1/2026", data: "2026-05-25", tipo: "SBI", quadrante_fofa: "Fraqueza", descricao: "Não se envolve nos demais assuntos do RH, Sugere ideias mas não executa, Estende demais conversas, Pouco participativa nos projetos, Não se preocupa com indicadores, Horários.", impacto: "Alto", nota: "5", origem: "Feedback 25/05/2026", projeto: "Execução e Gestão por Indicadores", observacao: "Necessário foco em execução prática, pontualidade e orientação a dados e métricas." },
-          { colaborador: "Carmen", ciclo: "Ciclo 1/2026", data: "2026-05-25", tipo: "OKR", quadrante_fofa: "Oportunidade", descricao: "Crescer em RH, Executar trabalho de Analista e Supervisão, Atuar na parte estratégica.", impacto: "Alto", nota: "9", origem: "Feedback 25/05/2026", projeto: "Evolução para Supervisão", observacao: "Capacidade para assumir liderança e visão estratégica de RH com a devida disciplina operacional." },
-          { colaborador: "Carmen", ciclo: "Ciclo 1/2026", data: "2026-05-25", tipo: "SBI", quadrante_fofa: "Ameaça", descricao: "Não enxergar oportunidades, Estar acostumado com a rotina, Prender informações e não aprender, Não acompanhar o ritmo do departamento.", impacto: "Alto", nota: "5", origem: "Feedback 25/05/2026", projeto: "Alinhamento Departamental", observacao: "Risco de estagnação por acomodação na rotina e retenção isolada de conhecimentos." },
-          { colaborador: "Carmen", ciclo: "Ciclo 1/2026", data: "2026-05-25", tipo: "Nota", quadrante_fofa: "Oportunidade", descricao: "Conversas fora da sala, Passar conhecimento para frente, Encontrar solução juntos, Planejar entregas atrasadas.", impacto: "Médio", nota: "7", origem: "Observações do Feedback Anterior", projeto: "Plano de Ação Corretivo", observacao: "Evitar conversas dispersas, focar em compartilhamento de conhecimento e entrega de pendências." },
-
-          { colaborador: "Mariana", ciclo: "Ciclo 1/2026", data: "2026-05-13", tipo: "Competência", quadrante_fofa: "Força", descricao: "Ótima Postura, Aprende Rápido, Muito Simpática, Inteligente, Interessada.", impacto: "Alto", nota: "9", origem: "Feedback 13/05/2026", projeto: "Atendimento e GG&C", observacao: "Excelente acolhimento e agilidade na compreensão de novas demandas e procedimentos." },
-          { colaborador: "Mariana", ciclo: "Ciclo 1/2026", data: "2026-05-13", tipo: "SBI", quadrante_fofa: "Fraqueza", descricao: "Não tão próxima nas tarefas diárias, Não domina a rotina do departamento, Falta de clareza nas prioridades.", impacto: "Médio", nota: "6", origem: "Feedback 13/05/2026", projeto: "Organização Operacional", observacao: "Estruturar lista diária de prioridades e aumentar proximidade com as atividades contínuas do GG&C." },
-          { colaborador: "Mariana", ciclo: "Ciclo 1/2026", data: "2026-05-13", tipo: "OKR", quadrante_fofa: "Oportunidade", descricao: "Crescer no GGC ou logística, Atuar em tema específico, Ser promovida.", impacto: "Alto", nota: "9", origem: "Feedback 13/05/2026", projeto: "Plano de Crescimento", observacao: "Espaço aberto para especialização interna e futura promoção na área corporativa ou operacional." },
-          { colaborador: "Mariana", ciclo: "Ciclo 1/2026", data: "2026-05-13", tipo: "SBI", quadrante_fofa: "Ameaça", descricao: "Falta de clareza deixa perdida, Muitos começos e poucos fins, Falta de planejamento e prazos.", impacto: "Alto", nota: "5", origem: "Feedback 13/05/2026", projeto: "Conclusão de Tarefas", observacao: "Combater dispersão definindo prazos finais rigorosos para cada entrega iniciada." },
-          { colaborador: "Mariana", ciclo: "Ciclo 1/2026", data: "2026-05-13", tipo: "Nota", quadrante_fofa: "Oportunidade", descricao: "Reuniões semanais, Gestão das Ações de Endomarketing 2026, Agência de Marketing, Gestão do Estoque e Inventário, Novo layout da Recepção.", impacto: "Alto", nota: "8", origem: "Observações do Feedback Anterior", projeto: "Projetos 2026", observacao: "Pautas chaves acordadas para acompanhamento nas reuniões semanais de alinhamento." },
-
-          { colaborador: "Raquel", ciclo: "Ciclo 1/2026", data: "2026-03-06", tipo: "Competência", quadrante_fofa: "Força", descricao: "Ótima postura, Conhece do seu trabalho, Ágil, Educada, Determinada, Sempre aberta a ouvir, Solicita.", impacto: "Alto", nota: "10", origem: "Feedback 06/03/2026", projeto: "Departamento Pessoal", observacao: "Grande autoridade técnica no setor, resolução rápida e abertura constante para melhorias." },
-          { colaborador: "Raquel", ciclo: "Ciclo 1/2026", data: "2026-03-06", tipo: "SBI", quadrante_fofa: "Fraqueza", descricao: "Agir ou falar sem pensar, Se antecipar antes de entender o contexto, Ficar nervosa, Crenças limitantes, Muitos trabalhos manuais.", impacto: "Médio", nota: "6", origem: "Feedback 06/03/2026", projeto: "Autocontrole e Automação", observacao: "Trabalhar equilíbrio emocional frente à pressão e automatizar controles repetitivos manuais." },
-          { colaborador: "Raquel", ciclo: "Ciclo 1/2026", data: "2026-03-06", tipo: "OKR", quadrante_fofa: "Oportunidade", descricao: "Implantar novas metodologias, Ter mais domínio da postura, Se tornar supervisora de DP, Expandir conhecimentos e ser líder, Ganhar mais dinheiro.", impacto: "Alto", nota: "10", origem: "Feedback 06/03/2026", projeto: "Supervisão de DP", observacao: "Potencial claro para promoção a Supervisora de Departamento Pessoal e líder de referência." },
-          { colaborador: "Raquel", ciclo: "Ciclo 1/2026", data: "2026-03-06", tipo: "SBI", quadrante_fofa: "Ameaça", descricao: "Não se permitir aprender, Não se achar merecedora, Ser mal interpretada, Estagnar na carreira.", impacto: "Alto", nota: "5", origem: "Feedback 06/03/2026", projeto: "Desenvolvimento de Liderança", observacao: "Cuidado com o sentimento de não-merecimento e desentendimentos de comunicação sob estresse." },
-          { colaborador: "Raquel", ciclo: "Ciclo 1/2026", data: "2026-03-06", tipo: "Nota", quadrante_fofa: "Força", descricao: "Muito boa em ensinar, Não desperdiça tempo, Sempre solicita, Conhece a rotina e não perde prazos, Colaboradores respeitam e confiam.", impacto: "Alto", nota: "10", origem: "Observações do Feedback Anterior", projeto: "Mentoria e Governança", observacao: "Confiança unânime da equipe, excelente didática interna e rigor absoluto com datas." }
-        ]
-      };
+      // Fallback tasks
+      const DEFAULT_TASKS = [
+        { id: "001", tarefa: "Definir novo layout de armazenagem do galpão (contrato Nestlé)", dept: "Dpto Projetos", prio: "Alta", prazo: "2026-10-15", status: "Em Andamento", dono: "Renato", origem: "Reunião", obs: "Capacidade para 60 pallets." },
+        { id: "002", tarefa: "Demolir o muro mole e contratar caçamba de entulho", dept: "Dpto Operacional", prio: "Alta", prazo: "2026-10-30", status: "A Fazer", dono: "Juvenal", origem: "Reunião", obs: "Desocupar área externa do pátio." },
+        { id: "003", tarefa: "Revisão e manutenção preventiva dos semirreboques", dept: "Dpto Frota", prio: "Alta", prazo: "2026-10-18", status: "Em Andamento", dono: "Equipe", origem: "Projeto", obs: "Garantir checklist mecânico." },
+        { id: "004", tarefa: "Auditoria interna dos padrões de segurança de transporte", dept: "Dpto Qualidade", prio: "Média", prazo: "2026-10-25", status: "A Fazer", dono: "Kelly", origem: "Decisão", obs: "Normas ISO e monitoramento." },
+        { id: "005", tarefa: "Proposta comercial de ampliação de rotas BNZ", dept: "Dpto Comercial", prio: "Média", prazo: "2026-11-05", status: "Ideia", dono: "Renato", origem: "E-mail", obs: "Novos fluxos interestaduais." },
+        { id: "006", tarefa: "Fechar buracos da lateral externa e pintura geral", dept: "Dpto Operacional", prio: "Média", prazo: "2026-10-15", status: "A Fazer", dono: "Juvenal", origem: "Reunião", obs: "Insumos já disponíveis no estoque." },
+        { id: "007", tarefa: "Relatório de consolidação do fluxo de caixa e combustíveis", dept: "Dpto Financeiro", prio: "Alta", prazo: "2026-10-12", status: "Concluídos", dono: "Fabiana", origem: "Decisão", obs: "Consolidado e enviado à Diretoria." },
+        { id: "008", tarefa: "Estudo de viabilidade de sistema de telemetria em tempo real", dept: "Dpto GGC", prio: "Baixa", prazo: "", status: "Ideia", dono: "Renato", origem: "Ideia", obs: "Avaliar fornecedores homologados." },
+        { id: "009", tarefa: "Alinhar escala de motoristas para feriado prolongado", dept: "Dpto Transportes", prio: "Média", prazo: "2026-10-09", status: "Concluídos", dono: "Milton", origem: "Caderno", obs: "Todas as escalas confirmadas." },
+        { id: "010", tarefa: "Automatizar faturamento de ordens de frete via planilha", dept: "Dpto Faturamento", prio: "Baixa", prazo: "", status: "A Fazer", dono: "Terceiro", origem: "Projeto", obs: "Integração direta com ERP." }
+      ];
 
       // Parser de plano de ação multilinhas "Ação | Responsável | Prazo"
       function parsePlanoAcao(raw) {
         if (!raw) return [];
         if (Array.isArray(raw)) return raw;
         const result = [];
-        const lines = String(raw).replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+        const lines = String(raw).split('\n');
         lines.forEach(line => {
           const l = line.trim();
           if (!l) return;
@@ -3730,166 +2666,91 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         return result;
       }
 
-      // Normalizador de campos de Reunião
+      // Seed local de fallback — 2 reuniões reais especificadas
+      const SEED_REUNIOES_RAW = [
+        {
+          titulo: "Planejamento do Galpão",
+          data: "07/10/2026",
+          tipo: "Projetos",
+          departamento: "Departamento de Projetos",
+          participantes: "Renato Rodrigues, Kelly, Juvenal",
+          resumo: "Definição do layout do galpão (coworking aberto, sala climatizada para cargas frias de diversos clientes, dormitórios mantidos nos fundos), capacidade de armazenagem fixada em cerca de 60 pallets (50 fixos da BNZ), e a partir de agora todas as cargas passam a ser descarregadas diretamente no Galpão, desocupando a Matriz. Pendências: decidir ocupação das equipes de Atendimento, Monitoramento e Transportes (aguardando Diretoria), marcar data da demolição do muro e entregar lista final de demandas de manutenção.",
+          link_ata: "https://docs.google.com/document/d/1sX2LACQgOY9H3YutePX5LiKRz2qHq7wK_M-fTYDzUdY/edit",
+          plano_acao: "Demolir o muro mole e contratar caçamba | Juvenal + João | 30/10/2026\nNivelar o contêiner torto e resolver o odor | Juvenal | 30/10/2026\nTrocar as borrachas de vedação do contêiner | Kelly | 20/10/2026\nLevantar os pallets devidos por cliente, ex. Danone | Juvenal, Milton e Fabiana | 30/10/2026\nLimpeza semanal do galpão, toda quinta-feira | Dona Maria | \nFechar os buracos da lateral externa | Juvenal | 15/10/2026\nPintura geral do galpão com insumos do estoque | Juvenal | 23/10/2026\nTrocar telhas quebradas e consertar cobertura | Juvenal | 16/10/2026\nConsolidar a lista de demandas do galpão | Juvenal | 09/10/2026\nRemover a grade de ferro do jardim | Juvenal + João | 30/10/2026"
+        },
+        {
+          titulo: "Treinamento Estoque Rodopar",
+          data: "08/10/2026",
+          tipo: "Treinamento",
+          departamento: "Frotas, Compras e GGC",
+          participantes: "Renato Rodrigues, Carmem, Raquel, Mariana, Sandra, Patrick, Bruno, Luciano, Thiago Yamada",
+          resumo: "Capacitar os times de Frotas, Compras e GGC (Gente, Gestão e Cultura) na operação e governança do módulo de estoque do ERP Rodopar, estabelecendo rotinas sistêmicas padronizadas, alinhando parâmetros de cadastro, estruturando alçadas de aprovação, controlando transferências internas e garantindo a acurácia de inventários e indicadores operacionais — preparando a Transnova para a consolidação do ERP e a eliminação de planilhas e controles paralelos.",
+          link_ata: "https://docs.google.com/document/d/1_gYDXbo61-u1V5WAFuWFycJO0kpsYnxVfOVBNlzq4Gk/edit",
+          plano_acao: "Realizar inventário físico completo com ajuste de saldos | GGC e Frotas | nov/2026\nOrganizar prateleiras e localizações (físico x lógico) | GGC e Frotas | nov/2026\nPadronizar cadastro de produtos, grupos e subgrupos | Compras, Frota e GGC | out/2026\nConcluir depara de produtos (prioridade: pneus) | Frota | nov/2026\nConciliar saldo de combustível (aproximadamente 22 mil litros) | Frota e Compras | nov/2026\nEstruturar fluxo de pneus (ressolagem, fornecedores, notas) | Frota e Compras | nov/2026\nConfigurar aprovadores/liberadores + notificação e app mobile | Dpto Compras e Rodopar | out/2026\nDefinir níveis mínimo/máximo por produto e localização | Compras, Frotas e GG&C | nov/2026\nPadronizar distribuição de materiais e itens recondicionáveis | Gerenciamento e Cultura (GGC) | nov/2026\nValidar acessos e credenciais (portal.br, app mobile, Datapad) | Rodopar | out/2026\nDefinir relatórios e indicadores de estoque | Renato, Luciano e Compras | nov/2026\nReunião de acompanhamento (Follow-up) do plano de ação | Todos | 10/11/2026"
+        }
+      ];
+
       function normalizarReuniao(r, idx) {
-        if (!r || typeof r !== 'object') return null;
-        const tituloVal = r.titulo || r['título'] || r.nome || r.title || 'Reunião sem título';
-        const dataVal = r.data || r.date || '';
-        const tipoVal = r.tipo || r.type || 'Geral';
-        const deptVal = r.departamento || r.dept || 'Geral';
-        const linkAtaVal = r.link_ata || r.link || r.ata_link || '';
-        const rawPlano = r.plano_acao || r.plano || r['plano_ação'] || '';
         return {
           id: r.id || `reuniao-${idx || Date.now()}`,
-          titulo: tituloVal,
-          data: dataVal,
-          tipo: tipoVal,
-          departamento: deptVal,
-          dept: deptVal,
+          titulo: r.titulo || r.title || 'Reunião sem título',
+          data: r.data || r.date || '',
+          tipo: r.tipo || r.type || 'Geral',
+          departamento: r.departamento || r.dept || 'Geral',
           participantes: r.participantes || '',
           resumo: r.resumo || r.summary || '',
-          link_ata: linkAtaVal,
-          link: linkAtaVal,
-          plano_acao: rawPlano,
-          plano: parsePlanoAcao(rawPlano)
+          link_ata: r.link_ata || r.link || '',
+          plano: parsePlanoAcao(r.plano_acao || r.plano || '')
         };
       }
 
-      // Helper para verificar se localStorage possui dados reais (não-vazio)
-      function getFromLocalStorage(key) {
-        try {
-          let raw = localStorage.getItem(key);
-          if (!raw && key === STORAGE_TASKS_KEY) {
-            raw = localStorage.getItem(STORAGE_TASKS_LEGACY_KEY);
-          }
-          if (!raw) return null;
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
-          }
-        } catch (e) {
-          console.warn(`Erro ao ler ${key} do localStorage:`, e);
+      // SEED LOCAL (fallback) — 5 colaboradores do GGC especificados
+      const SEED_EQUIPE = [
+        {
+          nome: "Raquel",
+          cargo: "Analista de DP",
+          descricao_cargo: "Analista de Departamento Pessoal Sênior — Participar dos processos de admissão, demissão, rescisões contratuais, folha de pagamento, férias, encargos sociais, benefícios, indicadores de desempenho de pessoal e apoio ao Plano de Cargos e Salários.",
+          departamento: "GGC",
+          admissao: "2024-03-01",
+          status: "Ativo"
+        },
+        {
+          nome: "Carmen",
+          cargo: "Analista de RH",
+          descricao_cargo: "Analista de Gente Gestão & Cultura Sênior — Recrutamento e seleção, treinamento e desenvolvimento, integração de novos colaboradores, avaliação de desempenho, pesquisa de clima, Plano de Cargos e Salários, benefícios e indicadores de gestão de pessoas.",
+          departamento: "GGC",
+          admissao: "2023-08-15",
+          status: "Ativo"
+        },
+        {
+          nome: "Barbara",
+          cargo: "Assistente de GGC",
+          descricao_cargo: "Assistente de Gente Gestão & Cultura IV — Apoiar recrutamento e seleção, triagem de currículos, integração, cadastros no sistema, benefícios, avaliação de desempenho e arquivamento de documentos do DGG&C.",
+          departamento: "GGC",
+          admissao: "2024-05-10",
+          status: "Ativo"
+        },
+        {
+          nome: "Bruno",
+          cargo: "Assistente de DP",
+          descricao_cargo: "Assistente de Departamento Pessoal — Apoiar admissão, rescisões, fechamento de ponto e horas, folha de pagamento, carteiras profissionais, benefícios, arquivamento e cadastros de pessoal da Área Operacional.",
+          departamento: "GGC",
+          admissao: "2024-02-20",
+          status: "Ativo"
+        },
+        {
+          nome: "Mariana",
+          cargo: "Recepcionista",
+          descricao_cargo: "Recepcionista — Recepcionar e atender clientes, fornecedores e visitantes, prestar informações, receber e distribuir correspondência, controlar estoque de uniformes/EPIs e materiais, apoiar endomarketing. Acumula tarefas de Assistente de GGC.",
+          departamento: "GGC",
+          admissao: "2023-11-01",
+          status: "Ativo"
         }
-        return null;
-      }
+      ];
 
-      // Helper universal de normalização: mapeia variações de chaves e estrutura da resposta do Google Apps Script
-      function normalizarDados(dados) {
-        if (!dados || typeof dados !== 'object') {
-          return { tasks: null, reunioes: null, equipe: null, fatos: null, isSuccess: false };
-        }
-
-        const isSuccess = dados.success === true || dados.status === 'success' || dados.ok === true || (!('success' in dados) && !('status' in dados));
-        const root = (dados.data && typeof dados.data === 'object' && !Array.isArray(dados.data)) ? dados.data : dados;
-
-        // 1. TAREFAS ("tasks" OU "tarefas")
-        const rawTasks = root.tasks || root.tarefas || root.Tasks || root.Tarefas || null;
-        let normalizedTasks = null;
-        if (Array.isArray(rawTasks) && rawTasks.length > 0) {
-          normalizedTasks = rawTasks.map((t, idx) => {
-            const idVal = t.id !== undefined && t.id !== null ? cleanId(t.id) : `TAR-${String(idx + 1).padStart(3, '0')}`;
-            const tarefaVal = t.tarefa || t.task || t.titulo || t.nome || 'Tarefa sem título';
-            const deptVal = t.departamento || t.dept || 'Dpto Operacional';
-            const prioVal = t.prioridade || t.prio || 'Média';
-            const prazoVal = t.prazo || t.data || t.date || '';
-            const statusVal = t.status || 'A Fazer';
-            const donoVal = t.dono || t.responsavel || t['responsável'] || 'Equipe';
-            const origemVal = t.origem || 'Reunião';
-            const obsVal = t.observacoes || t.obs || t.observacao || t['observações'] || t['observação'] || '';
-            return {
-              id: idVal,
-              tarefa: tarefaVal,
-              dept: deptVal,
-              departamento: deptVal,
-              prio: prioVal,
-              prioridade: prioVal,
-              prazo: prazoVal,
-              status: statusVal,
-              dono: donoVal,
-              origem: origemVal,
-              obs: obsVal,
-              observacoes: obsVal
-            };
-          });
-        }
-
-        // 2. REUNIÕES ("reunioes" OU "reunioes_aba" OU "reuniões")
-        const rawReunioes = root.reunioes || root['reuniões'] || root.reunioes_aba || root.Reunioes || root.Reuniões || null;
-        let normalizedReunioes = null;
-        if (Array.isArray(rawReunioes) && rawReunioes.length > 0) {
-          normalizedReunioes = rawReunioes
-            .map((r, idx) => normalizarReuniao(r, idx))
-            .filter(Boolean);
-        }
-
-        // 3. EQUIPE ("equipe")
-        const rawEquipe = root.equipe || root.Equipe || root.colaboradores || null;
-        let normalizedEquipe = null;
-        if (Array.isArray(rawEquipe) && rawEquipe.length > 0) {
-          normalizedEquipe = rawEquipe.map(c => {
-            const nomeVal = (c.nome || c.colaborador || '').trim();
-            const cargoVal = (c.cargo || '').trim();
-            const descVal = c.descricao_cargo || c.descricao || c['descrição'] || c['descrição_cargo'] || '';
-            const deptVal = c.departamento || c.dept || 'GGC';
-            const admVal = c.admissao || c['admissão'] || '';
-            const stVal = c.status || 'Ativo';
-            return {
-              nome: nomeVal,
-              cargo: cargoVal,
-              descricao_cargo: descVal,
-              descricao: descVal,
-              departamento: deptVal,
-              dept: deptVal,
-              admissao: admVal,
-              status: stVal
-            };
-          });
-        }
-
-        // 4. FATOS ("fatos")
-        const rawFatos = root.fatos || root.Fatos || null;
-        let normalizedFatos = null;
-        if (Array.isArray(rawFatos) && rawFatos.length > 0) {
-          normalizedFatos = rawFatos.map(f => {
-            const colabVal = (f.colaborador || f.nome || '').trim();
-            const dataVal = f.data || f.date || '';
-            const tipoVal = f.tipo || 'Feedback';
-            const quadVal = f.quadrante_fofa || f.quadrante || f.fofa || '';
-            const descVal = f.descricao || f['descrição'] || '';
-            const impVal = f.impacto || 'Médio';
-            const notaVal = f.nota !== undefined && f.nota !== null ? String(f.nota) : '';
-            const origVal = f.origem || 'Planilha Transnova';
-            const projVal = f.projeto || '';
-            const obsVal = f.observacao || f.obs || f.observacoes || f['observações'] || f['observação'] || '';
-            return {
-              colaborador: colabVal,
-              ciclo: f.ciclo || window.masterMind.determinarCicloPorData(dataVal),
-              data: dataVal,
-              tipo: tipoVal,
-              quadrante_fofa: quadVal,
-              quadrante: quadVal,
-              descricao: descVal,
-              impacto: impVal,
-              nota: notaVal,
-              origem: origVal,
-              projeto: projVal,
-              observacao: obsVal,
-              obs: obsVal
-            };
-          });
-        }
-
-        return {
-          isSuccess: isSuccess,
-          tasks: normalizedTasks,
-          reunioes: normalizedReunioes,
-          equipe: normalizedEquipe,
-          fatos: normalizedFatos
-        };
-      }
-
-      // State
-      let tasks = [];=================
+      // SEED LOCAL DE FATOS REAIS DA PLANILHA (aba Fatos) — Gestao_Tarefas_Transnova
+      const SEED_FATOS = [
+        // ================= BARBARA (22/05/2026) =================
         // ================= BARBARA (Ciclo 1/2026 - Anterior) =================
         {
           colaborador: "Barbara",
@@ -4897,214 +3758,174 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       // App Initialization
       window.masterMind = {
         init: function () {
-          // 1. RENDERIZAÇÃO SÍNCRONA GARANTIDA NO CARREGAMENTO
-          // Carrega primeiro de localStorage se existirem dados reais válidos; senão usa DADOS_EMBUTIDOS.
-          this.loadInitialDataSynchronous();
-
-          // Configura visualização inicial e renderiza o app IMEDIATAMENTE sem esperar fetch
+          // Inicia na aba padrão
           this.switchTab('inicio');
-          this.populateFilterDropdowns();
-          this.renderAll();
 
-          // Set sync status default
-          const syncEl = document.getElementById('syncIndicator');
-          if (syncEl) {
-            syncEl.className = 'sync-status offline';
-            syncEl.innerHTML = '<span>Dados locais (offline)</span>';
-          }
-
-          // 2. Tentar atualização em background sem bloquear o usuário
-          this.tryBackgroundFetch(false);
-        },
-
-        loadInitialDataSynchronous: function () {
-          // TASKS: localStorage or DADOS_EMBUTIDOS
-          const cachedTasks = getFromLocalStorage(STORAGE_TASKS_KEY);
-          if (cachedTasks && cachedTasks.length > 0) {
-            tasks = cachedTasks.map(t => ({
-              id: cleanId(t.id || ''),
-              tarefa: t.tarefa || t.task || 'Tarefa sem título',
-              dept: t.dept || t.departamento || 'Dpto Operacional',
-              departamento: t.departamento || t.dept || 'Dpto Operacional',
-              prio: t.prio || t.prioridade || 'Média',
-              prioridade: t.prioridade || t.prio || 'Média',
-              prazo: t.prazo || '',
-              status: t.status || 'A Fazer',
-              dono: t.dono || t.responsavel || 'Equipe',
-              origem: t.origem || 'Reunião',
-              obs: t.obs || t.observacoes || t.observacao || '',
-              observacoes: t.observacoes || t.obs || t.observacao || ''
-            }));
-          } else {
-            tasks = JSON.parse(JSON.stringify(DADOS_EMBUTIDOS.tasks));
-          }
-
-          // REUNIOES: localStorage or DADOS_EMBUTIDOS
-          const cachedReunioes = getFromLocalStorage(STORAGE_REUNIOES_KEY);
-          if (cachedReunioes && cachedReunioes.length > 0) {
-            const parsed = cachedReunioes.map((r, idx) => normalizarReuniao(r, idx)).filter(Boolean);
-            if (parsed.length > 0) {
-              reunioes = parsed;
-            } else {
-              reunioes = DADOS_EMBUTIDOS.reunioes.map((r, idx) => normalizarReuniao(r, idx)).filter(Boolean);
-            }
-          } else {
-            reunioes = DADOS_EMBUTIDOS.reunioes.map((r, idx) => normalizarReuniao(r, idx)).filter(Boolean);
-          }
-
-          // EQUIPE: localStorage or DADOS_EMBUTIDOS
-          const cachedEquipe = getFromLocalStorage(STORAGE_EQUIPE_KEY);
-          if (cachedEquipe && cachedEquipe.length > 0) {
-            const parsed = cachedEquipe.map(c => ({
-              nome: (c.nome || c.colaborador || '').trim(),
-              cargo: c.cargo || '',
-              descricao_cargo: c.descricao_cargo || c.descricao || c['descrição'] || '',
-              descricao: c.descricao_cargo || c.descricao || c['descrição'] || '',
-              departamento: c.departamento || c.dept || 'GGC',
-              dept: c.departamento || c.dept || 'GGC',
-              admissao: c.admissao || c['admissão'] || '',
-              status: c.status || 'Ativo'
-            })).filter(c => c.nome);
-            if (parsed.length > 0) {
-              equipe = parsed;
-            } else {
-              equipe = JSON.parse(JSON.stringify(DADOS_EMBUTIDOS.equipe));
-            }
-          } else {
-            equipe = JSON.parse(JSON.stringify(DADOS_EMBUTIDOS.equipe));
-          }
-
-          // FATOS: localStorage or DADOS_EMBUTIDOS
-          const cachedFatos = getFromLocalStorage(STORAGE_FATOS_KEY);
-          if (cachedFatos && cachedFatos.length > 0) {
-            const parsed = cachedFatos.map(f => ({
-              colaborador: (f.colaborador || f.nome || '').trim(),
-              ciclo: f.ciclo || this.determinarCicloPorData(f.data),
-              data: f.data || '',
-              tipo: f.tipo || 'Feedback',
-              quadrante_fofa: f.quadrante_fofa || f.quadrante || f.fofa || '',
-              quadrante: f.quadrante_fofa || f.quadrante || f.fofa || '',
-              descricao: f.descricao || f['descrição'] || '',
-              impacto: f.impacto || 'Médio',
-              nota: f.nota !== undefined && f.nota !== null ? String(f.nota) : '',
-              origem: f.origem || 'Planilha Transnova',
-              projeto: f.projeto || '',
-              observacao: f.observacao || f.obs || f.observacoes || '',
-              obs: f.observacao || f.obs || f.observacoes || ''
-            })).filter(f => f.colaborador && f.descricao);
-            if (parsed.length > 0) {
-              fatos = parsed;
-            } else {
-              fatos = JSON.parse(JSON.stringify(DADOS_EMBUTIDOS.fatos));
-            }
-          } else {
-            fatos = JSON.parse(JSON.stringify(DADOS_EMBUTIDOS.fatos));
-          }
+          // Carrega dados da planilha via GET (tarefas e reuniões)
+          this.loadFromSheet();
         },
 
         loadFromSheet: async function () {
-          await this.tryBackgroundFetch(true);
-        },
-
-        tryBackgroundFetch: async function (isManual = false) {
           const syncEl = document.getElementById('syncIndicator');
-          if (syncEl && isManual) {
-            syncEl.className = 'sync-status loading';
-            syncEl.innerHTML = '<span>Verificando atualizações...</span>';
-          }
-
-          let updated = false;
+          syncEl.className = 'sync-status loading';
+          syncEl.innerHTML = '<span>Sincronizando...</span>';
 
           try {
-            const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-            const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
+            const resp = await fetch(SYNC_URL, { method: 'GET' });
+            if (!resp.ok) throw new Error('Falha ao comunicar com Sheets');
+            const data = await resp.json();
 
-            const resp = await fetch(SYNC_URL, {
-              method: 'GET',
-              signal: controller ? controller.signal : undefined
-            });
-
-            if (timeoutId) clearTimeout(timeoutId);
-
-            if (resp.ok) {
-              const respData = await resp.json();
-              const norm = normalizarDados(respData);
-
-              const hasTasks = norm.tasks && norm.tasks.length > 0;
-              const hasReunioes = norm.reunioes && norm.reunioes.length > 0;
-              const hasEquipe = norm.equipe && norm.equipe.length > 0;
-              const hasFatos = norm.fatos && norm.fatos.length > 0;
-
-              if (norm.isSuccess && (hasTasks || hasReunioes || hasEquipe || hasFatos)) {
-                updated = true;
-
-                if (hasTasks) {
-                  tasks = norm.tasks;
-                  localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
-                }
-                if (hasReunioes) {
-                  reunioes = norm.reunioes;
-                  localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
-                }
-                if (hasEquipe) {
-                  equipe = norm.equipe;
-                  localStorage.setItem(STORAGE_EQUIPE_KEY, JSON.stringify(equipe));
-                }
-                if (hasFatos) {
-                  fatos = norm.fatos;
-                  localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
-                }
-
-                if (syncEl) {
-                  syncEl.className = 'sync-status';
-                  syncEl.innerHTML = '<span>Sincronizado ✓</span>';
-                }
-
-                this.populateFilterDropdowns();
-                this.renderAll();
-              }
+            // 1. Processamento de TAREFAS
+            if (data && data.success && Array.isArray(data.tasks)) {
+              tasks = data.tasks.map(t => ({
+                id: cleanId(t.id || (Math.random() * 1000).toFixed(0)),
+                tarefa: t.tarefa || t.task || 'Tarefa sem título',
+                dept: t.dept || t.departamento || 'Dpto Operacional',
+                prio: t.prio || t.prioridade || 'Média',
+                prazo: t.prazo || '',
+                status: t.status || 'A Fazer',
+                dono: t.dono || t.responsavel || 'Equipe',
+                origem: t.origem || 'Reunião',
+                obs: t.obs || t.observacoes || ''
+              }));
+              localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+            } else {
+              this.loadTasksFallback();
             }
+
+            // 2. Processamento de REUNIÕES DIRETO DA PLANILHA
+            if (data && data.success && Array.isArray(data.reunioes) && data.reunioes.length > 0) {
+              reunioes = data.reunioes.map((r, idx) => normalizarReuniao(r, idx));
+              localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
+            } else {
+              // Se a resposta não trouxe array de reuniões, usa fallback offline/seed
+              this.loadReunioesFallback();
+            }
+
+            // 3. Processamento de EQUIPE DIRETO DA PLANILHA
+            if (data && data.success && Array.isArray(data.equipe) && data.equipe.length > 0) {
+              equipe = data.equipe.map(c => ({
+                nome: c.nome || c.colaborador || '',
+                cargo: c.cargo || '',
+                descricao_cargo: c.descricao_cargo || c.descricao || '',
+                departamento: c.departamento || c.dept || 'GGC',
+                admissao: c.admissao || '',
+                status: c.status || 'Ativo'
+              }));
+              localStorage.setItem(STORAGE_EQUIPE_KEY, JSON.stringify(equipe));
+            } else {
+              this.loadEquipeFallback();
+            }
+
+            // 4. Processamento de FATOS DIRETO DA PLANILHA (aba Fatos)
+            if (data && data.success && Array.isArray(data.fatos) && data.fatos.length > 0) {
+              fatos = data.fatos.map(f => ({
+                colaborador: (f.colaborador || f.nome || '').trim(),
+                ciclo: f.ciclo || this.determinarCicloPorData(f.data),
+                data: f.data || '',
+                tipo: f.tipo || 'Feedback',
+                quadrante_fofa: f.quadrante_fofa || f.quadrante || '',
+                descricao: f.descricao || '',
+                impacto: f.impacto || 'Médio',
+                nota: f.nota || '',
+                origem: f.origem || 'Planilha Transnova',
+                projeto: f.projeto || '',
+                observacao: f.observacao || f.obs || ''
+              }));
+              localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
+            } else if (data && data.fatos && Array.isArray(data.fatos) && data.fatos.length > 0) {
+              fatos = data.fatos.map(f => ({
+                colaborador: (f.colaborador || f.nome || '').trim(),
+                ciclo: f.ciclo || this.determinarCicloPorData(f.data),
+                data: f.data || '',
+                tipo: f.tipo || 'Feedback',
+                quadrante_fofa: f.quadrante_fofa || f.quadrante || '',
+                descricao: f.descricao || '',
+                impacto: f.impacto || 'Médio',
+                nota: f.nota || '',
+                origem: f.origem || 'Planilha Transnova',
+                projeto: f.projeto || '',
+                observacao: f.observacao || f.obs || ''
+              }));
+              localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
+            } else {
+              this.loadFatosFallback();
+            }
+
+            syncEl.className = 'sync-status';
+            syncEl.innerHTML = '<span>Sincronizado ✓</span>';
           } catch (err) {
-            console.warn('Busca externa bloqueada ou sem dados — mantendo dados embutidos/locais:', err);
+            console.warn('Falha na requisição ao Apps Script, acionando fallback local/offline:', err);
+            this.loadTasksFallback();
+            this.loadReunioesFallback();
+            this.loadEquipeFallback();
+            this.loadFatosFallback();
+            syncEl.className = 'sync-status offline';
+            syncEl.innerHTML = '<span>Salvo localmente (offline)</span>';
           }
 
-          if (!updated) {
-            if (syncEl) {
-              syncEl.className = 'sync-status offline';
-              syncEl.innerHTML = '<span>Dados locais (offline)</span>';
-            }
-            if (isManual) {
-              alert('Não foi possível atualizar agora — exibindo dados locais');
-            }
-          }
-        },
-
-        refreshReunioesFromSheet: async function () {
-          await this.tryBackgroundFetch(true);
+          this.populateFilterDropdowns();
+          this.renderAll();
         },
 
         loadTasksFallback: function () {
-          this.loadInitialDataSynchronous();
+          const cached = localStorage.getItem(STORAGE_TASKS_KEY);
+          if (cached) {
+            try { tasks = JSON.parse(cached); } catch(e) { tasks = DEFAULT_TASKS; }
+          } else {
+            tasks = DEFAULT_TASKS;
+            localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tasks));
+          }
         },
 
         loadReunioesFallback: function () {
-          this.loadInitialDataSynchronous();
+          const cached = localStorage.getItem(STORAGE_REUNIOES_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                reunioes = parsed.map((r, idx) => normalizarReuniao(r, idx));
+                return;
+              }
+            } catch(e) {
+              console.warn('Erro ao ler cache de reuniões:', e);
+            }
+          }
+          // Se não houver em localStorage, utiliza o seed local com as 2 reuniões reais
+          reunioes = SEED_REUNIOES_RAW.map((r, idx) => normalizarReuniao(r, idx));
+          localStorage.setItem(STORAGE_REUNIOES_KEY, JSON.stringify(reunioes));
         },
 
         loadEquipeFallback: function () {
-          this.loadInitialDataSynchronous();
+          const cached = localStorage.getItem(STORAGE_EQUIPE_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                equipe = parsed;
+                return;
+              }
+            } catch(e) {
+              console.warn('Erro ao ler cache de equipe:', e);
+            }
+          }
+          equipe = JSON.parse(JSON.stringify(SEED_EQUIPE));
+          localStorage.setItem(STORAGE_EQUIPE_KEY, JSON.stringify(equipe));
         },
 
         determinarCicloPorData: function (dataStr) {
           const d = parseDate(dataStr);
           if (!d) return CICLO_ATUAL_PADRAO;
           const y = d.getFullYear();
-          const m = d.getMonth() + 1;
+          const m = d.getMonth() + 1; // 1 to 12
 
           if (y === 2026) {
+            // Regra do negócio: fatos do feedback anterior (fev a mai 2026) são Ciclo 1/2026
+            // Fatos registrados a partir de out/2026 são Ciclo 2/2026 (atual)
             if (m <= 6) return 'Ciclo 1/2026';
             return 'Ciclo 2/2026';
           }
+          // 2027 e anos futuros: trimestres padrão (Ciclos 1 a 4)
           if (m <= 3) return `Ciclo 1/${y}`;
           if (m <= 6) return `Ciclo 2/${y}`;
           if (m <= 9) return `Ciclo 3/${y}`;
@@ -5112,7 +3933,27 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         },
 
         loadFatosFallback: function () {
-          this.loadInitialDataSynchronous();
+          const cached = localStorage.getItem(STORAGE_FATOS_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              const hasRealFacts = Array.isArray(parsed) && parsed.some(f => 
+                (f.colaborador === 'Barbara' || f.colaborador === 'Raquel') && 
+                (f.descricao && (f.descricao.includes('Esforçada') || f.descricao.includes('postura')))
+              );
+              if (hasRealFacts) {
+                fatos = parsed.map(f => ({
+                  ...f,
+                  ciclo: f.ciclo || this.determinarCicloPorData(f.data)
+                }));
+                return;
+              }
+            } catch(e) {
+              console.warn('Erro ao ler cache de fatos:', e);
+            }
+          }
+          fatos = JSON.parse(JSON.stringify(SEED_FATOS));
+          localStorage.setItem(STORAGE_FATOS_KEY, JSON.stringify(fatos));
         },
 
         saveToSheet: async function (taskObj, action = 'update') {
@@ -5229,11 +4070,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           document.getElementById('viewKanban').style.display = tab === 'kanban' ? 'block' : 'none';
           document.getElementById('viewReunioes').style.display = tab === 'reunioes' ? 'block' : 'none';
           document.getElementById('viewEquipe').style.display = tab === 'equipe' ? 'block' : 'none';
-
-          // Ao abrir a aba Reuniões, tentar re-buscar do GET em background
-          if (tab === 'reunioes') {
-            this.tryBackgroundFetch(false);
-          }
 
           this.renderAll();
         },
